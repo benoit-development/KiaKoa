@@ -1,5 +1,6 @@
 package org.bbt.kiakoa;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,12 +10,16 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import org.bbt.kiakoa.fragment.LendDetailsFragment;
+import org.bbt.kiakoa.fragment.LendListsPagerFragment;
+import org.bbt.kiakoa.model.Lend;
+
+public class MainActivity extends AppCompatActivity implements LendListsPagerFragment.OnItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -48,5 +53,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(Lend lend) {
+        LendDetailsFragment displayFrag = (LendDetailsFragment) getFragmentManager().findFragmentById(R.id.lend_details_frag);
+        if (displayFrag == null) {
+            // DisplayFragment (Fragment B) is not in the layout (handset layout),
+            // so start DisplayActivity (Activity B)
+            // and pass it the info about the selected item
+            Intent intent = new Intent(this, LendDetailsActivity.class);
+            intent.putExtra("lend", lend);
+            startActivity(intent);
+        } else {
+            // DisplayFragment (Fragment B) is in the layout (tablet layout),
+            // so tell the fragment to update
+            displayFrag.updateDetails(lend);
+        }
+
     }
 }
