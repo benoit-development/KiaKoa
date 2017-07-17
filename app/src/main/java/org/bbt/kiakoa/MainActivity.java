@@ -14,23 +14,13 @@ import org.bbt.kiakoa.fragment.LendDetailsFragment;
 import org.bbt.kiakoa.fragment.LendListsPagerFragment;
 import org.bbt.kiakoa.model.Lend;
 
-public class MainActivity extends AppCompatActivity implements LendListsPagerFragment.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override
@@ -40,36 +30,4 @@ public class MainActivity extends AppCompatActivity implements LendListsPagerFra
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onItemSelected(Lend lend) {
-        LendDetailsFragment displayFrag = (LendDetailsFragment) getFragmentManager().findFragmentById(R.id.lend_details_frag);
-        if (displayFrag == null) {
-            // DisplayFragment (Fragment B) is not in the layout (handset layout),
-            // so start DisplayActivity (Activity B)
-            // and pass it the info about the selected item
-            Intent intent = new Intent(this, LendDetailsActivity.class);
-            intent.putExtra("lend", lend);
-            startActivity(intent);
-        } else {
-            // DisplayFragment (Fragment B) is in the layout (tablet layout),
-            // so tell the fragment to update
-            displayFrag.updateDetails(lend);
-        }
-
-    }
 }
