@@ -1,15 +1,14 @@
 package org.bbt.kiakoa.fragment;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.Lend;
@@ -33,15 +32,26 @@ public class LendListsPagerFragment extends Fragment {
 
         // get viewpager
         viewPager = (ViewPager) view.findViewById(R.id.pager);
-        viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
+        viewPager.setAdapter(new LendPagerAdapter(getChildFragmentManager()));
+
+        // Manage tabs of the view pager
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
         return view;
     }
 
 
+    /**
+     *
+     */
+    private static class LendPagerAdapter extends FragmentPagerAdapter {
 
-    public static class MyAdapter extends FragmentPagerAdapter {
-        public MyAdapter(FragmentManager fm) {
+        /**
+         * Constructor
+         * @param fm fragment manager
+         */
+        private LendPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -53,6 +63,12 @@ public class LendListsPagerFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             return LendListFragment.newInstance(position);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            // Generate title based on item position
+            return (String.valueOf(position));
         }
     }
 
