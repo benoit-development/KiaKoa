@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
  *
  * @author Benoît Bousquet
  */
-class LendDetailsActivity extends AppCompatActivity {
+public class LendDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

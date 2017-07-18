@@ -3,6 +3,8 @@ package org.bbt.kiakoa.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
+
 /**
  * Class defining a Land
  *
@@ -11,9 +13,9 @@ import android.os.Parcelable;
 public class Lend implements Parcelable {
 
     /**
-     * Label to identify the lend
+     * Label to identify the loaned item
      */
-    private String label;
+    private String item;
 
     @Override
     public int describeContents() {
@@ -23,7 +25,7 @@ public class Lend implements Parcelable {
     // write your object's data to the passed-in Parcel
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeString(label);
+        out.writeString(item);
     }
 
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
@@ -39,6 +41,39 @@ public class Lend implements Parcelable {
 
     // example constructor that takes a Parcel and gives you an object populated with it's values
     private Lend(Parcel in) {
-        label = in.readString();
+        item = in.readString();
+    }
+
+    /**
+     * Constructor
+     *
+     * @param item lend item
+     */
+    public Lend(String item) {
+        this.item = item;
+    }
+
+    /**
+     * item Getter
+     * @return item label
+     */
+    public String getItem() {
+        return item;
+    }
+
+    /**
+     * item setter
+     * @param item item label
+     */
+    public void setItem(String item) {
+        this.item = item;
+    }
+
+    /**
+     * Serialize this lend to JSON
+     * @return json string
+     */
+    public String toJson() {
+        return new Gson().toJson(this);
     }
 }

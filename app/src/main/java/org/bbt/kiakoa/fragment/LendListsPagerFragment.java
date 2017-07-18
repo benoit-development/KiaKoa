@@ -23,7 +23,7 @@ public class LendListsPagerFragment extends Fragment {
     /**
      * {@link ViewPager} of this fragment
      */
-    private ViewPager viewPager;
+    ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,11 +31,11 @@ public class LendListsPagerFragment extends Fragment {
         View view = inflater.inflate(R.layout.lend_list_pager, container, false);
 
         // get viewpager
-        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        viewPager = view.findViewById(R.id.pager);
         viewPager.setAdapter(new LendPagerAdapter(getChildFragmentManager()));
 
         // Manage tabs of the view pager
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        TabLayout tabLayout = view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;
@@ -43,7 +43,7 @@ public class LendListsPagerFragment extends Fragment {
 
 
     /**
-     *
+     * Adapter managing pager and fragments displayed inside
      */
     private static class LendPagerAdapter extends FragmentPagerAdapter {
 
