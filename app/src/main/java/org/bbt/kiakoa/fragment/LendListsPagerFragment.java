@@ -62,7 +62,14 @@ public class LendListsPagerFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            return LendListFragment.newInstance(position);
+            switch (position) {
+                case 0:
+                break;
+                case 1:
+                break;
+            }
+
+            return LendListFragment.newInstance();
         }
 
         @Override
