@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.fragment.LendList.LendArchiveListFragment;
+import org.bbt.kiakoa.fragment.LendList.LendFromListFragment;
+import org.bbt.kiakoa.fragment.LendList.LendToListFragment;
 import org.bbt.kiakoa.model.Lend;
 
 /**
@@ -20,18 +23,13 @@ import org.bbt.kiakoa.model.Lend;
  */
 public class LendListsPagerFragment extends Fragment {
 
-    /**
-     * {@link ViewPager} of this fragment
-     */
-    ViewPager viewPager;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.lend_list_pager, container, false);
 
         // get viewpager
-        viewPager = view.findViewById(R.id.pager);
+        ViewPager viewPager = view.findViewById(R.id.pager);
         viewPager.setAdapter(new LendPagerAdapter(getChildFragmentManager()));
 
         // Manage tabs of the view pager
@@ -57,19 +55,25 @@ public class LendListsPagerFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
         public Fragment getItem(int position) {
+            Fragment fragment;
             switch (position) {
                 case 0:
-                break;
+                    fragment = new LendToListFragment();
+                    break;
                 case 1:
-                break;
+                    fragment = new LendFromListFragment();
+                    break;
+                default:
+                    fragment = new LendArchiveListFragment();
+                    break;
             }
 
-            return LendListFragment.newInstance();
+            return fragment;
         }
 
         @Override

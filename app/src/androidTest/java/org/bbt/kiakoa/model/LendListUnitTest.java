@@ -17,7 +17,7 @@ public class LendListUnitTest {
     /**
      * a {@link Context}
      */
-    private Context context = InstrumentationRegistry.getContext();
+    private final Context context = InstrumentationRegistry.getContext();
 
     @Test
     public void get_instance() throws Exception {

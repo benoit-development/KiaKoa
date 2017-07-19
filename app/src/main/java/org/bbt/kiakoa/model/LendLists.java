@@ -29,6 +29,11 @@ public class LendLists {
     private static final String LEND_FROM = "lend_from";
 
     /**
+     * Lend archive list identifier for shared preferences
+     */
+    private static final String LEND_ARCHIVE = "lend_archive";
+
+    /**
      * lend list of loaned items
      */
     private ArrayList<Lend> lendToList;
@@ -37,6 +42,11 @@ public class LendLists {
      * lend list from loaned items
      */
     private ArrayList<Lend> lendFromList;
+
+    /**
+     * lend list archive loaned items
+     */
+    private ArrayList<Lend> lendArchiveList;
 
     /**
      * Singleton instance
@@ -78,9 +88,12 @@ public class LendLists {
             }.getType());
             lendFromList = new Gson().fromJson(sharedPref.getString(LEND_FROM, "[]"), new TypeToken<ArrayList<String>>() {
             }.getType());
+            lendArchiveList = new Gson().fromJson(sharedPref.getString(LEND_ARCHIVE, "[]"), new TypeToken<ArrayList<String>>() {
+            }.getType());
         } else {
             lendToList = new ArrayList<>();
             lendFromList = new ArrayList<>();
+            lendArchiveList = new ArrayList<>();
         }
     }
 
@@ -137,6 +150,34 @@ public class LendLists {
         return result;
     }
 
+
+    /**
+     * add a {@link Lend} from the LendTo list
+     *
+     * @param lend lend from add
+     * @param context a {@link Context}
+     * @return if add is success or not
+     */
+    public boolean addLendArchive(Lend lend, Context context) {
+
+        // remove this lend from its previous lists
+        lendToList.remove(lend);
+        lendFromList.remove(lend);
+
+        // add to archive list
+        boolean result = lendArchiveList.add(lend);
+
+        // if there is a context, then save list
+        if (context != null) {
+            SharedPreferences sharedPref = context.getSharedPreferences(LEND_LISTS, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(LEND_ARCHIVE, new Gson().toJson(lendArchiveList));
+            editor.apply();
+        }
+
+        return result;
+    }
+
     /**
      * Lend to list getter
      *
@@ -147,12 +188,21 @@ public class LendLists {
     }
 
     /**
-     * Lend to list getter
+     * Lend from list getter
      *
      * @return lend from list
      */
     public ArrayList<Lend> getLendFromList() {
         return lendFromList;
+    }
+
+    /**
+     * Lend archive list getter
+     *
+     * @return lend archive list
+     */
+    public ArrayList<Lend> getLendArchiveList() {
+        return lendArchiveList;
     }
 
     /**
@@ -166,11 +216,13 @@ public class LendLists {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.remove(LEND_TO);
             editor.remove(LEND_FROM);
+            editor.remove(LEND_ARCHIVE);
             editor.apply();
         }
 
         // empty lists
         lendToList.clear();
         lendFromList.clear();
+        lendArchiveList.clear();
     }
 }

@@ -28,7 +28,8 @@ public class LendListUnitTest {
         lendLists.initLists(null);
 
         // add some lend to
-        assertTrue(lendLists.addLendTo(new Lend("1"), null));
+        Lend lend1 = new Lend("1");
+        assertTrue(lendLists.addLendTo(lend1, null));
         assertTrue(lendLists.addLendTo(new Lend("2"), null));
         assertTrue(lendLists.addLendTo(new Lend("3"), null));
 
@@ -36,16 +37,30 @@ public class LendListUnitTest {
 
 
         // add some lend from
-        assertTrue(lendLists.addLendFrom(new Lend("4"), null));
+        Lend lend4 = new Lend("4");
+        assertTrue(lendLists.addLendFrom(lend4, null));
         assertTrue(lendLists.addLendFrom(new Lend("5"), null));
         assertTrue(lendLists.addLendFrom(new Lend("6"), null));
 
         assertEquals(3, lendLists.getLendFromList().size());
 
+
+        // add some lend archive
+        assertTrue(lendLists.addLendArchive(lend1, null));
+        assertEquals(2, lendLists.getLendToList().size());
+        assertEquals(3, lendLists.getLendFromList().size());
+        assertEquals(1, lendLists.getLendArchiveList().size());
+
+        assertTrue(lendLists.addLendArchive(lend4, null));
+        assertEquals(2, lendLists.getLendToList().size());
+        assertEquals(2, lendLists.getLendFromList().size());
+        assertEquals(2, lendLists.getLendArchiveList().size());
+
         // clear lists
         lendLists.clearLists(null);
         assertEquals(0, lendLists.getLendToList().size());
         assertEquals(0, lendLists.getLendFromList().size());
+        assertEquals(0, lendLists.getLendArchiveList().size());
 
     }
 

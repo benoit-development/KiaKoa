@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class LendUnitTest {
 
     private static final String LEND_ITEM = "a label";
-    private Lend lendTest = new Lend(LEND_ITEM);
+    private final Lend lendTest = new Lend(LEND_ITEM);
 
 
     @Test
