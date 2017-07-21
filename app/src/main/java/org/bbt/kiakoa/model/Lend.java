@@ -39,7 +39,11 @@ public class Lend implements Parcelable {
         }
     };
 
-    // example constructor that takes a Parcel and gives you an object populated with it's values
+    /**
+     * Constructor from a {@link Parcel}
+     *
+     * @param in the {@link Parcel}
+     */
     private Lend(Parcel in) {
         item = in.readString();
     }
@@ -55,6 +59,7 @@ public class Lend implements Parcelable {
 
     /**
      * item Getter
+     *
      * @return item label
      */
     public String getItem() {
@@ -63,6 +68,7 @@ public class Lend implements Parcelable {
 
     /**
      * item setter
+     *
      * @param item item label
      */
     public void setItem(String item) {
@@ -71,6 +77,7 @@ public class Lend implements Parcelable {
 
     /**
      * Serialize this lend to JSON
+     *
      * @return json string
      */
     public String toJson() {

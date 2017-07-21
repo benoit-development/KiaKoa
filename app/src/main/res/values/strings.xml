@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">KiaKoa</string>
     <string name="action_settings">Settings</string>
+    <string name="tab_title_lend_to">I lent</string>
+    <string name="tab_title_lend_from">I was lent</string>
+    <string name="tab_title_archive">Archive</string>
 </resources>

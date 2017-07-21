@@ -3,6 +3,7 @@ package org.bbt.kiakoa.fragment;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -43,7 +44,7 @@ public class LendListsPagerFragment extends Fragment {
     /**
      * Adapter managing pager and fragments displayed inside
      */
-    private static class LendPagerAdapter extends FragmentPagerAdapter {
+    private class LendPagerAdapter extends FragmentPagerAdapter {
 
         /**
          * Constructor
@@ -78,8 +79,20 @@ public class LendListsPagerFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            // Generate title based on item position
-            return (String.valueOf(position));
+            CharSequence title = "";
+            FragmentActivity activity = LendListsPagerFragment.this.getActivity();
+            switch (position) {
+                case 0:
+                    title = activity.getString(R.string.tab_title_lend_to);
+                    break;
+                case 1:
+                    title = activity.getString(R.string.tab_title_lend_from);
+                    break;
+                case 2:
+                    title = activity.getString(R.string.tab_title_archive);
+                    break;
+            }
+            return title;
         }
     }
 
