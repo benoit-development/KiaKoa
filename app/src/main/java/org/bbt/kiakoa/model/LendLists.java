@@ -110,16 +110,6 @@ public class LendLists {
     }
 
     /**
-     * Serialize instance to Json
-     *
-     * @return Json {@link String}
-     */
-    public String toJson() {
-        return new Gson().toJson(this);
-    }
-
-
-    /**
      * add a {@link Lend} to the LendTo list
      *
      * @param lend lend to add

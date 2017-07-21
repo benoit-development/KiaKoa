@@ -5,8 +5,6 @@ import android.util.Log;
 
 import org.bbt.kiakoa.model.LendLists;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Custom {@link Application} class
  */

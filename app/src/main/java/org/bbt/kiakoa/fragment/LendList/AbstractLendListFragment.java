@@ -19,7 +19,7 @@ abstract public class AbstractLendListFragment extends ListFragment {
     /**
      * Floating button used for various actions (add, empty, ...) depending on the list to display
      */
-    protected FloatingActionButton fab;
+    FloatingActionButton fab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,5 +50,5 @@ abstract public class AbstractLendListFragment extends ListFragment {
      * {@link android.view.View.OnClickListener} getter for {@link FloatingActionButton} on this {@link android.app.Fragment}
      * @return the listener
      */
-    abstract public View.OnClickListener getFABOnClickListener();
+    abstract protected View.OnClickListener getFABOnClickListener();
 }
