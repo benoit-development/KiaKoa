@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.bbt.kiakoa.R;
@@ -28,6 +27,10 @@ abstract public class AbstractLendListFragment extends ListFragment {
 
         // Attach floating button
         fab = inflate.findViewById(R.id.lend_list_fab);
+        fab.setOnClickListener(getFABOnClickListener());
+
+        // customize list
+        ((ListView) inflate.findViewById(android.R.id.list)).setEmptyView(inflate.findViewById(R.id.emptyElement));
 
         return inflate;
     }
@@ -35,12 +38,17 @@ abstract public class AbstractLendListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        setListAdapter(new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_list_item_1, new String[]{"1", "2", "3", "4", "5", "6"}));
+        //TODO set adapter to display lend list
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.i("FragmentList", "Item clicked: " + id);
+        Log.i("AbstractLendListFragmen", "Item clicked: " + id);
     }
+
+    /**
+     * {@link android.view.View.OnClickListener} getter for {@link FloatingActionButton} on this {@link android.app.Fragment}
+     * @return the listener
+     */
+    abstract public View.OnClickListener getFABOnClickListener();
 }

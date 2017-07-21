@@ -4,4 +4,7 @@
     <string name="tab_title_lend_to">I lent</string>
     <string name="tab_title_lend_from">I was lent</string>
     <string name="tab_title_archive">Archive</string>
+    <string name="empty_lend_list">Empty lend list</string>
+    <string name="item">Item</string>
+    <string name="item_description">Item description</string>
 </resources>
