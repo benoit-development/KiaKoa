@@ -35,6 +35,11 @@ public class LendLists {
     private static final String LEND_ARCHIVE = "lend_archive";
 
     /**
+     * Tag for logs
+     */
+    private static final String TAG = "LendLists";
+
+    /**
      * lend list of loaned items
      */
     private ArrayList<Lend> lendToList;
@@ -63,7 +68,7 @@ public class LendLists {
 
         if (instance == null) {
             // Create the instance
-            Log.i("LendLists", "getInstance: Creating instance");
+            Log.i(TAG, "getInstance: Creating instance");
             instance = new LendLists();
         }
 
@@ -86,7 +91,7 @@ public class LendLists {
         // when context is set, we need to update lists with stored data
         if (context != null) {
 
-            Log.i("LendLists", "initLists: init lists from shared preferences");
+            Log.i(TAG, "initLists: init lists from shared preferences");
 
             SharedPreferences sharedPref = context.getSharedPreferences(LEND_LISTS, Context.MODE_PRIVATE);
             lendToList = new Gson().fromJson(sharedPref.getString(LEND_TO, "[]"), new TypeToken<ArrayList<String>>() {
@@ -97,16 +102,16 @@ public class LendLists {
             }.getType());
         } else {
 
-            Log.i("LendLists", "initLists: init empty lists");
+            Log.i(TAG, "initLists: init empty lists");
 
             lendToList = new ArrayList<>();
             lendFromList = new ArrayList<>();
             lendArchiveList = new ArrayList<>();
         }
 
-        Log.d("LendLists", "initLists: lend to count:      " + lendToList.size());
-        Log.d("LendLists", "initLists: lend from count:    " + lendFromList.size());
-        Log.d("LendLists", "initLists: lend archive count: " + lendArchiveList.size());
+        Log.d(TAG, "initLists: lend to count:      " + lendToList.size());
+        Log.d(TAG, "initLists: lend from count:    " + lendFromList.size());
+        Log.d(TAG, "initLists: lend archive count: " + lendArchiveList.size());
     }
 
     /**
@@ -117,7 +122,7 @@ public class LendLists {
      * @return if add is success or not
      */
     public boolean addLendTo(Lend lend, Context context) {
-        Log.i("LendLists", "addLendTo: " + lend.toJson());
+        Log.i(TAG, "addLendTo: " + lend.toJson());
         boolean result = lendToList.add(lend);
 
         // if there is a context, then save list
@@ -140,7 +145,7 @@ public class LendLists {
      * @return if add is success or not
      */
     public boolean addLendFrom(Lend lend, Context context) {
-        Log.i("LendLists", "addLendFrom: " + lend.toJson());
+        Log.i(TAG, "addLendFrom: " + lend.toJson());
         boolean result = lendFromList.add(lend);
 
         // if there is a context, then save list
@@ -163,7 +168,7 @@ public class LendLists {
      * @return if add is success or not
      */
     public boolean addLendArchive(Lend lend, Context context) {
-        Log.i("LendLists", "addLendArchive: " + lend.toJson());
+        Log.i(TAG, "addLendArchive: " + lend.toJson());
 
         // remove this lend from its previous lists
         lendToList.remove(lend);
@@ -215,7 +220,7 @@ public class LendLists {
      * @param context a {@link Context}
      */
     public void clearLists(Context context) {
-        Log.i("LendLists", "clearLists");
+        Log.i(TAG, "clearLists");
 
         if (context != null) {
             // remove data from shared preferences

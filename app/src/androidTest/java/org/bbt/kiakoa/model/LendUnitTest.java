@@ -2,6 +2,8 @@ package org.bbt.kiakoa.model;
 
 import android.os.Parcel;
 
+import com.google.gson.Gson;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,8 +16,8 @@ import static org.junit.Assert.*;
 public class LendUnitTest {
 
     private static final String LEND_ITEM = "a label";
-    private final Lend lendTest = new Lend(LEND_ITEM);
-
+    private static final String LEND_ANOTHER_ITEM = "a another label";
+    final private Lend lendTest = new Lend(LEND_ITEM);
 
     @Test
     public void lend_parcelable() throws Exception {
@@ -29,5 +31,46 @@ public class LendUnitTest {
         Lend newLend = Lend.CREATOR.createFromParcel(parcel);
 
         assertEquals(LEND_ITEM, newLend.getItem());
+    }
+
+    @Test
+    public void lend_class_definition() throws Exception {
+
+        assertEquals(LEND_ITEM, lendTest.getItem());
+
+        lendTest.setItem(LEND_ANOTHER_ITEM);
+        assertEquals(LEND_ANOTHER_ITEM, lendTest.getItem());
+    }
+
+    @Test
+    public void json_test() throws Exception {
+
+        // serialize then instantiate
+        String json = lendTest.toJson();
+        Lend newLend = new Gson().fromJson(json, Lend.class);
+
+        assertEquals(LEND_ITEM, newLend.getItem());
+    }
+
+    @Test
+    public void test_id() throws Exception {
+
+        Lend anotherLend = new Lend("Another Lend");
+
+        int id1 = lendTest.getId();
+        int id2 = anotherLend.getId();
+
+        assertNotEquals(id1, id2);
+    }
+
+    @Test
+    public void test_equals() {
+        // new lend with the same item but different ID
+        Lend anotherLend = new Lend(LEND_ITEM);
+        assertFalse(lendTest.equals(anotherLend));
+
+        // build another lend with same id
+        Lend sameLend = new Gson().fromJson(lendTest.toJson(), Lend.class);
+        assertTrue(lendTest.equals(sameLend));
     }
 }

@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.model.Lend;
+import org.bbt.kiakoa.model.LendLists;
+
+import java.util.ArrayList;
 
 /**
  * Lend archive fragment list
@@ -15,6 +19,11 @@ import org.bbt.kiakoa.R;
  * @author Benoît BOUSQUET
  */
 public class LendArchiveListFragment extends AbstractLendListFragment {
+
+    /**
+     * Tag for logs
+     */
+    private static final String TAG = "LendArchiveListFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,10 +41,15 @@ public class LendArchiveListFragment extends AbstractLendListFragment {
             @Override
             public void onClick(View view) {
 
-                Log.i("LendArchiveListFragment", "fabOnclickListener: empty archive");
+                Log.i(TAG, "fabOnclickListener: empty archive");
                 Toast.makeText(getActivity(), "Empty list", Toast.LENGTH_LONG).show();
                 // LendLists.getInstance().emptyArchive(getActivity());
             }
         };
+    }
+
+    @Override
+    protected ArrayList<Lend> getLendList() {
+        return LendLists.getInstance().getLendArchiveList();
     }
 }

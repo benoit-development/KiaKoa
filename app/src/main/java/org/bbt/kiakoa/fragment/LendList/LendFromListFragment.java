@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.view.View;
 
 import org.bbt.kiakoa.LendFormActivity;
+import org.bbt.kiakoa.model.Lend;
+import org.bbt.kiakoa.model.LendLists;
+
+import java.util.ArrayList;
 
 /**
  * Lend from fragment list
@@ -22,5 +26,10 @@ public class LendFromListFragment extends AbstractLendListFragment {
                 startActivity(intent);
             }
         };
+    }
+
+    @Override
+    protected ArrayList<Lend> getLendList() {
+        return LendLists.getInstance().getLendFromList();
     }
 }

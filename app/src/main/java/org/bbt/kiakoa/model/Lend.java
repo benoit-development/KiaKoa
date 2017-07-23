@@ -5,12 +5,24 @@ import android.os.Parcelable;
 
 import com.google.gson.Gson;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Class defining a Land
  *
  * @author Benoit Bousquet
  */
 public class Lend implements Parcelable {
+
+    /**
+     * Unique instance of {@link AtomicInteger} generating unique ID for {@link Lend} instances
+     */
+    private final static AtomicInteger atomicInteger = new AtomicInteger();
+
+    /**
+     * id of the {@link Lend} instance
+     */
+    private final int id = atomicInteger.incrementAndGet();
 
     /**
      * Label to identify the loaned item
@@ -76,11 +88,33 @@ public class Lend implements Parcelable {
     }
 
     /**
+     * id getter
+     * @return id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
      * Serialize this lend to JSON
      *
      * @return json string
      */
     public String toJson() {
         return new Gson().toJson(this);
+    }
+
+    @Override
+    public String toString() {
+        return item;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Lend) {
+            return (id == ((Lend) obj).id);
+        } else {
+            return super.equals(obj);
+        }
     }
 }

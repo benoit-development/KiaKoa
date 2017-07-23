@@ -10,12 +10,17 @@ import org.bbt.kiakoa.model.LendLists;
  */
 public class LendApplication extends Application {
 
+    /**
+     * Tag for logs
+     */
+    private static final String TAG = "LendApplication";
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         // Init LendList instance and set its context
-        Log.i("LendApplication", "onCreate: init lend lists");
+        Log.i(TAG, "onCreate: init lend lists");
         LendLists.getInstance().initLists(this);
     }
 }
