@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 /**
@@ -31,6 +33,7 @@ public class LendUnitTest {
         Lend newLend = Lend.CREATOR.createFromParcel(parcel);
 
         assertEquals(LEND_ITEM, newLend.getItem());
+        assertEquals(lendTest.getId(), newLend.getId());
     }
 
     @Test
@@ -50,6 +53,7 @@ public class LendUnitTest {
         Lend newLend = new Gson().fromJson(json, Lend.class);
 
         assertEquals(LEND_ITEM, newLend.getItem());
+        assertEquals(lendTest.getId(), newLend.getId());
     }
 
     @Test
@@ -72,5 +76,13 @@ public class LendUnitTest {
         // build another lend with same id
         Lend sameLend = new Gson().fromJson(lendTest.toJson(), Lend.class);
         assertTrue(lendTest.equals(sameLend));
+
+        // equality must be used for Lend deletion. This case represents when Lend is passed and rebuild using parcel
+        ArrayList<Lend> list = new ArrayList<>();
+        list.add(lendTest);
+        list.add(anotherLend);
+        assertEquals(2, list.size());
+        list.remove(sameLend);
+        assertEquals(1, list.size());
     }
 }

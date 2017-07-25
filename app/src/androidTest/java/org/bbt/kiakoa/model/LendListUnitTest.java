@@ -37,35 +37,35 @@ public class LendListUnitTest {
 
         // add some lend to
         Lend lend1 = new Lend("1");
-        assertTrue(lendLists.addLendTo(lend1, null));
-        assertTrue(lendLists.addLendTo(new Lend("2"), null));
-        assertTrue(lendLists.addLendTo(new Lend("3"), null));
+        assertTrue(lendLists.addLendTo(lend1, context));
+        assertTrue(lendLists.addLendTo(new Lend("2"), context));
+        assertTrue(lendLists.addLendTo(new Lend("3"), context));
 
         assertEquals(3, lendLists.getLendToList().size());
 
 
         // add some lend from
         Lend lend4 = new Lend("4");
-        assertTrue(lendLists.addLendFrom(lend4, null));
-        assertTrue(lendLists.addLendFrom(new Lend("5"), null));
-        assertTrue(lendLists.addLendFrom(new Lend("6"), null));
+        assertTrue(lendLists.addLendFrom(lend4, context));
+        assertTrue(lendLists.addLendFrom(new Lend("5"), context));
+        assertTrue(lendLists.addLendFrom(new Lend("6"), context));
 
         assertEquals(3, lendLists.getLendFromList().size());
 
 
         // add some lend archive
-        assertTrue(lendLists.addLendArchive(lend1, null));
+        assertTrue(lendLists.addLendArchive(lend1, context));
         assertEquals(2, lendLists.getLendToList().size());
         assertEquals(3, lendLists.getLendFromList().size());
         assertEquals(1, lendLists.getLendArchiveList().size());
 
-        assertTrue(lendLists.addLendArchive(lend4, null));
+        assertTrue(lendLists.addLendArchive(lend4, context));
         assertEquals(2, lendLists.getLendToList().size());
         assertEquals(2, lendLists.getLendFromList().size());
         assertEquals(2, lendLists.getLendArchiveList().size());
 
         // clear lists
-        lendLists.clearLists(null);
+        lendLists.clearLists(context);
         assertEquals(0, lendLists.getLendToList().size());
         assertEquals(0, lendLists.getLendFromList().size());
         assertEquals(0, lendLists.getLendArchiveList().size());
@@ -84,7 +84,7 @@ public class LendListUnitTest {
     @Test
     public void lend_lists_sharedpreferencces() {
 
-        // clear sharedpreferences
+        // clear SharedPreferences
         LendLists lendLists = LendLists.getInstance();
 
         lendLists.clearLists(context);

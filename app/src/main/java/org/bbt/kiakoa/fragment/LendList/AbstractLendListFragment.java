@@ -1,6 +1,7 @@
 package org.bbt.kiakoa.fragment.LendList;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ListFragment;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Fragment displaying list of {@link org.bbt.kiakoa.model.Lend}
  */
@@ -27,6 +30,11 @@ abstract public class AbstractLendListFragment extends ListFragment {
      * Tag for logs
      */
     private static final String TAG = "AbstractLendListFragmen";
+
+    /**
+     * Request code used to get the result of the add or update of an {@link org.bbt.kiakoa.LendFormActivity} result
+     */
+    static final int REQUEST_CODE_ADD_UPDATE_LEND = 0;
 
     /**
      * Floating button used for various actions (add, empty, ...) depending on the list to display
@@ -49,12 +57,6 @@ abstract public class AbstractLendListFragment extends ListFragment {
         listView.setAdapter(lendAdapter);
 
         return inflate;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        lendAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -87,6 +89,19 @@ abstract public class AbstractLendListFragment extends ListFragment {
             return true;
         }
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_ADD_UPDATE_LEND) {
+            // an add/update had been requested
+            if (resultCode == RESULT_OK) {
+                // add/update has been correctly done
+                Log.d(TAG, "Lend list changed, updating list");
+                lendAdapter.notifyDataSetChanged();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**

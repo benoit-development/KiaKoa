@@ -22,7 +22,7 @@ public class Lend implements Parcelable {
     /**
      * id of the {@link Lend} instance
      */
-    private final int id = atomicInteger.incrementAndGet();
+    private int id = atomicInteger.incrementAndGet();
 
     /**
      * Label to identify the loaned item
@@ -37,6 +37,7 @@ public class Lend implements Parcelable {
     // write your object's data to the passed-in Parcel
     @Override
     public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(id);
         out.writeString(item);
     }
 
@@ -57,6 +58,7 @@ public class Lend implements Parcelable {
      * @param in the {@link Parcel}
      */
     private Lend(Parcel in) {
+        id = in.readInt();
         item = in.readString();
     }
 
