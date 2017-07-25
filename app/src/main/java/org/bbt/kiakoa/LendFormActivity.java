@@ -17,10 +17,10 @@ import org.bbt.kiakoa.model.Lend;
  */
 public class LendFormActivity extends AppCompatActivity {
 
-    static final String EXTRA_LEND_LIST_ACTION = "org.bbt.kiakoi.LEND_LIST_ACTION";
-    static final int EXTRA_NEW_LEND_TO = 0;
-    static final int EXTRA_NEW_LEND_FROM = 1;
-    static final int EXTRA_UPDATE_LEND = 2;
+    public static final String EXTRA_LEND_LIST_ACTION = "org.bbt.kiakoi.LEND_LIST_ACTION";
+    public static final int EXTRA_NEW_LEND_TO = 0;
+    public static final int EXTRA_NEW_LEND_FROM = 1;
+    public static final int EXTRA_UPDATE_LEND = 2;
 
     /**
      * Current {@link Lend} edited

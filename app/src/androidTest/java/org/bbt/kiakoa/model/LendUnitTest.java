@@ -57,6 +57,11 @@ public class LendUnitTest {
     }
 
     @Test
+    public void test_toString() throws Exception {
+        assertEquals(lendTest.getId() + " : " + lendTest.getItem(), lendTest.toString());
+    }
+
+    @Test
     public void test_id() throws Exception {
 
         Lend anotherLend = new Lend("Another Lend");

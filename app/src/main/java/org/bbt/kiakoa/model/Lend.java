@@ -108,7 +108,7 @@ public class Lend implements Parcelable {
 
     @Override
     public String toString() {
-        return item;
+        return id + " : " + item;
     }
 
     @Override
