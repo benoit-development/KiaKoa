@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import org.bbt.kiakoa.model.Lend;
 
@@ -15,7 +18,7 @@ import org.bbt.kiakoa.model.Lend;
  *
  * @author Benoît BOUSQUET
  */
-public class LendFormActivity extends AppCompatActivity {
+public class LendFormActivity extends AppCompatActivity implements TextWatcher {
 
     public static final String EXTRA_LEND_LIST_ACTION = "org.bbt.kiakoi.LEND_LIST_ACTION";
     public static final int EXTRA_NEW_LEND_TO = 0;
@@ -40,13 +43,35 @@ public class LendFormActivity extends AppCompatActivity {
      */
     private int extraAction;
 
+    /**
+     * itemEditText form input
+     */
+    private EditText itemEditText;
+
+    /**
+     * Menu to save changes
+     */
+    private MenuItem doneMenu;
+
+    /**
+     * Activity toolbar
+     */
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lend_form);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        myToolbar.setTitle("");
-        setSupportActionBar(myToolbar);
+
+        // Toolbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        doneMenu = toolbar.getMenu().findItem(R.id.action_done);
+        setSupportActionBar(toolbar);
+
+        // Form
+        itemEditText = (EditText) findViewById(R.id.item);
+        itemEditText.addTextChangedListener(this);
 
         // Get a support ActionBar corresponding to this toolbar
         ActionBar ab = getSupportActionBar();
@@ -78,6 +103,8 @@ public class LendFormActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_lend_form, menu);
+        doneMenu = menu.findItem(R.id.action_done);
+        validateForm();
         return true;
     }
 
@@ -88,6 +115,38 @@ public class LendFormActivity extends AppCompatActivity {
                 return false;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        // Nothing to do
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        // Nothing to do
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+        validateForm();
+    }
+
+    /**
+     * This method will validate form to activate the done button
+     */
+    private void validateForm() {
+        // check edit text
+        String item = itemEditText.getText().toString();
+        if (item.length() == 0) {
+            // item is empty
+            itemEditText.setError(getString(R.string.error_item_empty));
+            doneMenu.setEnabled(false);
+        } else {
+            // item is correct
+            lend.setItem(item);
+            doneMenu.setEnabled(true);
         }
     }
 }
