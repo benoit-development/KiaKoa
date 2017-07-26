@@ -189,6 +189,33 @@ public class LendLists {
     }
 
     /**
+     * Update a {@link Lend} present in one of the lists
+     *
+     * @param lend {@link Lend} to update
+     * @param context a {@link Context}
+     * @return update result (success or not)
+     */
+    public boolean updateLend(Lend lend, Context context) {
+        boolean result = false;
+
+        // remove this lend from lists (based on its ID)
+        if (lendToList.remove(lend)) {
+            // lend removed from lend to list
+            result = addLendTo(lend, context);
+        }
+        if (lendFromList.remove(lend)) {
+            // lend removed from lend from list
+            result = addLendFrom(lend, context);
+        }
+        if (lendArchiveList.remove(lend)) {
+            // lend removed from lend archive list
+            result = addLendArchive(lend, context);
+        }
+
+        return result;
+    }
+
+    /**
      * Lend to list getter
      *
      * @return lend to list

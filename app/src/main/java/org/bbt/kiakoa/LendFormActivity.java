@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import org.bbt.kiakoa.model.Lend;
+import org.bbt.kiakoa.model.LendLists;
 
 /**
  * Activity displaying form to create/update lends
@@ -53,20 +54,14 @@ public class LendFormActivity extends AppCompatActivity implements TextWatcher {
      */
     private MenuItem doneMenu;
 
-    /**
-     * Activity toolbar
-     */
-    private Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lend_form);
 
         // Toolbar
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        doneMenu = toolbar.getMenu().findItem(R.id.action_done);
         setSupportActionBar(toolbar);
 
         // Form
@@ -101,18 +96,44 @@ public class LendFormActivity extends AppCompatActivity implements TextWatcher {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_lend_form, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
         doneMenu = menu.findItem(R.id.action_done);
         validateForm();
-        return true;
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_done:
-                return false;
+                if (validateForm()) {
+                    boolean addResult = false;
+                    switch (extraAction) {
+                        case EXTRA_NEW_LEND_TO:
+                            addResult = LendLists.getInstance().addLendTo(lend, getBaseContext());
+                            break;
+                        case EXTRA_NEW_LEND_FROM:
+                            addResult = LendLists.getInstance().addLendTo(lend, getBaseContext());
+                            break;
+                        case EXTRA_UPDATE_LEND:
+                            addResult = LendLists.getInstance().updateLend(lend, getBaseContext());
+                            break;
+                    }
+                    return addResult;
+                } else {
+                    return false;
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -125,28 +146,42 @@ public class LendFormActivity extends AppCompatActivity implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        // Nothing to do
+        validateForm();
     }
 
     @Override
     public void afterTextChanged(Editable editable) {
-        validateForm();
+        // Nothing to do
     }
 
     /**
      * This method will validate form to activate the done button
      */
-    private void validateForm() {
-        // check edit text
+    private boolean validateForm() {
+        Log.i(TAG, "Form validation requested");
+
+        // result
+        boolean result;
+
+        // check item label
         String item = itemEditText.getText().toString();
         if (item.length() == 0) {
             // item is empty
-            itemEditText.setError(getString(R.string.error_item_empty));
-            doneMenu.setEnabled(false);
+            itemEditText.setError(null);
+            if (doneMenu != null) {
+                doneMenu.setEnabled(false);
+            }
+            result = false;
         } else {
             // item is correct
             lend.setItem(item);
-            doneMenu.setEnabled(true);
+            if (doneMenu != null) {
+                doneMenu.setEnabled(true);
+            }
+            result = true;
         }
+
+        Log.i(TAG, "Form validation requested : " + ((result)?"true":"false"));
+        return result;
     }
 }

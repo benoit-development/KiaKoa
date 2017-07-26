@@ -9,5 +9,4 @@
     <string name="item_description">Item description</string>
     <string name="lend_date">Lend date</string>
     <string name="action_done">Done</string>
-    <string name="error_item_empty">Item shouldn\'t be empty</string>
 </resources>

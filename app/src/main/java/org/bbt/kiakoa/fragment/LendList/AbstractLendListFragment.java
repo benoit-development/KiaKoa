@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.bbt.kiakoa.LendFormActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.Lend;
 
@@ -62,6 +63,9 @@ abstract public class AbstractLendListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.i(TAG, "Item clicked: " + id);
+        Intent intent = new Intent(getActivity(), LendFormActivity.class);
+        intent.putExtra(LendFormActivity.EXTRA_LEND_LIST_ACTION, LendFormActivity.EXTRA_UPDATE_LEND);
+        startActivityForResult(intent, LendFromListFragment.REQUEST_CODE_ADD_UPDATE_LEND);
     }
 
     /**

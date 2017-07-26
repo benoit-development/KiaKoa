@@ -3,9 +3,12 @@ package org.bbt.kiakoa.model;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
+import com.google.gson.Gson;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
@@ -33,7 +36,7 @@ public class LendListUnitTest {
     public void test_lend_lists() throws Exception {
 
         // init lists
-        lendLists.initLists(null);
+        lendLists.initLists(context);
 
         // add some lend to
         Lend lend1 = new Lend("1");
@@ -85,8 +88,6 @@ public class LendListUnitTest {
     public void lend_lists_sharedpreferencces() {
 
         // clear SharedPreferences
-        LendLists lendLists = LendLists.getInstance();
-
         lendLists.clearLists(context);
         assertEquals(0, lendLists.getLendToList().size());
 
@@ -95,6 +96,52 @@ public class LendListUnitTest {
         assertTrue(lendLists.addLendTo(new Lend("3"), context));
 
         assertEquals(3, lendLists.getLendToList().size());
+
+    }
+
+    @Test
+    public void update_lists() {
+
+        // clear lists
+        lendLists.clearLists(context);
+
+        // init lends for tests
+        Lend lend = new Lend("a lend");
+        Lend sameLend = new Gson().fromJson(lend.toJson(), Lend.class);
+        Lend anotherLend = new Lend("another lend");
+
+        // update on empty lists
+        assertFalse(lendLists.updateLend(lend, context));
+
+        //update lend to list
+        lendLists.clearLists(context);
+        lendLists.addLendTo(lend, context);
+        assertTrue(lendLists.updateLend(lend, context));
+        assertTrue(lendLists.updateLend(sameLend, context));
+        assertFalse(lendLists.updateLend(anotherLend, context));
+        assertEquals(1, lendLists.getLendToList().size());
+        assertEquals(0, lendLists.getLendFromList().size());
+        assertEquals(0, lendLists.getLendArchiveList().size());
+
+        //update lend to list
+        lendLists.clearLists(context);
+        lendLists.addLendFrom(lend, context);
+        assertTrue(lendLists.updateLend(lend, context));
+        assertTrue(lendLists.updateLend(sameLend, context));
+        assertFalse(lendLists.updateLend(anotherLend, context));
+        assertEquals(0, lendLists.getLendToList().size());
+        assertEquals(1, lendLists.getLendFromList().size());
+        assertEquals(0, lendLists.getLendArchiveList().size());
+
+        //update lend to list
+        lendLists.clearLists(context);
+        lendLists.addLendArchive(lend, context);
+        assertTrue(lendLists.updateLend(lend, context));
+        assertTrue(lendLists.updateLend(sameLend, context));
+        assertFalse(lendLists.updateLend(anotherLend, context));
+        assertEquals(0, lendLists.getLendToList().size());
+        assertEquals(0, lendLists.getLendFromList().size());
+        assertEquals(1, lendLists.getLendArchiveList().size());
 
     }
 

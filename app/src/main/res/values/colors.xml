@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#1baad5</color>
     <color name="colorPrimaryDark">#1897bd</color>
-    <color name="colorAccent">#e67128</color>
+    <color name="colorAccent">#f06292</color>
     <color name="colorTabText">#aad9e7</color>
     <color name="colorTabTextSelected">@android:color/white</color>
 </resources>

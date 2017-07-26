@@ -23,7 +23,7 @@ public class LendToListFragment extends AbstractLendListFragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), LendFormActivity.class);
                 intent.putExtra(LendFormActivity.EXTRA_LEND_LIST_ACTION, LendFormActivity.EXTRA_NEW_LEND_TO);
-                startActivity(intent);
+                startActivityForResult(intent, LendFromListFragment.REQUEST_CODE_ADD_UPDATE_LEND);
             }
         };
     }
