@@ -22,6 +22,7 @@ import org.bbt.kiakoa.model.LendLists;
 public class LendFormActivity extends AppCompatActivity implements TextWatcher {
 
     public static final String EXTRA_LEND_LIST_ACTION = "org.bbt.kiakoi.LEND_LIST_ACTION";
+    public static final String EXTRA_LEND_TO_UPDATE = "org.bbt.kiakoi.LEND_TO_UPDATE";
     public static final int EXTRA_NEW_LEND_TO = 0;
     public static final int EXTRA_NEW_LEND_FROM = 1;
     public static final int EXTRA_UPDATE_LEND = 2;
@@ -85,8 +86,17 @@ public class LendFormActivity extends AppCompatActivity implements TextWatcher {
             case EXTRA_NEW_LEND_FROM:
                 Log.i(TAG, "onCreate: new lend : " + extraAction);
                 lend = new Lend(null);
+                break;
             case EXTRA_UPDATE_LEND:
                 Log.i(TAG, "onCreate: update lend");
+                lend = getIntent().getParcelableExtra(EXTRA_LEND_TO_UPDATE);
+                if (lend == null) {
+                    Log.i(TAG, "onCreate: no lend sent, finishing activity");
+                    finish();
+                } else {
+                    Log.d(TAG, "onCreate: lend to update : " + lend.toJson());
+                    itemEditText.setText(lend.getItem());
+                }
                 break;
             default:
                 Log.i(TAG, "onCreate: error with extra action");
@@ -112,6 +122,8 @@ public class LendFormActivity extends AppCompatActivity implements TextWatcher {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_done:
+                Log.i(TAG, "Save action requested");
+                Log.d(TAG, "Lend : " + lend.toJson());
                 if (validateForm()) {
                     boolean addResult = false;
                     switch (extraAction) {
@@ -119,14 +131,17 @@ public class LendFormActivity extends AppCompatActivity implements TextWatcher {
                             addResult = LendLists.getInstance().addLendTo(lend, getBaseContext());
                             break;
                         case EXTRA_NEW_LEND_FROM:
-                            addResult = LendLists.getInstance().addLendTo(lend, getBaseContext());
+                            addResult = LendLists.getInstance().addLendFrom(lend, getBaseContext());
                             break;
                         case EXTRA_UPDATE_LEND:
                             addResult = LendLists.getInstance().updateLend(lend, getBaseContext());
                             break;
                     }
+                    Log.i(TAG, "Lend correctly saved");
+                    finish();
                     return addResult;
                 } else {
+                    Log.i(TAG, "Lend is incorrect to be saved");
                     return false;
                 }
             default:
@@ -141,12 +156,12 @@ public class LendFormActivity extends AppCompatActivity implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        validateForm();
+        // Nothing to do
     }
 
     @Override
     public void afterTextChanged(Editable editable) {
-        // Nothing to do
+        validateForm();
     }
 
     /**

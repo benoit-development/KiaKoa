@@ -66,8 +66,8 @@ public class LendUnitTest {
 
         Lend anotherLend = new Lend("Another Lend");
 
-        int id1 = lendTest.getId();
-        int id2 = anotherLend.getId();
+        String id1 = lendTest.getId();
+        String id2 = anotherLend.getId();
 
         assertNotEquals(id1, id2);
     }

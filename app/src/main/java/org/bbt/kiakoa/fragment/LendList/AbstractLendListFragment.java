@@ -65,6 +65,7 @@ abstract public class AbstractLendListFragment extends ListFragment {
         Log.i(TAG, "Item clicked: " + id);
         Intent intent = new Intent(getActivity(), LendFormActivity.class);
         intent.putExtra(LendFormActivity.EXTRA_LEND_LIST_ACTION, LendFormActivity.EXTRA_UPDATE_LEND);
+        intent.putExtra(LendFormActivity.EXTRA_LEND_TO_UPDATE, getLendList().get(position));
         startActivityForResult(intent, LendFromListFragment.REQUEST_CODE_ADD_UPDATE_LEND);
     }
 

@@ -94,11 +94,11 @@ public class LendLists {
             Log.i(TAG, "initLists: init lists from shared preferences");
 
             SharedPreferences sharedPref = context.getSharedPreferences(LEND_LISTS, Context.MODE_PRIVATE);
-            lendToList = new Gson().fromJson(sharedPref.getString(LEND_TO, "[]"), new TypeToken<ArrayList<String>>() {
+            lendToList = new Gson().fromJson(sharedPref.getString(LEND_TO, "[]"), new TypeToken<ArrayList<Lend>>() {
             }.getType());
-            lendFromList = new Gson().fromJson(sharedPref.getString(LEND_FROM, "[]"), new TypeToken<ArrayList<String>>() {
+            lendFromList = new Gson().fromJson(sharedPref.getString(LEND_FROM, "[]"), new TypeToken<ArrayList<Lend>>() {
             }.getType());
-            lendArchiveList = new Gson().fromJson(sharedPref.getString(LEND_ARCHIVE, "[]"), new TypeToken<ArrayList<String>>() {
+            lendArchiveList = new Gson().fromJson(sharedPref.getString(LEND_ARCHIVE, "[]"), new TypeToken<ArrayList<Lend>>() {
             }.getType());
         } else {
 
@@ -117,7 +117,7 @@ public class LendLists {
     /**
      * add a {@link Lend} to the LendTo list
      *
-     * @param lend lend to add
+     * @param lend    lend to add
      * @param context a {@link Context}
      * @return if add is success or not
      */
@@ -140,7 +140,7 @@ public class LendLists {
     /**
      * add a {@link Lend} from the LendTo list
      *
-     * @param lend lend from add
+     * @param lend    lend from add
      * @param context a {@link Context}
      * @return if add is success or not
      */
@@ -163,7 +163,7 @@ public class LendLists {
     /**
      * add a {@link Lend} from the LendTo list
      *
-     * @param lend lend from add
+     * @param lend    lend from add
      * @param context a {@link Context}
      * @return if add is success or not
      */
@@ -191,7 +191,7 @@ public class LendLists {
     /**
      * Update a {@link Lend} present in one of the lists
      *
-     * @param lend {@link Lend} to update
+     * @param lend    {@link Lend} to update
      * @param context a {@link Context}
      * @return update result (success or not)
      */
@@ -244,6 +244,7 @@ public class LendLists {
 
     /**
      * empty every lists
+     *
      * @param context a {@link Context}
      */
     public void clearLists(Context context) {

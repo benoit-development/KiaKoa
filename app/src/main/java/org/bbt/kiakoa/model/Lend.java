@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.Gson;
 
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -22,7 +23,7 @@ public class Lend implements Parcelable {
     /**
      * id of the {@link Lend} instance
      */
-    private int id = atomicInteger.incrementAndGet();
+    private String id = UUID.randomUUID().toString();;
 
     /**
      * Label to identify the loaned item
@@ -37,7 +38,7 @@ public class Lend implements Parcelable {
     // write your object's data to the passed-in Parcel
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeInt(id);
+        out.writeString(id);
         out.writeString(item);
     }
 
@@ -58,7 +59,7 @@ public class Lend implements Parcelable {
      * @param in the {@link Parcel}
      */
     private Lend(Parcel in) {
-        id = in.readInt();
+        id = in.readString();
         item = in.readString();
     }
 
@@ -93,7 +94,7 @@ public class Lend implements Parcelable {
      * id getter
      * @return id
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 
