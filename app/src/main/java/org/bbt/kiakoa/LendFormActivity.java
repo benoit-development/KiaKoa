@@ -96,11 +96,6 @@ public class LendFormActivity extends AppCompatActivity implements TextWatcher {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_lend_form, menu);
         return true;
