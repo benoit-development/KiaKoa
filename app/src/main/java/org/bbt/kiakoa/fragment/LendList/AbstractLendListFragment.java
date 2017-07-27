@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.bbt.kiakoa.LendDetailsActivity;
 import org.bbt.kiakoa.LendFormActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.Lend;
@@ -45,7 +46,7 @@ abstract public class AbstractLendListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View inflate = inflater.inflate(R.layout.lend_list_fragment, container, false);
+        View inflate = inflater.inflate(R.layout.fragment_lend_list, container, false);
 
         // Attach floating button
         fab = inflate.findViewById(R.id.lend_list_fab);
@@ -63,9 +64,8 @@ abstract public class AbstractLendListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.i(TAG, "Item clicked: " + id);
-        Intent intent = new Intent(getActivity(), LendFormActivity.class);
-        intent.putExtra(LendFormActivity.EXTRA_LEND_LIST_ACTION, LendFormActivity.EXTRA_UPDATE_LEND);
-        intent.putExtra(LendFormActivity.EXTRA_LEND_TO_UPDATE, getLendList().get(position));
+        Intent intent = new Intent(getActivity(), LendDetailsActivity.class);
+        intent.putExtra(LendDetailsActivity.EXTRA_LEND, getLendList().get(position));
         startActivityForResult(intent, LendFromListFragment.REQUEST_CODE_ADD_UPDATE_LEND);
     }
 

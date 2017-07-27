@@ -23,7 +23,7 @@ public class Lend implements Parcelable {
     /**
      * id of the {@link Lend} instance
      */
-    private String id = UUID.randomUUID().toString();;
+    private String id = UUID.randomUUID().toString();
 
     /**
      * Label to identify the loaned item

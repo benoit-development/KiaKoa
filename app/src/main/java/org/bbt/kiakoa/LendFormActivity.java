@@ -1,5 +1,7 @@
 package org.bbt.kiakoa;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -137,7 +139,11 @@ public class LendFormActivity extends AppCompatActivity implements TextWatcher {
                             addResult = LendLists.getInstance().updateLend(lend, getBaseContext());
                             break;
                     }
-                    Log.i(TAG, "Lend correctly saved");
+                    if (addResult) {
+                        Log.i(TAG, "Lend correctly saved");
+                        Intent returnIntent = new Intent();
+                        setResult(Activity.RESULT_OK,returnIntent);
+                    }
                     finish();
                     return addResult;
                 } else {

@@ -1,20 +1,28 @@
 package org.bbt.kiakoa;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-/**
- * Activity displaying lend details
- *
- * @author Benoît Bousquet
- */
+import org.bbt.kiakoa.fragment.LendDetailsFragment;
+
 public class LendDetailsActivity extends AppCompatActivity {
 
+    /**
+     * EXTRA key to provide lend to display
+     */
+    public static final String EXTRA_LEND = "org.bbt.kiakoi.lend";
+
+    /**
+     * Fragment displaying lend details
+     */
+    private LendDetailsFragment lendDetailFragment;
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-        setContentView(R.layout.activity_lend_detail);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_lend_details);
+
+        // getFragment
+        lendDetailFragment = (LendDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.lend_detail);
     }
 }

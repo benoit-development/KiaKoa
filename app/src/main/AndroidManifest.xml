@@ -30,13 +30,21 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".LendDetailsActivity" />
         <activity
             android:name=".LendFormActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".LendDetailsActivity"
+            android:label="@string/title_activity_lend_details"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.bbt.kiakoa.MainActivity" />
         </activity>
     </application>
 

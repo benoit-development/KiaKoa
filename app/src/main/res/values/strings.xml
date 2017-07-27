@@ -9,4 +9,5 @@
     <string name="item_description">Item description</string>
     <string name="lend_date">Lend date</string>
     <string name="action_done">Done</string>
+    <string name="title_activity_lend_details">LendDetailsActivity</string>
 </resources>
