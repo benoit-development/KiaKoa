@@ -205,11 +205,11 @@ public class LendLists {
         }
         if (lendFromList.remove(lend)) {
             // lend removed from lend from list
-            result = addLendFrom(lend, context);
+            result |= addLendFrom(lend, context);
         }
         if (lendArchiveList.remove(lend)) {
             // lend removed from lend archive list
-            result = addLendArchive(lend, context);
+            result |= addLendArchive(lend, context);
         }
 
         return result;

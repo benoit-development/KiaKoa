@@ -18,5 +18,6 @@ public class LendDetailsFragment extends Fragment {
      * @param lend new lend to display
      */
     public void updateDetails(Lend lend) {
+        //TODO develop this screen to manage a lend
     }
 }

@@ -115,7 +115,7 @@ public class Lend implements Parcelable {
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Lend) {
-            return (id == ((Lend) obj).id);
+            return (id .equals(((Lend) obj).id));
         } else {
             return super.equals(obj);
         }
