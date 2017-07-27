@@ -24,10 +24,10 @@ import org.bbt.kiakoa.model.LendLists;
 public class LendFormActivity extends AppCompatActivity implements TextWatcher {
 
     public static final String EXTRA_LEND_LIST_ACTION = "org.bbt.kiakoi.LEND_LIST_ACTION";
-    public static final String EXTRA_LEND_TO_UPDATE = "org.bbt.kiakoi.LEND_TO_UPDATE";
+    private static final String EXTRA_LEND_TO_UPDATE = "org.bbt.kiakoi.LEND_TO_UPDATE";
     public static final int EXTRA_NEW_LEND_TO = 0;
     public static final int EXTRA_NEW_LEND_FROM = 1;
-    public static final int EXTRA_UPDATE_LEND = 2;
+    private static final int EXTRA_UPDATE_LEND = 2;
 
     /**
      * Current {@link Lend} edited

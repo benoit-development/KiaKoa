@@ -44,7 +44,7 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.bbt.kiakoa.MainActivity" />
+                android:value=".MainActivity" />
         </activity>
     </application>
 

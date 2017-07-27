@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.bbt.kiakoa.LendDetailsActivity;
-import org.bbt.kiakoa.LendFormActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.Lend;
 

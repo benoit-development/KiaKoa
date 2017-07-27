@@ -1,64 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context="org.bbt.kiakoa.LendFormActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="0dp"
-        android:theme="@style/ToolBarTheme"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="1">
 
-
-    <ScrollView xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="org.bbt.kiakoa.LendFormActivity">
-
-        <GridLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:rowCount="1">
+            android:layout_gravity="center_vertical"
+            android:layout_margin="20dp"
+            android:contentDescription="@string/lend_date"
+            android:src="@drawable/ic_event_24dp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="20dp"
-                android:contentDescription="@string/item_description"
-                android:src="@drawable/ic_description_24dp" />
+        <TextView
+            android:id="@+id/date"
+            android:layout_gravity="fill_horizontal|center_vertical"
+            android:layout_marginEnd="20dp"
+            android:ellipsize="end"
+            android:maxLines="1" />
 
-            <TextView
-                android:id="@+id/item"
-                android:layout_gravity="fill_horizontal|center_vertical"
-                android:layout_marginEnd="20dp"
-                android:maxLines="1"
-                android:ellipsize="end"/>
+    </GridLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="20dp"
-                android:contentDescription="@string/lend_date"
-                android:src="@drawable/ic_event_24dp" />
-
-            <TextView
-                android:id="@+id/date"
-                android:layout_gravity="fill_horizontal|center_vertical"
-                android:layout_marginEnd="20dp"
-                android:maxLines="1"
-                android:ellipsize="end"/>
-
-        </GridLayout>
-
-    </ScrollView>
-</LinearLayout>
+</ScrollView>
