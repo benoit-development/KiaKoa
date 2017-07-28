@@ -41,7 +41,7 @@ abstract public class AbstractLendListFragment extends ListFragment {
      * Floating button used for various actions (add, empty, ...) depending on the list to display
      */
     FloatingActionButton fab;
-    private LendArrayAdapter lendAdapter;
+    private LendListAdapter lendAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ abstract public class AbstractLendListFragment extends ListFragment {
         // customize list
         ListView listView = inflate.findViewById(android.R.id.list);
         listView.setEmptyView(inflate.findViewById(R.id.emptyElement));
-        lendAdapter = new LendArrayAdapter(getActivity(), getLendList());
+        lendAdapter = new LendListAdapter(getActivity(), getLendList());
         listView.setAdapter(lendAdapter);
 
         return inflate;
@@ -66,33 +66,6 @@ abstract public class AbstractLendListFragment extends ListFragment {
         Intent intent = new Intent(getActivity(), LendDetailsActivity.class);
         intent.putExtra(LendDetailsActivity.EXTRA_LEND, getLendList().get(position));
         startActivityForResult(intent, LendFromListFragment.REQUEST_CODE_ADD_UPDATE_LEND);
-    }
-
-    /**
-     * Adapter for {@link ListView}
-     */
-    private class LendArrayAdapter extends ArrayAdapter<Lend> {
-
-        final HashMap<String, Integer> mIdMap = new HashMap<>();
-
-        public LendArrayAdapter(Context context,
-                                List<Lend> objects) {
-            super(context, android.R.layout.simple_list_item_1, objects);
-            for (int i = 0; i < objects.size(); ++i) {
-                mIdMap.put(objects.get(i).toString(), i);
-            }
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
-
     }
 
     @Override

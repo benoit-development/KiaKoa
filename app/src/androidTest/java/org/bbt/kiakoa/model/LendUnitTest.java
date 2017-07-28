@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -34,6 +35,13 @@ public class LendUnitTest {
 
         assertEquals(LEND_ITEM, newLend.getItem());
         assertEquals(lendTest.getId(), newLend.getId());
+        assertEquals(lendTest.getLendDate(), newLend.getLendDate());
+        assertNull(newLend.getReturnDate());
+
+        // with a return date
+        lendTest.setReturnDate(new Date());
+        newLend = Lend.CREATOR.createFromParcel(parcel);
+        assertEquals(lendTest.getReturnDate(), newLend.getReturnDate());
     }
 
     @Test
@@ -57,17 +65,12 @@ public class LendUnitTest {
     }
 
     @Test
-    public void test_toString() throws Exception {
-        assertEquals(lendTest.getId() + " : " + lendTest.getItem(), lendTest.toString());
-    }
-
-    @Test
     public void test_id() throws Exception {
 
         Lend anotherLend = new Lend("Another Lend");
 
-        String id1 = lendTest.getId();
-        String id2 = anotherLend.getId();
+        long id1 = lendTest.getId();
+        long id2 = anotherLend.getId();
 
         assertNotEquals(id1, id2);
     }
