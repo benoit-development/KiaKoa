@@ -43,7 +43,8 @@ public class LendArchiveListFragment extends AbstractLendListFragment {
 
                 Log.i(TAG, "fabOnclickListener: empty archive");
                 Toast.makeText(getActivity(), "Empty list", Toast.LENGTH_LONG).show();
-                // LendLists.getInstance().emptyArchive(getActivity());
+                LendLists.getInstance().getLendArchiveList().clear();
+                lendAdapter.notifyDataSetChanged();
             }
         };
     }
@@ -51,5 +52,16 @@ public class LendArchiveListFragment extends AbstractLendListFragment {
     @Override
     protected ArrayList<Lend> getLendList() {
         return LendLists.getInstance().getLendArchiveList();
+    }
+
+    @Override
+    protected String getLendListId() {
+        return LendLists.LEND_ARCHIVE;
+    }
+
+    @Override
+    protected void addLend(Lend lend) {
+        // this class does not directly add Lend
+        // no action to do here
     }
 }

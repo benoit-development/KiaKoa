@@ -1,9 +1,5 @@
 package org.bbt.kiakoa.fragment.LendList;
 
-import android.content.Intent;
-import android.view.View;
-
-import org.bbt.kiakoa.LendFormActivity;
 import org.bbt.kiakoa.model.Lend;
 import org.bbt.kiakoa.model.LendLists;
 
@@ -17,19 +13,17 @@ import java.util.ArrayList;
 public class LendFromListFragment extends AbstractLendListFragment {
 
     @Override
-    public View.OnClickListener getFABOnClickListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), LendFormActivity.class);
-                intent.putExtra(LendFormActivity.EXTRA_LEND_LIST_ACTION, LendFormActivity.EXTRA_NEW_LEND_FROM);
-                startActivityForResult(intent, LendFromListFragment.REQUEST_CODE_ADD_UPDATE_LEND);
-            }
-        };
+    protected ArrayList<Lend> getLendList() {
+        return LendLists.getInstance().getLendFromList();
     }
 
     @Override
-    protected ArrayList<Lend> getLendList() {
-        return LendLists.getInstance().getLendFromList();
+    protected String getLendListId() {
+        return LendLists.LEND_FROM;
+    }
+
+    @Override
+    protected void addLend(Lend lend) {
+        LendLists.getInstance().addLendFrom(lend, getContext());
     }
 }

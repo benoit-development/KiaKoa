@@ -18,7 +18,7 @@ import java.util.ArrayList;
 class LendListAdapter extends BaseAdapter {
 
     private final Context context;
-    private ArrayList<Lend> lendList;
+    private final ArrayList<Lend> lendList;
     private final LayoutInflater inflater;
 
     public LendListAdapter(Context applicationContext, ArrayList<Lend> lendList) {
@@ -51,8 +51,8 @@ class LendListAdapter extends BaseAdapter {
 
             // Creates a ViewHolder
             holder = new ViewHolder();
-            holder.item = (TextView) view.findViewById(R.id.item);
-            holder.duration = (TextView) view.findViewById(R.id.duration);
+            holder.item = view.findViewById(R.id.item);
+            holder.duration = view.findViewById(R.id.duration);
 
             view.setTag(holder);
         } else {

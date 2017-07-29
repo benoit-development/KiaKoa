@@ -15,7 +15,6 @@ import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.fragment.LendList.LendArchiveListFragment;
 import org.bbt.kiakoa.fragment.LendList.LendFromListFragment;
 import org.bbt.kiakoa.fragment.LendList.LendToListFragment;
-import org.bbt.kiakoa.model.Lend;
 
 /**
  * {@link android.app.Fragment} displaying lend lists
@@ -94,14 +93,6 @@ public class LendListsPagerFragment extends Fragment {
             }
             return title;
         }
-    }
-
-
-    /**
-     * An interface to manage Lend item click
-     */
-    public interface OnItemSelectedListener {
-        void onItemSelected(Lend lend);
     }
 
 }

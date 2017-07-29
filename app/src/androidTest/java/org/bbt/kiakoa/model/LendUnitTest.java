@@ -36,10 +36,14 @@ public class LendUnitTest {
         assertEquals(LEND_ITEM, newLend.getItem());
         assertEquals(lendTest.getId(), newLend.getId());
         assertEquals(lendTest.getLendDate(), newLend.getLendDate());
-        assertNull(newLend.getReturnDate());
+        // no date
+        assertEquals(-1, newLend.getReturnDate());
 
         // with a return date
-        lendTest.setReturnDate(new Date());
+        lendTest.setReturnDate(new Date().getTime());
+        parcel = Parcel.obtain();
+        lendTest.writeToParcel(parcel, lendTest.describeContents());
+        parcel.setDataPosition(0);
         newLend = Lend.CREATOR.createFromParcel(parcel);
         assertEquals(lendTest.getReturnDate(), newLend.getReturnDate());
     }

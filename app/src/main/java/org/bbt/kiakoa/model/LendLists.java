@@ -22,17 +22,17 @@ public class LendLists {
     /**
      * Lend to list identifier for shared preferences
      */
-    private static final String LEND_TO = "lend_to";
+    public static final String LEND_TO = "lend_to";
 
     /**
      * Lend from list identifier for shared preferences
      */
-    private static final String LEND_FROM = "lend_from";
+    public static final String LEND_FROM = "lend_from";
 
     /**
      * Lend archive list identifier for shared preferences
      */
-    private static final String LEND_ARCHIVE = "lend_archive";
+    public static final String LEND_ARCHIVE = "lend_archive";
 
     /**
      * Tag for logs

@@ -2,24 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="?attr/listPreferredItemHeight"
-    android:mode="twoLine"
-    android:paddingStart="5dp"
-    android:paddingEnd="5dp"
+    android:padding="5dp"
     android:orientation="vertical">
 
     <TextView android:id="@+id/item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="5dp"
         android:textAppearance="?attr/textAppearanceListItem"
         android:text="@string/app_name"/>
 
     <TextView android:id="@+id/duration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/item"
-        android:layout_alignStart="@id/item"
         android:textAppearance="?attr/textAppearanceListItemSmall"
         android:text="@string/app_name"/>
 

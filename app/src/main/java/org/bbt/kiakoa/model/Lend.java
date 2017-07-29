@@ -6,8 +6,6 @@ import android.os.Parcelable;
 import com.google.gson.Gson;
 
 import java.util.Date;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Class defining a Land
@@ -15,11 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Benoit Bousquet
  */
 public class Lend implements Parcelable {
-
-    /**
-     * Unique instance of {@link AtomicInteger} generating unique ID for {@link Lend} instances
-     */
-    private final static AtomicInteger atomicInteger = new AtomicInteger();
 
     /**
      * id of the {@link Lend} instance
@@ -34,12 +27,13 @@ public class Lend implements Parcelable {
     /**
      * Lend date
      */
-    private Date lendDate = new Date();
+    private long lendDate = new Date().getTime();
 
     /**
      * date when item should be return
+     * init to -1 meaning there's not date
      */
-    private Date returnDate;
+    private long returnDate = -1;
 
     @Override
     public int describeContents() {
@@ -51,9 +45,8 @@ public class Lend implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(id);
         out.writeString(item);
-        out.writeLong(lendDate.getTime());
-        // if no return Date is set then put -1
-        out.writeLong((returnDate == null)?-1:returnDate.getTime());
+        out.writeLong(lendDate);
+        out.writeLong(returnDate);
     }
 
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
@@ -75,10 +68,8 @@ public class Lend implements Parcelable {
     private Lend(Parcel in) {
         id = in.readLong();
         item = in.readString();
-        lendDate = new Date(in.readLong());
-        // if return was set to -1 then set returnDate to null
-        long returnDateLong = in.readLong();
-        returnDate = (returnDateLong == -1)?null:new Date(returnDateLong);
+        lendDate = in.readLong();
+        returnDate = in.readLong();
     }
 
     /**
@@ -110,6 +101,7 @@ public class Lend implements Parcelable {
 
     /**
      * id getter
+     *
      * @return id
      */
     public long getId() {
@@ -118,33 +110,37 @@ public class Lend implements Parcelable {
 
     /**
      * lend date getter
+     *
      * @return lend date
      */
-    public Date getLendDate() {
+    public long getLendDate() {
         return lendDate;
     }
 
     /**
      * lend date setter
+     *
      * @param lendDate new lend date
      */
-    public void setLendDate(Date lendDate) {
+    public void setLendDate(long lendDate) {
         this.lendDate = lendDate;
     }
 
     /**
      * return date getter
+     *
      * @return return date
      */
-    public Date getReturnDate() {
+    public long getReturnDate() {
         return returnDate;
     }
 
     /**
      * return date setter
+     *
      * @param returnDate new return date
      */
-    public void setReturnDate(Date returnDate) {
+    public void setReturnDate(long returnDate) {
         this.returnDate = returnDate;
     }
 
@@ -159,7 +155,7 @@ public class Lend implements Parcelable {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Lend) {
+        if (obj instanceof Lend) {
             return (id == ((Lend) obj).id);
         } else {
             return super.equals(obj);
