@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Fragment displaying list of {@link org.bbt.kiakoa.model.Lend}
  */
-abstract public class AbstractLendListFragment extends ListFragment {
+abstract public class AbstractLendListFragment extends ListFragment implements LendLists.OnLendListsChangedListener {
 
     /**
      * Tag for logs
@@ -61,6 +61,13 @@ abstract public class AbstractLendListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         lendAdapter.notifyDataSetChanged();
+        LendLists.getInstance().registerOnLendListsChangedListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LendLists.getInstance().unregisterOnLendListsChangedListener(this);
     }
 
     @Override
@@ -90,9 +97,9 @@ abstract public class AbstractLendListFragment extends ListFragment {
 
                 // Create and show the dialog.
                 LendItemDialog newItemDialog = LendItemDialog.newInstance();
-                newItemDialog.setOnLendItemTypedListener(new LendItemDialog.OnLendItemTypedListener() {
+                newItemDialog.setOnLendItemSetListener(new LendItemDialog.OnLendItemSetListener() {
                     @Override
-                    public void onLendCreated(String item) {
+                    public void onLendSet(String item) {
                         addLend(new Lend(item));
                         lendAdapter.notifyDataSetChanged();
                     }
@@ -127,14 +134,19 @@ abstract public class AbstractLendListFragment extends ListFragment {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag(getLendListId());
         if ((prev != null) && (prev instanceof LendItemDialog)) {
-            ((LendItemDialog) prev).setOnLendItemTypedListener(new LendItemDialog.OnLendItemTypedListener() {
+            ((LendItemDialog) prev).setOnLendItemSetListener(new LendItemDialog.OnLendItemSetListener() {
                 @Override
-                public void onLendCreated(String item) {
+                public void onLendSet(String item) {
                     addLend(new Lend(item));
                     lendAdapter.notifyDataSetChanged();
                 }
             });
         }
         ft.commit();
+    }
+
+    @Override
+    public void onLendListsChanged() {
+        lendAdapter.notifyDataSetChanged();
     }
 }

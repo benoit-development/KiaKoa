@@ -72,6 +72,11 @@ public class LendLists {
     };
 
     /**
+     * Listener lend lists changed
+     */
+    private final ArrayList<OnLendListsChangedListener> onLendListsChangedListeners = new ArrayList<>();
+
+    /**
      * Instance getter
      *
      * @return singleton instance
@@ -306,4 +311,36 @@ public class LendLists {
         lendFromList.clear();
         lendArchiveList.clear();
     }
+
+    /**
+     * Method called to notify changes
+     */
+    public void notifyLendListsChanged() {
+        for(OnLendListsChangedListener listener : onLendListsChangedListeners) {
+            if (listener != null) {
+                listener.onLendListsChanged();
+            }
+        }
+    }
+
+    public void registerOnLendListsChangedListener(OnLendListsChangedListener listener) {
+        Log.i(TAG, "Adding OnLendListsChangedListener");
+        onLendListsChangedListeners.add(listener);
+    }
+
+    public void unregisterOnLendListsChangedListener(OnLendListsChangedListener listener) {
+        Log.i(TAG, "Removing OnLendListsChangedListener");
+        onLendListsChangedListeners.remove(listener);
+    }
+
+    /**
+     * Listener when lend lists changed
+     */
+    public interface OnLendListsChangedListener {
+        /**
+         * Called when lend lists changed
+         */
+        void onLendListsChanged();
+    }
+
 }

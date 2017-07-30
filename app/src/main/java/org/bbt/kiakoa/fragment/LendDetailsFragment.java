@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.dialog.LendDateDialog;
 import org.bbt.kiakoa.dialog.LendItemDialog;
 import org.bbt.kiakoa.model.Lend;
 import org.bbt.kiakoa.model.LendLists;
@@ -27,7 +28,7 @@ import java.text.DateFormat;
  *
  * @author Benoit Bousquet
  */
-public class LendDetailsFragment extends ListFragment {
+public class LendDetailsFragment extends ListFragment implements LendItemDialog.OnLendItemSetListener, LendDateDialog.OnLendDateSetListener {
 
     private static final String TAG = "LendDetailsFragment";
     /**
@@ -92,37 +93,64 @@ public class LendDetailsFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+
         switch (position) {
             case 0:
                 Log.i(TAG, "Item modification requested");
-
-                // DialogFragment.show() will take care of adding the fragment
-                // in a transaction.  We also want to remove any currently showing
-                // dialog, so make our own transaction and take care of that here.
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment prev = getFragmentManager().findFragmentByTag("item");
-                if (prev != null) {
-                    ft.remove(prev);
+                Fragment itemDialog = getFragmentManager().findFragmentByTag("item");
+                if (itemDialog != null) {
+                    ft.remove(itemDialog);
                 }
                 ft.addToBackStack(null);
 
                 // Create and show the dialog.
                 LendItemDialog newItemDialog = LendItemDialog.newInstance(lend.getItem());
-                newItemDialog.setOnLendItemTypedListener(new LendItemDialog.OnLendItemTypedListener() {
-                    @Override
-                    public void onLendCreated(String item) {
-                        lend.setItem(item);
-                        LendLists.getInstance().updateLend(lend, getContext());
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+                newItemDialog.setOnLendItemSetListener(this);
                 newItemDialog.show(ft, "item");
 
                 break;
             case 1:
                 Log.i(TAG, "Lend date modification requested");
+                Fragment lendDateDialog = getFragmentManager().findFragmentByTag("lend_date");
+                if (lendDateDialog != null) {
+                    ft.remove(lendDateDialog);
+                }
+
+                // Create and show the dialog
+                LendDateDialog newLendDateDialog = LendDateDialog.newInstance(lend.getLendDate());
+                newLendDateDialog.setOnLendDateSetListener(this);
+                newLendDateDialog.show(ft, "lend_date");
+
                 break;
         }
+    }
+
+    @Override
+    public void onLendSet(String item) {
+        Log.i(TAG, "New item : " + item);
+        lend.setItem(item);
+        updateLend();
+    }
+
+    @Override
+    public void onLendSet(long lendDate) {
+        Log.i(TAG, "New lend date : " + lendDate);
+        lend.setLendDate(lendDate);
+        updateLend();
+    }
+
+    /**
+     * Update lend and notify for changes
+     */
+    private void updateLend() {
+        LendLists.getInstance().updateLend(lend, getContext());
+        adapter.notifyDataSetChanged();
+        LendLists.getInstance().notifyLendListsChanged();
     }
 
     /**
