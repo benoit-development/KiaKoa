@@ -14,26 +14,50 @@ import android.widget.Toast;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.Lend;
 
+import java.util.Objects;
+
 /**
- * Dialog used to create a new {@link org.bbt.kiakoa.model.Lend
+ * Dialog used to pick an item
  */
-public class NewLendDialog extends DialogFragment {
+public class LendItemDialog extends DialogFragment {
 
     /**
      * For log
      */
-    private static final String TAG = "NewLendDialog";
-    /**
-     * item of the new lend
-     */
-    private EditText itemEditText;
-    private OnLendCreatedListener onLendCreatedListener;
+    private static final String TAG = "LendItemDialog";
+    private static final int ACTION_CREATE = 0;
+    private static final int ACTION_UPDATE = 1;
 
     /**
-     * Create a new instance of NewLendDialog
+     * item for a lend
      */
-    public static NewLendDialog newInstance() {
-        return new NewLendDialog();
+    private EditText itemEditText;
+
+    private OnLendItemTypedListener onLendItemTypedListener;
+
+    /**
+     * Create a new instance of LendItemDialog
+     */
+    public static LendItemDialog newInstance() {
+        LendItemDialog dialog = new LendItemDialog();
+        Bundle args = new Bundle();
+        args.putInt("action", ACTION_CREATE);
+        dialog.setArguments(args);
+        return dialog;
+    }
+
+    /**
+     * Create a new instance of LendItemDialog with item
+     *
+     * @param item lend item
+     */
+    public static LendItemDialog newInstance(String item) {
+        LendItemDialog dialog = new LendItemDialog();
+        Bundle args = new Bundle();
+        args.putString("item", item);
+        args.putInt("action", ACTION_UPDATE);
+        dialog.setArguments(args);
+        return dialog;
     }
 
     @NonNull
@@ -41,14 +65,15 @@ public class NewLendDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         // Inflate view
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_new_lend, null, false);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_lend_item, null, false);
         itemEditText = view.findViewById(R.id.item);
-
+        String item = getArguments().getString("item", "");
+        itemEditText.setText(item);
 
         final AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.new_lend)
+                .setTitle((ACTION_CREATE == getArguments().getInt("action", ACTION_CREATE))?R.string.new_lend:R.string.item)
                 .setView(view)
-                .setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -72,11 +97,11 @@ public class NewLendDialog extends DialogFragment {
                     public void onClick(View view) {
                         String item = itemEditText.getText().toString();
                         if (item.length() > 0) {
-                            if (onLendCreatedListener != null) {
+                            if (onLendItemTypedListener != null) {
                                 Log.i(TAG, "new item : " + item);
-                                onLendCreatedListener.onLendCreated(new Lend(item));
+                                onLendItemTypedListener.onLendCreated(item);
                             } else {
-                                Log.w(TAG, "No listener to call, lend creation cancelled");
+                                Log.w(TAG, "No listener to call, lend item typed");
                             }
                             dismiss();
                         } else {
@@ -93,23 +118,23 @@ public class NewLendDialog extends DialogFragment {
     }
 
     /**
-     * Set lisener from Lend creation
+     * Set listener from Lend item typed
      *
-     * @param onLendCreatedListener listener
+     * @param onLendItemTypedListener listener
      */
-    public void setOnLendCreatedListener(OnLendCreatedListener onLendCreatedListener) {
-        this.onLendCreatedListener = onLendCreatedListener;
+    public void setOnLendItemTypedListener(OnLendItemTypedListener onLendItemTypedListener) {
+        this.onLendItemTypedListener = onLendItemTypedListener;
     }
 
     /**
-     * Listener interference called when lend created
+     * Listener interference called when lend item type
      */
-    public interface OnLendCreatedListener {
+    public interface OnLendItemTypedListener {
         /**
          * Called when lend has been created
          *
          * @param lend created lend
          */
-        void onLendCreated(Lend lend);
+        void onLendCreated(String lend);
     }
 }

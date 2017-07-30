@@ -27,7 +27,7 @@ public class Lend implements Parcelable {
     /**
      * Lend date
      */
-    private long lendDate = new Date().getTime();
+    private long lendDate = System.currentTimeMillis();
 
     /**
      * date when item should be return
@@ -160,5 +160,16 @@ public class Lend implements Parcelable {
         } else {
             return super.equals(obj);
         }
+    }
+
+    /**
+     * Calculate duration of the lend in days
+     *
+     * @return day number
+     */
+    public int getDatesDifferenceInDays() {
+        long different = System.currentTimeMillis() - lendDate;
+        long dayInMillis = 1000 * 60 * 60 * 24;
+        return (int) (different / dayInMillis);
     }
 }

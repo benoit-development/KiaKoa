@@ -15,7 +15,7 @@ import android.widget.ListView;
 
 import org.bbt.kiakoa.LendDetailsActivity;
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.dialog.NewLendDialog;
+import org.bbt.kiakoa.dialog.LendItemDialog;
 import org.bbt.kiakoa.model.Lend;
 import org.bbt.kiakoa.model.LendLists;
 
@@ -51,11 +51,17 @@ abstract public class AbstractLendListFragment extends ListFragment {
 
         // customize list
         ListView listView = inflate.findViewById(android.R.id.list);
-        listView.setEmptyView(inflate.findViewById(R.id.emptyElement));
+        listView.setEmptyView(inflate.findViewById(R.id.empty_element));
         lendAdapter = new LendListAdapter(getActivity(), getLendList());
         listView.setAdapter(lendAdapter);
 
         return inflate;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        lendAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -80,22 +86,22 @@ abstract public class AbstractLendListFragment extends ListFragment {
                 // in a transaction.  We also want to remove any currently showing
                 // dialog, so make our own transaction and take care of that here.
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+                Fragment prev = getFragmentManager().findFragmentByTag(getLendListId());
                 if (prev != null) {
                     ft.remove(prev);
                 }
                 ft.addToBackStack(null);
 
                 // Create and show the dialog.
-                NewLendDialog newFragment = NewLendDialog.newInstance();
-                newFragment.setOnLendCreatedListener(new NewLendDialog.OnLendCreatedListener() {
+                LendItemDialog newItemDialog = LendItemDialog.newInstance();
+                newItemDialog.setOnLendItemTypedListener(new LendItemDialog.OnLendItemTypedListener() {
                     @Override
-                    public void onLendCreated(Lend lend) {
-                        addLend(lend);
+                    public void onLendCreated(String item) {
+                        addLend(new Lend(item));
                         lendAdapter.notifyDataSetChanged();
                     }
                 });
-                newFragment.show(ft, getLendListId());
+                newItemDialog.show(ft, getLendListId());
             }
         };
     }
@@ -124,11 +130,11 @@ abstract public class AbstractLendListFragment extends ListFragment {
         // attach this activity to the dialog if exists
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag(getLendListId());
-        if ((prev != null) && (prev instanceof NewLendDialog)) {
-            ((NewLendDialog) prev).setOnLendCreatedListener(new NewLendDialog.OnLendCreatedListener() {
+        if ((prev != null) && (prev instanceof LendItemDialog)) {
+            ((LendItemDialog) prev).setOnLendItemTypedListener(new LendItemDialog.OnLendItemTypedListener() {
                 @Override
-                public void onLendCreated(Lend lend) {
-                    addLend(lend);
+                public void onLendCreated(String item) {
+                    addLend(new Lend(item));
                     lendAdapter.notifyDataSetChanged();
                 }
             });

@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Class managing all current lends
@@ -60,6 +62,16 @@ public class LendLists {
     private static LendLists instance;
 
     /**
+     * Lend Comparator based on lend date
+     */
+    private final Comparator<Lend> lendDateComparator = new Comparator<Lend>() {
+        @Override
+        public int compare(Lend lend1, Lend lend2) {
+            return Long.compare(lend1.getLendDate(), lend2.getLendDate());
+        }
+    };
+
+    /**
      * Instance getter
      *
      * @return singleton instance
@@ -100,6 +112,9 @@ public class LendLists {
             }.getType());
             lendArchiveList = new Gson().fromJson(sharedPref.getString(LEND_ARCHIVE, "[]"), new TypeToken<ArrayList<Lend>>() {
             }.getType());
+
+            sortLists();
+
         } else {
 
             Log.i(TAG, "initLists: init empty lists");
@@ -112,6 +127,23 @@ public class LendLists {
         Log.d(TAG, "initLists: lend to count:      " + lendToList.size());
         Log.d(TAG, "initLists: lend from count:    " + lendFromList.size());
         Log.d(TAG, "initLists: lend archive count: " + lendArchiveList.size());
+    }
+
+    /**
+     * Sort all the lists
+     */
+    private void sortLists() {
+        sortList(lendToList);
+        sortList(lendFromList);
+        sortList(lendArchiveList);
+    }
+
+    /**
+     * Sort a list depending on the choosen sort
+     * @param lendList list to be sorted
+     */
+    private void sortList(ArrayList<Lend> lendList) {
+        Collections.sort(lendList, lendDateComparator);
     }
 
     /**
@@ -132,6 +164,8 @@ public class LendLists {
             editor.putString(LEND_TO, new Gson().toJson(lendToList));
             editor.apply();
         }
+
+        sortList(lendToList);
 
         return result;
     }
@@ -155,6 +189,8 @@ public class LendLists {
             editor.putString(LEND_FROM, new Gson().toJson(lendFromList));
             editor.apply();
         }
+
+        sortList(lendFromList);
 
         return result;
     }
@@ -185,6 +221,8 @@ public class LendLists {
             editor.apply();
         }
 
+        sortList(lendArchiveList);
+
         return result;
     }
 
@@ -202,14 +240,17 @@ public class LendLists {
         if (lendToList.remove(lend)) {
             // lend removed from lend to list
             result = addLendTo(lend, context);
+            sortList(lendToList);
         }
         if (lendFromList.remove(lend)) {
             // lend removed from lend from list
             result |= addLendFrom(lend, context);
+            sortList(lendFromList);
         }
         if (lendArchiveList.remove(lend)) {
             // lend removed from lend archive list
             result |= addLendArchive(lend, context);
+            sortList(lendArchiveList);
         }
 
         return result;

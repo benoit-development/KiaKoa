@@ -1,3 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="list_item_text_size_primary">16sp</dimen>
+    <dimen name="list_item_text_size_secondary">14sp</dimen>
 </resources>

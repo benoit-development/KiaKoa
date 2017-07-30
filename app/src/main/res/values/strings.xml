@@ -7,10 +7,11 @@
     <string name="empty_lend_list">Empty lend list</string>
     <string name="item">Item</string>
     <string name="lend_date">Lend date</string>
-    <string name="create">Create</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="new_lend">New lend</string>
     <string name="item_cant_be_blank">Item can\'t be blank</string>
+    <string name="no_lend_selected">No lend selected</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>

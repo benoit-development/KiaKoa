@@ -21,7 +21,7 @@ class LendListAdapter extends BaseAdapter {
     private final ArrayList<Lend> lendList;
     private final LayoutInflater inflater;
 
-    public LendListAdapter(Context applicationContext, ArrayList<Lend> lendList) {
+    LendListAdapter(Context applicationContext, ArrayList<Lend> lendList) {
         this.context = applicationContext;
         this.lendList = lendList;
         inflater = (LayoutInflater.from(applicationContext));
@@ -63,12 +63,13 @@ class LendListAdapter extends BaseAdapter {
         // Bind the data efficiently with the holder.
         Lend lend = lendList.get(i);
         holder.item.setText(lend.getItem());
-        holder.duration.setText(context.getResources().getQuantityString(R.plurals.plural_day, 2));
+        int days = lend.getDatesDifferenceInDays();
+        holder.duration.setText(context.getResources().getQuantityString(R.plurals.plural_day, days, days));
 
         return view;
     }
 
-    static class ViewHolder {
+    private static class ViewHolder {
         TextView item;
         TextView duration;
     }
