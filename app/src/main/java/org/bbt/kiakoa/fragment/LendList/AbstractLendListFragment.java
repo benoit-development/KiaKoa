@@ -1,6 +1,5 @@
 package org.bbt.kiakoa.fragment.LendList;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -13,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import org.bbt.kiakoa.LendDetailsActivity;
+import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.LendItemDialog;
 import org.bbt.kiakoa.model.Lend;
@@ -66,11 +65,8 @@ abstract public class AbstractLendListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // TODO update LendDetail in large mode
         Log.i(TAG, "Item clicked: " + id);
-        Intent intent = new Intent(getActivity(), LendDetailsActivity.class);
-        intent.putExtra(LendDetailsActivity.EXTRA_LEND, getLendList().get(position));
-        startActivity(intent);
+        ((MainActivity) getActivity()).displayLendDetails(getLendList().get(position));
     }
 
     /**

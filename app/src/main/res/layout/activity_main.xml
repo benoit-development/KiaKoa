@@ -16,7 +16,6 @@
         android:theme="@style/ToolBarTheme"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <!-- "Fragment A" -->
     <fragment class="org.bbt.kiakoa.fragment.LendListsPagerFragment"
         android:id="@+id/lend_pager_frag"
         android:layout_width="match_parent"

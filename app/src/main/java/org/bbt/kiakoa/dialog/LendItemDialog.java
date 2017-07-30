@@ -12,9 +12,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.model.Lend;
-
-import java.util.Objects;
 
 /**
  * Dialog used to pick an item

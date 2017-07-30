@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import com.google.gson.Gson;
 
-import java.util.Date;
-
 /**
  * Class defining a Land
  *
