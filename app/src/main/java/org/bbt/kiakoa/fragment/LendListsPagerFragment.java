@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.fragment.LendList.LendArchiveListFragment;
@@ -34,6 +35,7 @@ public class LendListsPagerFragment extends Fragment implements LendLists.OnLend
      * Pager adapter
      */
     private LendPagerAdapter lendPagerAdapter;
+    private TabLayout tabLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,7 +48,7 @@ public class LendListsPagerFragment extends Fragment implements LendLists.OnLend
         viewPager.setAdapter(lendPagerAdapter);
 
         // Manage tabs of the view pager
-        TabLayout tabLayout = view.findViewById(R.id.tabs);
+        tabLayout = view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;
@@ -61,7 +63,55 @@ public class LendListsPagerFragment extends Fragment implements LendLists.OnLend
     @Override
     public void onLendListsChanged() {
         Log.i(TAG, "LendLists changed, update TabLayout titles");
-        lendPagerAdapter.notifyDataSetChanged();
+
+        FragmentActivity activity = LendListsPagerFragment.this.getActivity();
+
+        // LendLists to get lend numbers
+        LendLists lendLists = LendLists.getInstance();
+
+        // tablayout custom view
+        for (int position=0; position<tabLayout.getTabCount(); position++) {
+
+            TabLayout.Tab tabAt = tabLayout.getTabAt(position);
+            View customView = tabAt.getCustomView();
+            if (customView == null) {
+                customView = activity.getLayoutInflater().inflate(R.layout.tab_custom_view, null, false);
+                tabAt.setCustomView(customView);
+            } else {
+                customView.getTag();
+            }
+            // find useful views
+            TextView titleView = customView.findViewById(android.R.id.text1);
+            TextView badgeView = customView.findViewById(R.id.badge);
+            String titleLabel;
+            String badgeNb;
+
+            switch (position) {
+                case 0:
+                    titleLabel = activity.getString(R.string.tab_title_lend_to);
+                    int lendToNb = lendLists.getLendToList().size();
+                    badgeNb = (lendToNb > 0) ? " " + lendToNb : null;
+                    break;
+                case 1:
+                    titleLabel = activity.getString(R.string.tab_title_lend_from);
+                    int lendFromNb = lendLists.getLendFromList().size();
+                    badgeNb = (lendFromNb > 0) ? " " + lendFromNb : null;
+                    break;
+                case 2:
+                    titleLabel = activity.getString(R.string.tab_title_archive);
+                    int lendArchiveNb = lendLists.getLendArchiveList().size();
+                    badgeNb = (lendArchiveNb > 0) ? " " + lendArchiveNb : null;
+                    break;
+                default:
+                    titleLabel = "";
+                    badgeNb = "";
+                    break;
+            }
+
+            titleView.setText(titleLabel);
+            badgeView.setText(badgeNb);
+
+        }
     }
 
     @Override
@@ -105,40 +155,6 @@ public class LendListsPagerFragment extends Fragment implements LendLists.OnLend
             }
 
             return fragment;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            String title;
-            FragmentActivity activity = LendListsPagerFragment.this.getActivity();
-
-            // LendLists to get lend numbers
-            LendLists lendLists = LendLists.getInstance();
-            int lendToNb = lendLists.getLendToList().size();
-            int lendFromNb = lendLists.getLendFromList().size();
-            int lendArchiveNb = lendLists.getLendArchiveList().size();
-
-            switch (position) {
-                case 0:
-                    String titleLabel = activity.getString(R.string.tab_title_lend_to);
-                    String titleNb = (lendToNb > 0) ? " " + lendToNb : "";
-                    title = titleLabel + titleNb;
-                    break;
-                case 1:
-                    titleLabel = activity.getString(R.string.tab_title_lend_from);
-                    titleNb = (lendFromNb > 0) ? " " + lendFromNb : "";
-                    title = titleLabel + titleNb;
-                    break;
-                case 2:
-                    titleLabel = activity.getString(R.string.tab_title_archive);
-                    titleNb = (lendArchiveNb > 0) ? " " + lendArchiveNb : "";
-                    title = titleLabel + titleNb;
-                    break;
-                default:
-                    title = "";
-                    break;
-            }
-            return title;
         }
     }
 
