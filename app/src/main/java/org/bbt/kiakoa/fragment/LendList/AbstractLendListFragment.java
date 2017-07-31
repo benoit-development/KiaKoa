@@ -61,13 +61,13 @@ abstract public class AbstractLendListFragment extends ListFragment implements L
     public void onResume() {
         super.onResume();
         lendAdapter.notifyDataSetChanged();
-        LendLists.getInstance().registerOnLendListsChangedListener(this);
+        LendLists.getInstance().registerOnLendListsChangedListener(this, TAG);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LendLists.getInstance().unregisterOnLendListsChangedListener(this);
+        LendLists.getInstance().unregisterOnLendListsChangedListener(this, TAG);
     }
 
     @Override
@@ -101,7 +101,6 @@ abstract public class AbstractLendListFragment extends ListFragment implements L
                     @Override
                     public void onLendSet(String item) {
                         addLend(new Lend(item));
-                        lendAdapter.notifyDataSetChanged();
                     }
                 });
                 newItemDialog.show(ft, getLendListId());

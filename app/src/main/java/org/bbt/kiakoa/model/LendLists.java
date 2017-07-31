@@ -170,7 +170,10 @@ public class LendLists {
             editor.apply();
         }
 
-        sortList(lendToList);
+        if (result) {
+            sortList(lendToList);
+            notifyLendListsChanged();
+        }
 
         return result;
     }
@@ -195,7 +198,10 @@ public class LendLists {
             editor.apply();
         }
 
-        sortList(lendFromList);
+        if (result) {
+            sortList(lendFromList);
+            notifyLendListsChanged();
+        }
 
         return result;
     }
@@ -226,7 +232,10 @@ public class LendLists {
             editor.apply();
         }
 
-        sortList(lendArchiveList);
+        if (result) {
+            sortList(lendArchiveList);
+            notifyLendListsChanged();
+        }
 
         return result;
     }
@@ -256,6 +265,10 @@ public class LendLists {
             // lend removed from lend archive list
             result |= addLendArchive(lend, context);
             sortList(lendArchiveList);
+        }
+
+        if (result) {
+            notifyLendListsChanged();
         }
 
         return result;
@@ -310,6 +323,9 @@ public class LendLists {
         lendToList.clear();
         lendFromList.clear();
         lendArchiveList.clear();
+
+        // notify changes
+        notifyLendListsChanged();
     }
 
     /**
@@ -323,13 +339,23 @@ public class LendLists {
         }
     }
 
-    public void registerOnLendListsChangedListener(OnLendListsChangedListener listener) {
-        Log.i(TAG, "Adding OnLendListsChangedListener");
+    /**
+     * Register a listener for changes in this {@link LendLists}
+     * @param listener listener to be registered
+     * @param id id for log
+     */
+    public void registerOnLendListsChangedListener(OnLendListsChangedListener listener, String id) {
+        Log.i(TAG, "Adding OnLendListsChangedListener : " + id);
         onLendListsChangedListeners.add(listener);
     }
 
-    public void unregisterOnLendListsChangedListener(OnLendListsChangedListener listener) {
-        Log.i(TAG, "Removing OnLendListsChangedListener");
+    /**
+     * Unregister a listener for changes in this {@link LendLists}
+     * @param listener listener to be unregistered
+     * @param id id for log
+     */
+    public void unregisterOnLendListsChangedListener(OnLendListsChangedListener listener, String id) {
+        Log.i(TAG, "Removing OnLendListsChangedListener : " + id);
         onLendListsChangedListeners.remove(listener);
     }
 
