@@ -1,6 +1,5 @@
 package org.bbt.kiakoa.fragment;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -8,10 +7,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,6 +77,7 @@ public class LendListsPagerFragment extends Fragment implements LendLists.OnLend
 
         /**
          * Constructor
+         *
          * @param fm fragment manager
          */
         private LendPagerAdapter(FragmentManager fm) {
@@ -125,7 +121,7 @@ public class LendListsPagerFragment extends Fragment implements LendLists.OnLend
             switch (position) {
                 case 0:
                     String titleLabel = activity.getString(R.string.tab_title_lend_to);
-                    String titleNb = (lendToNb > 0)?" " + lendToNb:"";
+                    String titleNb = (lendToNb > 0) ? " " + lendToNb : "";
                     title = titleLabel + titleNb;
                     break;
                 case 1:
