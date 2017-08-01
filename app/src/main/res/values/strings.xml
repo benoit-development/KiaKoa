@@ -12,6 +12,8 @@
     <string name="new_lend">New lend</string>
     <string name="item_cant_be_blank">Item can\'t be blank</string>
     <string name="no_lend_selected">No lend selected</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
