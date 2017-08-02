@@ -4,14 +4,14 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="10dp"
+    android:padding="20dp"
     android:weightSum="1">
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="20dp"
         android:src="@drawable/ic_item_gray_24dp"
         android:contentDescription="@string/item_icon" />
 

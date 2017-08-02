@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,12 +109,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
     /**
      * Method called by an {@link org.bbt.kiakoa.fragment.LendList.AbstractLendListFragment} to
      * display a lend details in {@link org.bbt.kiakoa.fragment.LendDetailsFragment}
@@ -140,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // true, then it has handled the app icon touch event
         // Manage click on burger icon in toolbar
         return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-
     }
 
     @Override
@@ -150,7 +142,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mDrawerLayout.closeDrawer(mDrawerLeft);
 
         // change the displayed Lend list
-        lendListsPager.showPage(position);
+        // first position of lend lists is 1 (0 is the first header)
+        lendListsPager.showPage(position - 1);
     }
 
     @Override
@@ -163,6 +156,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private class DrawerLayoutAdapter extends BaseAdapter {
 
+        public static final int TYPE_ITEM = 1;
+        public static final int TYPE_HEADER = 2;
+
         private final LayoutInflater inflater;
 
         DrawerLayoutAdapter() {
@@ -171,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public int getCount() {
-            return 3;
+            return 6;
         }
 
         @Override
@@ -184,19 +180,49 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             return i;
         }
 
+        /**
+         * 2 types possibles TYPE_ITEM and TYPE_HEADER
+         * @return type count
+         */
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        /**
+         * Return the type depending on the position
+         */
+        @Override
+        public int getItemViewType(int position) {
+            if ((position == 0) || (position == 4)) {
+                return TYPE_HEADER;
+            } else {
+                return TYPE_ITEM;
+            }
+        }
+
+        @Override
+        public View getView(int position, View view, ViewGroup viewGroup) {
             ViewHolder holder;
+            int itemViewType = getItemViewType(position);
 
             if (view == null) {
-                view = inflater.inflate(R.layout.adapter_drawer_layout_item, viewGroup, false);
-
-                // Creates a ViewHolder
                 holder = new ViewHolder();
-                holder.icon = view.findViewById(R.id.icon);
-                holder.text = view.findViewById(R.id.text);
-                holder.badge = view.findViewById(R.id.badge);
+                if (itemViewType == TYPE_HEADER) {
 
+                    view = inflater.inflate(R.layout.adapter_drawer_layout_header, viewGroup, false);
+                    // Creates a ViewHolderHeader
+                    holder.text = view.findViewById(R.id.text);
+
+                } else {
+
+                    view = inflater.inflate(R.layout.adapter_drawer_layout_item, viewGroup, false);
+                    // Creates a ViewHolder
+                    holder.icon = view.findViewById(R.id.icon);
+                    holder.text = view.findViewById(R.id.text);
+                    holder.badge = view.findViewById(R.id.badge);
+
+                }
                 view.setTag(holder);
             } else {
                 // Get the ViewHolder
@@ -207,37 +233,44 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             int iconId = 0;
             int textId = 0;
             int lendCount = 0;
-            switch (i) {
+            switch (position) {
                 case 0:
+                    textId = R.string.lend_lists;
+                    break;
+                case 1:
                     iconId = R.drawable.ic_lend_to_gray_24dp;
                     textId = R.string.title_lend_to;
                     lendCount = LendLists.getInstance().getLendToList().size();
                     break;
-                case 1:
+                case 2:
                     iconId = R.drawable.ic_lend_from_gray_24dp;
                     textId = R.string.title_lend_from;
                     lendCount = LendLists.getInstance().getLendFromList().size();
                     break;
-                case 2:
+                case 3:
                     iconId = R.drawable.ic_archive_gray_24dp;
                     textId = R.string.title_archive;
                     lendCount = LendLists.getInstance().getLendArchiveList().size();
                     break;
-                default:
-                    Log.e(TAG, "Index of the view is not correct : " + i);
+                case 4:
+                    textId = R.string.configurations;
+                    break;
+                case 5:
+                    iconId = R.drawable.ic_settings_white_24dp;
+                    textId = R.string.settings;
                     break;
             }
-            if(iconId != 0) {
+            if (iconId != 0) {
                 holder.icon.setImageResource(iconId);
             }
-            if(textId != 0) {
+            if (textId != 0) {
                 holder.text.setText(textId);
             }
             if (lendCount != 0) {
-                holder.badge.setVisibility(View.VISIBLE);
                 holder.badge.setText(String.valueOf(lendCount));
-            } else {
-                holder.badge.setVisibility(View.GONE);
+            }
+            if (itemViewType == TYPE_ITEM) {
+                holder.badge.setVisibility((lendCount == 0)?View.GONE:View.VISIBLE);
             }
 
             return view;
