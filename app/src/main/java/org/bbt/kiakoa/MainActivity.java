@@ -1,10 +1,10 @@
 package org.bbt.kiakoa;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,23 +24,21 @@ import android.widget.TextView;
 import org.bbt.kiakoa.fragment.LendDetailsFragment;
 import org.bbt.kiakoa.fragment.LendListsPagerFragment;
 import org.bbt.kiakoa.model.Lend;
+import org.bbt.kiakoa.model.LendLists;
 
-import java.util.ArrayList;
-
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LendLists.OnLendListsChangedListener {
 
     /**
      * For Log
      */
-    private static final String TAG = "MaintActivity";
+    private static final String TAG = "MainActivity";
     /**
      * For navigation
      */
     private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle drawerToggle;
     private LinearLayout mDrawerLeft;
     private ActionBarDrawerToggle mDrawerToggle;
-    private ListView mDrawerList;
+    private DrawerLayoutAdapter mDrawerLayoutAdapter;
 
     /**
      * {@link android.support.v4.app.Fragment} displaying Lend detail
@@ -49,19 +46,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private LendDetailsFragment lendDetailsFragment;
 
-    /**
-     * Names for lend lists
-     */
-    private String[] lendListsNames = new String[]{};;
     private LendListsPagerFragment lendListsPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // init lend lists names
-        lendListsNames = getResources().getStringArray(R.array.lend_lists_names);
 
         // find fragments
         lendListsPager = (LendListsPagerFragment) getSupportFragmentManager().findFragmentById(R.id.lend_pager_frag);
@@ -73,10 +63,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLeft = (LinearLayout) findViewById(R.id.left_drawer);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
+        ListView mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
 
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new DrawerLayoutAdapter());
+        mDrawerLayoutAdapter = new DrawerLayoutAdapter();
+        mDrawerList.setAdapter(mDrawerLayoutAdapter);
 
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(this);
@@ -87,8 +78,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setHomeButtonEnabled(true);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LendLists.getInstance().registerOnLendListsChangedListener(this, TAG);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LendLists.getInstance().unregisterOnLendListsChangedListener(this, TAG);
     }
 
     @Override
@@ -132,24 +138,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        // Manage click on buger icon in toolbar
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
+        // Manage click on burger icon in toolbar
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Log.i(TAG, "item clicked : " + position);
 
-        // Highlight the selected item, update the title, and close the drawer
-        mDrawerList.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mDrawerLeft);
 
         // change the displayed Lend list
         lendListsPager.showPage(position);
+    }
+
+    @Override
+    public void onLendListsChanged() {
+        mDrawerLayoutAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -165,12 +171,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public int getCount() {
-            return lendListsNames.length;
+            return 3;
         }
 
         @Override
         public Object getItem(int i) {
-            return lendListsNames[i];
+            return i;
         }
 
         @Override
@@ -183,12 +189,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             ViewHolder holder;
 
             if (view == null) {
-                view = inflater.inflate(android.R.layout.simple_list_item_1, viewGroup, false);
+                view = inflater.inflate(R.layout.adapter_drawer_layout_item, viewGroup, false);
 
                 // Creates a ViewHolder
                 holder = new ViewHolder();
-                // holder.icon = view.findViewById(R.id.icon);
-                holder.text = view.findViewById(android.R.id.text1);
+                holder.icon = view.findViewById(R.id.icon);
+                holder.text = view.findViewById(R.id.text);
+                holder.badge = view.findViewById(R.id.badge);
 
                 view.setTag(holder);
             } else {
@@ -197,7 +204,41 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
 
             // Bind the data efficiently with the holder.
-            holder.text.setText(lendListsNames[i]);
+            int iconId = 0;
+            int textId = 0;
+            int lendCount = 0;
+            switch (i) {
+                case 0:
+                    iconId = R.drawable.ic_lend_to_gray_24dp;
+                    textId = R.string.title_lend_to;
+                    lendCount = LendLists.getInstance().getLendToList().size();
+                    break;
+                case 1:
+                    iconId = R.drawable.ic_lend_from_gray_24dp;
+                    textId = R.string.title_lend_from;
+                    lendCount = LendLists.getInstance().getLendFromList().size();
+                    break;
+                case 2:
+                    iconId = R.drawable.ic_archive_gray_24dp;
+                    textId = R.string.title_archive;
+                    lendCount = LendLists.getInstance().getLendArchiveList().size();
+                    break;
+                default:
+                    Log.e(TAG, "Index of the view is not correct : " + i);
+                    break;
+            }
+            if(iconId != 0) {
+                holder.icon.setImageResource(iconId);
+            }
+            if(textId != 0) {
+                holder.text.setText(textId);
+            }
+            if (lendCount != 0) {
+                holder.badge.setVisibility(View.VISIBLE);
+                holder.badge.setText(String.valueOf(lendCount));
+            } else {
+                holder.badge.setVisibility(View.GONE);
+            }
 
             return view;
         }
@@ -205,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         private class ViewHolder {
             ImageView icon;
             TextView text;
+            TextView badge;
         }
 
     }

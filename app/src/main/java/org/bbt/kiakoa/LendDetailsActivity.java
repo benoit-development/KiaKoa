@@ -14,7 +14,7 @@ public class LendDetailsActivity extends AppCompatActivity {
     /**
      * EXTRA key to provide lend to display
      */
-    public static final String EXTRA_LEND = "org.bbt.kiakoi.lend";
+    public static final String EXTRA_LEND = "org.bbt.kiakoa.lend";
 
     /**
      * For log

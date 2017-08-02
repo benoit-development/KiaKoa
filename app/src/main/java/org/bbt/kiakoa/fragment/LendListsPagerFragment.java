@@ -1,6 +1,7 @@
 package org.bbt.kiakoa.fragment;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -28,16 +29,6 @@ public class LendListsPagerFragment extends Fragment {
     private static final String TAG = "LendListsPagerFragment";
 
     /**
-     * Names for lend lists
-     */
-    private String[] lendListsNames = new String[]{};
-
-    /**
-     * Pager adapter
-     */
-    private LendPagerAdapter lendPagerAdapter;
-
-    /**
      * {@link ViewPager} displaying different lend lists
      */
     private ViewPager viewPager;
@@ -47,12 +38,11 @@ public class LendListsPagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lend_list_pager, container, false);
 
-        // init lend lists names
-        lendListsNames = getResources().getStringArray(R.array.lend_lists_names);
-
         // get viewpager
         viewPager = view.findViewById(R.id.pager);
-        lendPagerAdapter = new LendPagerAdapter(getChildFragmentManager());
+
+        // PAger adapter
+        LendPagerAdapter lendPagerAdapter = new LendPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(lendPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -70,6 +60,10 @@ public class LendListsPagerFragment extends Fragment {
 
             }
         });
+
+        // tablayout to display dots
+        TabLayout tabLayout = view.findViewById(R.id.tabDots);
+        tabLayout.setupWithViewPager(viewPager, true);
 
         return view;
     }
@@ -96,9 +90,10 @@ public class LendListsPagerFragment extends Fragment {
 
     /**
      * update title in activity
+     *
      * @param page selected page in viewpager
      */
-    public void setActivityTitle(int page) {
+    private void setActivityTitle(int page) {
         Log.i(TAG, "Change Activity Title : " + page);
         switch (page) {
             case 0:

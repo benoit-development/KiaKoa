@@ -144,7 +144,7 @@ public class LendLists {
     }
 
     /**
-     * Sort a list depending on the choosen sort
+     * Sort a list depending on the chosen sort
      * @param lendList list to be sorted
      */
     private void sortList(ArrayList<Lend> lendList) {

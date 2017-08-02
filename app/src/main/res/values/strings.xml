@@ -14,14 +14,10 @@
     <string name="no_lend_selected">No lend selected</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="item_icon">Item icon</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>
     </plurals>
-    <string-array name="lend_lists_names">
-        <item>@string/title_lend_to</item>
-        <item>@string/title_lend_from</item>
-        <item>@string/title_archive</item>
-    </string-array>
 </resources>
