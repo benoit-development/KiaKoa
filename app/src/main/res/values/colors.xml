@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#1baad5</color>
-    <color name="colorPrimaryDark">#1897bd</color>
+    <color name="colorPrimaryDark">#1baad5</color>
     <color name="colorAccent">#f06292</color>
     <color name="colorTabText">#aad9e7</color>
+    <color name="colorTextTitle">@android:color/white</color>
     <color name="colorTabTextSelected">@android:color/white</color>
     <color name="colorText">#585858</color>
     <color name="colorTextLight">#a6a6a6</color>

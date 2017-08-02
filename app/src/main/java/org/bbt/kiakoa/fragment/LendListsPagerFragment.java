@@ -1,9 +1,7 @@
 package org.bbt.kiakoa.fragment;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -11,20 +9,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.fragment.LendList.LendArchiveListFragment;
 import org.bbt.kiakoa.fragment.LendList.LendFromListFragment;
 import org.bbt.kiakoa.fragment.LendList.LendToListFragment;
-import org.bbt.kiakoa.model.LendLists;
 
 /**
  * {@link android.app.Fragment} displaying lend lists
  *
  * @author Benoit Bousquet
  */
-public class LendListsPagerFragment extends Fragment implements LendLists.OnLendListsChangedListener {
+public class LendListsPagerFragment extends Fragment {
 
     /**
      * For log
@@ -32,24 +28,48 @@ public class LendListsPagerFragment extends Fragment implements LendLists.OnLend
     private static final String TAG = "LendListsPagerFragment";
 
     /**
+     * Names for lend lists
+     */
+    private String[] lendListsNames = new String[]{};
+
+    /**
      * Pager adapter
      */
     private LendPagerAdapter lendPagerAdapter;
-    private TabLayout tabLayout;
+
+    /**
+     * {@link ViewPager} displaying different lend lists
+     */
+    private ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lend_list_pager, container, false);
 
+        // init lend lists names
+        lendListsNames = getResources().getStringArray(R.array.lend_lists_names);
+
         // get viewpager
-        ViewPager viewPager = view.findViewById(R.id.pager);
+        viewPager = view.findViewById(R.id.pager);
         lendPagerAdapter = new LendPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(lendPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        // Manage tabs of the view pager
-        tabLayout = view.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                setActivityTitle(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         return view;
     }
@@ -57,67 +77,43 @@ public class LendListsPagerFragment extends Fragment implements LendLists.OnLend
     @Override
     public void onResume() {
         super.onResume();
-        LendLists.getInstance().registerOnLendListsChangedListener(this, TAG);
+        setActivityTitle(viewPager.getCurrentItem());
     }
 
-    @Override
-    public void onLendListsChanged() {
-        Log.i(TAG, "LendLists changed, update TabLayout titles");
-
-        FragmentActivity activity = LendListsPagerFragment.this.getActivity();
-
-        // LendLists to get lend numbers
-        LendLists lendLists = LendLists.getInstance();
-
-        // tablayout custom view
-        for (int position=0; position<tabLayout.getTabCount(); position++) {
-
-            TabLayout.Tab tabAt = tabLayout.getTabAt(position);
-            View customView = tabAt.getCustomView();
-            if (customView == null) {
-                customView = activity.getLayoutInflater().inflate(R.layout.tab_custom_view, null, false);
-                tabAt.setCustomView(customView);
-            } else {
-                customView.getTag();
-            }
-            // find useful views
-            TextView titleView = customView.findViewById(android.R.id.text1);
-            TextView badgeView = customView.findViewById(R.id.badge);
-            String titleLabel;
-            String badgeNb;
-
-            switch (position) {
-                case 0:
-                    titleLabel = activity.getString(R.string.tab_title_lend_to);
-                    int lendToNb = lendLists.getLendToList().size();
-                    badgeNb = (lendToNb > 0) ? " " + lendToNb : null;
-                    break;
-                case 1:
-                    titleLabel = activity.getString(R.string.tab_title_lend_from);
-                    int lendFromNb = lendLists.getLendFromList().size();
-                    badgeNb = (lendFromNb > 0) ? " " + lendFromNb : null;
-                    break;
-                case 2:
-                    titleLabel = activity.getString(R.string.tab_title_archive);
-                    int lendArchiveNb = lendLists.getLendArchiveList().size();
-                    badgeNb = (lendArchiveNb > 0) ? " " + lendArchiveNb : null;
-                    break;
-                default:
-                    titleLabel = "";
-                    badgeNb = "";
-                    break;
-            }
-
-            titleView.setText(titleLabel);
-            badgeView.setText(badgeNb);
-
+    /**
+     * Display the asked page of the pager
+     *
+     * @param pageNumber page number
+     */
+    public void showPage(int pageNumber) {
+        if (pageNumber < viewPager.getAdapter().getCount()) {
+            Log.i(TAG, "Change lend list displayed : " + pageNumber);
+            viewPager.setCurrentItem(pageNumber, true);
+        } else {
+            Log.i(TAG, "Lend list page incorrect : " + pageNumber);
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        LendLists.getInstance().unregisterOnLendListsChangedListener(this, TAG);
+    /**
+     * update title in activity
+     * @param page selected page in viewpager
+     */
+    public void setActivityTitle(int page) {
+        Log.i(TAG, "Change Activity Title : " + page);
+        switch (page) {
+            case 0:
+                // lend to
+                getActivity().setTitle(R.string.title_lend_to);
+                break;
+            case 1:
+                // lend from
+                getActivity().setTitle(R.string.title_lend_from);
+                break;
+            case 2:
+                // lend archive
+                getActivity().setTitle(R.string.title_archive);
+                break;
+        }
     }
 
     /**
