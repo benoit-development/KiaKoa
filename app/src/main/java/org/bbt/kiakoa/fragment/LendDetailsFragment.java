@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.dialog.LendContactDialog;
 import org.bbt.kiakoa.dialog.LendDateDialog;
 import org.bbt.kiakoa.dialog.LendItemDialog;
 import org.bbt.kiakoa.model.Lend;
@@ -28,7 +29,7 @@ import java.text.DateFormat;
  *
  * @author Benoit Bousquet
  */
-public class LendDetailsFragment extends ListFragment implements LendItemDialog.OnLendItemSetListener, LendDateDialog.OnLendDateSetListener {
+public class LendDetailsFragment extends ListFragment implements LendItemDialog.OnLendItemSetListener, LendDateDialog.OnLendDateSetListener, LendContactDialog.OnLendContactSetListener {
 
     private static final String TAG = "LendDetailsFragment";
     /**
@@ -127,21 +128,42 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                 newLendDateDialog.show(ft, "lend_date");
 
                 break;
+            case 2:
+                Log.i(TAG, "Contact modification requested");
+                Fragment contactDialog = getFragmentManager().findFragmentByTag("contact");
+                if (contactDialog != null) {
+                    ft.remove(contactDialog);
+                }
+                ft.addToBackStack(null);
+
+                // Create and show the dialog.
+                // TODO get lend current contact name
+                LendContactDialog newContactDialog = LendContactDialog.newInstance("");
+                newContactDialog.setOnLendContactSetListener(this);
+                newContactDialog.show(ft, "contact");
+
+                break;
         }
     }
 
     @Override
-    public void onLendSet(String item) {
+    public void onItemSet(String item) {
         Log.i(TAG, "New item : " + item);
         lend.setItem(item);
         updateLend();
     }
 
     @Override
-    public void onLendSet(long lendDate) {
+    public void onDateSet(long lendDate) {
         Log.i(TAG, "New lend date : " + lendDate);
         lend.setLendDate(lendDate);
         updateLend();
+    }
+
+    @Override
+    public void onContactSet(String contact) {
+        Log.i(TAG, "New lend contact : " + contact);
+        // TODO update lend
     }
 
     /**
@@ -217,9 +239,9 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                     break;
                 case 2:
                     // lend contact
-                    holder.icon.setImageResource(R.drawable.ic_person_gray_24dp);
+                    holder.icon.setImageResource(R.drawable.ic_contact_gray_24dp);
                     holder.description.setText(R.string.contact);
-                    holder.value.setText(R.string.app_name);
+                    holder.value.setText(R.string.contact);
                     break;
             }
 

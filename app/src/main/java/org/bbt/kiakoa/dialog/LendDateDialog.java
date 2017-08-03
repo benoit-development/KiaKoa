@@ -54,7 +54,7 @@ public class LendDateDialog extends DialogFragment implements DatePickerDialog.O
             cal.set(Calendar.YEAR, year);
             cal.set(Calendar.MONTH, month);
             cal.set(Calendar.DAY_OF_MONTH, day);
-            onLendDateSetListener.onLendSet(cal.getTimeInMillis());
+            onLendDateSetListener.onDateSet(cal.getTimeInMillis());
         }
     }
 
@@ -75,6 +75,6 @@ public class LendDateDialog extends DialogFragment implements DatePickerDialog.O
          *
          * @param lendDate new lend date
          */
-        void onLendSet(long lendDate);
+        void onDateSet(long lendDate);
     }
 }

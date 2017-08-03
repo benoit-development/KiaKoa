@@ -98,7 +98,7 @@ public class LendItemDialog extends DialogFragment {
                         if (item.length() > 0) {
                             if (onLendItemSetListener != null) {
                                 Log.i(TAG, "new item : " + item);
-                                onLendItemSetListener.onLendSet(item);
+                                onLendItemSetListener.onItemSet(item);
                             } else {
                                 Log.w(TAG, "No listener to call, lend item typed");
                             }
@@ -134,6 +134,6 @@ public class LendItemDialog extends DialogFragment {
          *
          * @param item new item
          */
-        void onLendSet(String item);
+        void onItemSet(String item);
     }
 }

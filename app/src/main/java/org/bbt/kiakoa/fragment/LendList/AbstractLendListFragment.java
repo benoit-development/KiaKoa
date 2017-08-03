@@ -99,7 +99,7 @@ abstract public class AbstractLendListFragment extends ListFragment implements L
                 LendItemDialog newItemDialog = LendItemDialog.newInstance();
                 newItemDialog.setOnLendItemSetListener(new LendItemDialog.OnLendItemSetListener() {
                     @Override
-                    public void onLendSet(String item) {
+                    public void onItemSet(String item) {
                         addLend(new Lend(item));
                     }
                 });
@@ -135,7 +135,7 @@ abstract public class AbstractLendListFragment extends ListFragment implements L
         if ((prev != null) && (prev instanceof LendItemDialog)) {
             ((LendItemDialog) prev).setOnLendItemSetListener(new LendItemDialog.OnLendItemSetListener() {
                 @Override
-                public void onLendSet(String item) {
+                public void onItemSet(String item) {
                     addLend(new Lend(item));
                     lendAdapter.notifyDataSetChanged();
                 }

@@ -169,8 +169,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private class DrawerLayoutAdapter extends BaseAdapter {
 
-        private static final int TYPE_ITEM = 1;
-        private static final int TYPE_HEADER = 2;
+        private static final int TYPE_ITEM = 0;
+        private static final int TYPE_HEADER = 1;
 
         private final LayoutInflater inflater;
 
