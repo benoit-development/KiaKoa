@@ -1,10 +1,15 @@
 package org.bbt.kiakoa.fragment;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.LendContactDialog;
@@ -31,7 +37,16 @@ import java.text.DateFormat;
  */
 public class LendDetailsFragment extends ListFragment implements LendItemDialog.OnLendItemSetListener, LendDateDialog.OnLendDateSetListener, LendContactDialog.OnLendContactSetListener {
 
+    /**
+     * For log
+     */
     private static final String TAG = "LendDetailsFragment";
+
+    /**
+     * To get the result of the permission request
+     */
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
+
     /**
      * Current lend
      */
@@ -98,52 +113,111 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
 
         switch (position) {
             case 0:
                 Log.i(TAG, "Item modification requested");
-                Fragment itemDialog = getFragmentManager().findFragmentByTag("item");
-                if (itemDialog != null) {
-                    ft.remove(itemDialog);
-                }
-                ft.addToBackStack(null);
-
-                // Create and show the dialog.
-                LendItemDialog newItemDialog = LendItemDialog.newInstance(lend.getItem());
-                newItemDialog.setOnLendItemSetListener(this);
-                newItemDialog.show(ft, "item");
+                showItemDialog();
 
                 break;
             case 1:
                 Log.i(TAG, "Lend date modification requested");
-                Fragment lendDateDialog = getFragmentManager().findFragmentByTag("lend_date");
-                if (lendDateDialog != null) {
-                    ft.remove(lendDateDialog);
-                }
-
-                // Create and show the dialog
-                LendDateDialog newLendDateDialog = LendDateDialog.newInstance(lend.getLendDate());
-                newLendDateDialog.setOnLendDateSetListener(this);
-                newLendDateDialog.show(ft, "lend_date");
+                showDateDialog();
 
                 break;
             case 2:
                 Log.i(TAG, "Contact modification requested");
-                Fragment contactDialog = getFragmentManager().findFragmentByTag("contact");
-                if (contactDialog != null) {
-                    ft.remove(contactDialog);
-                }
-                ft.addToBackStack(null);
 
-                // Create and show the dialog.
-                // TODO get lend current contact name
-                LendContactDialog newContactDialog = LendContactDialog.newInstance("");
-                newContactDialog.setOnLendContactSetListener(this);
-                newContactDialog.show(ft, "contact");
+                // check permission to read contacts
+                boolean showDialog = true;
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                    // Should we show an explanation?
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_CONTACTS)) {
+                        // Show an explanation to the user *asynchronously*
+                        Log.i(TAG, "READ_CONTACTS permission not granted");
+                    } else {
+                        // No explanation needed, we can request the permission.
+                        requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                        showDialog = false;
+                    }
+                }
+
+                if (showDialog) {
+                    showContactDialog();
+                }
 
                 break;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                Log.i(TAG, "Permission result received");
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission granted !
+                    Log.i(TAG, "READ_CONTACTS permission granted");
+                } else {
+                    // permission denied
+                    Log.i(TAG, "READ_CONTACTS permission denied");
+                }
+                // in all cases we display contact dialog
+                showContactDialog();
+            }
+        }
+    }
+
+    /**
+     * Display dialog to set the lend contact
+     */
+    private void showContactDialog() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment contactDialog = getFragmentManager().findFragmentByTag("contact");
+        if (contactDialog != null) {
+            ft.remove(contactDialog);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        // TODO get lend current contact name
+        LendContactDialog newContactDialog = LendContactDialog.newInstance("");
+        newContactDialog.setOnLendContactSetListener(this);
+        newContactDialog.show(ft, "contact");
+    }
+
+    /**
+     * Display dialog to change the lend date
+     */
+    private void showDateDialog() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment lendDateDialog = getFragmentManager().findFragmentByTag("lend_date");
+        if (lendDateDialog != null) {
+            ft.remove(lendDateDialog);
+        }
+
+        // Create and show the dialog
+        LendDateDialog newLendDateDialog = LendDateDialog.newInstance(lend.getLendDate());
+        newLendDateDialog.setOnLendDateSetListener(this);
+        newLendDateDialog.show(ft, "lend_date");
+    }
+
+    /**
+     * Display dialog to enter a new item
+     */
+    private void showItemDialog() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment itemDialog = getFragmentManager().findFragmentByTag("item");
+        if (itemDialog != null) {
+            ft.remove(itemDialog);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        LendItemDialog newItemDialog = LendItemDialog.newInstance(lend.getItem());
+        newItemDialog.setOnLendItemSetListener(this);
+        newItemDialog.show(ft, "item");
     }
 
     @Override
