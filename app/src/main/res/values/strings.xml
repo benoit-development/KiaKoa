@@ -17,9 +17,11 @@
     <string name="item_icon">Item icon</string>
     <string name="lend_lists">Lend lists</string>
     <string name="configurations">Configurations</string>
+    <string name="contact">Contact</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>
     </plurals>
+
 </resources>

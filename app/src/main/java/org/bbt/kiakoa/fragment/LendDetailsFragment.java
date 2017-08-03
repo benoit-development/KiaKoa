@@ -168,7 +168,7 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
             if (lend == null) {
                 return 0;
             } else {
-                return 2;
+                return 3;
             }
         }
 
@@ -214,6 +214,12 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                     holder.icon.setImageResource(R.drawable.ic_event_gray_24dp);
                     holder.description.setText(R.string.lend_date);
                     holder.value.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(lend.getLendDate()));
+                    break;
+                case 2:
+                    // lend contact
+                    holder.icon.setImageResource(R.drawable.ic_person_gray_24dp);
+                    holder.description.setText(R.string.contact);
+                    holder.value.setText(R.string.app_name);
                     break;
             }
 

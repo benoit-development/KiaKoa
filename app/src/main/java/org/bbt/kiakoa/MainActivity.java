@@ -60,6 +60,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setHomeButtonEnabled(true);
+        }
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLeft = (LinearLayout) findViewById(R.id.left_drawer);
         ListView mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
@@ -76,12 +82,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.addDrawerListener(mDrawerToggle);
-
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
-            supportActionBar.setHomeButtonEnabled(true);
-        }
     }
 
     @Override
@@ -139,11 +139,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Log.i(TAG, "item clicked : " + position);
 
-        mDrawerLayout.closeDrawer(mDrawerLeft);
 
         // change the displayed Lend list
         // first position of lend lists is 1 (0 is the first header)
-        lendListsPager.showPage(position - 1);
+        switch (position) {
+            case 1:
+            case 2:
+            case 3:
+                // change displayed page in viewpager
+                lendListsPager.showPage(position - 1);
+                mDrawerLayout.closeDrawer(mDrawerLeft);
+                break;
+            case 5:
+                // launch setting activity
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                mDrawerLayout.closeDrawer(mDrawerLeft);
+                break;
+        }
     }
 
     @Override
@@ -156,8 +169,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private class DrawerLayoutAdapter extends BaseAdapter {
 
-        public static final int TYPE_ITEM = 1;
-        public static final int TYPE_HEADER = 2;
+        private static final int TYPE_ITEM = 1;
+        private static final int TYPE_HEADER = 2;
 
         private final LayoutInflater inflater;
 
@@ -211,6 +224,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (itemViewType == TYPE_HEADER) {
 
                     view = inflater.inflate(R.layout.adapter_drawer_layout_header, viewGroup, false);
+                    view.setEnabled(false);
+                    view.setOnClickListener(null);
                     // Creates a ViewHolderHeader
                     holder.text = view.findViewById(R.id.text);
 
