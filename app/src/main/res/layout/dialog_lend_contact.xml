@@ -10,6 +10,7 @@
         android:layout_margin="10dp"
         android:hint="@string/contact"
         android:inputType="text"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:completionThreshold="1" />
 
 </FrameLayout>
