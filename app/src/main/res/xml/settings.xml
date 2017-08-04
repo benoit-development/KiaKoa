@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+    Bad idea
     <PreferenceCategory
-        android:title="On verra">
+        android:title="@string/permissions">
 
         <SwitchPreference
-            android:key="checkbox_preference"
-            android:title="A voir"
-            android:summary="Vu ?" />
+            android:key="contact_read_permission"
+            android:title="@string/grant_contact_read_permission"
+            android:summary="@string/grant_contact_read_permission_summary" />
 
     </PreferenceCategory>
+    -->
 </PreferenceScreen>
