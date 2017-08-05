@@ -84,7 +84,8 @@ public class LendItemDialog extends DialogFragment {
 
                     }
                 }).create();
-        // manually
+
+        // manually manage ok button
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
             @Override

@@ -8,7 +8,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.provider.ContactsContract.Contacts;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
@@ -16,16 +16,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
-
-import java.util.ArrayList;
 
 /**
  * Dialog used to add a contact to the lend
@@ -47,28 +44,31 @@ public class LendContactDialog extends DialogFragment {
 
     private OnLendContactSetListener onLendContactSetListener;
 
-    // Defines the asynchronous callback for the contacts data loader
+    /**
+     * Asynchronous callback for the contacts data loader
+     */
     private LoaderManager.LoaderCallbacks<Cursor> contactsLoader =
             new LoaderManager.LoaderCallbacks<Cursor>() {
-                // Create and return the actual cursor loader for the contacts data
+
                 @Override
                 public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-                    Log.i(TAG, "Contact loader created");
+                    String search = contactEditText.getText().toString();
+                    Log.i(TAG, "Contact loader created. search : " + search);
+
                     // Define the columns to retrieve
-                    String[] projectionFields = new String[]{ContactsContract.Contacts._ID,
-                            ContactsContract.Contacts.DISPLAY_NAME,
-                            ContactsContract.Contacts.PHOTO_URI};
+                    String[] projectionFields = new String[]{Contacts._ID,
+                            Contacts.DISPLAY_NAME,
+                            Contacts.PHOTO_URI};
+
                     // Construct the loader
-                    CursorLoader cursorLoader = new CursorLoader(getContext(),
-                            ContactsContract.Contacts.CONTENT_URI, // URI
+                    return new CursorLoader(getContext(),
+                            Contacts.CONTENT_URI, // URI
                             projectionFields, // projection fields
-                            null, // the selection criteria
-                            null, // the selection args
-                            null // the sort order
+                            Contacts.DISPLAY_NAME + " LIKE ?", // the selection criteria
+                            new String[]{"%" + search + "%"}, // the selection args
+                            Contacts.DISPLAY_NAME + " COLLATE NOCASE ASC" // the sort order
                     );
-                    // Return the loader for use
-                    return cursorLoader;
-                };
+                }
 
                 // When the system finishes retrieving the Cursor through the CursorLoader,
                 // a call to the onLoadFinished() method takes place.
@@ -87,6 +87,10 @@ public class LendContactDialog extends DialogFragment {
                     contactAdapter.swapCursor(null);
                 }
             };
+
+    /**
+     * Adapter managing display of contact
+     */
     private SimpleCursorAdapter contactAdapter;
 
     /**
@@ -114,26 +118,39 @@ public class LendContactDialog extends DialogFragment {
         String contact = getArguments().getString("contact", "");
         contactEditText.setText(contact);
 
-        // setup automcomplete adapter
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG, "Read contact permission granted, attache adapter to search in contact list");
-            // Column data from cursor to bind views from
-            String[] uiBindFrom = {ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts.PHOTO_URI};
-            // View IDs which will have the respective column data inserted
-            int[] uiBindTo = {R.id.contact_name, R.id.contact_icon};
-            // Create the simple cursor adapter to use for our list
-            // specifying the template to inflate (item_contact),
+            // Init adapter
             contactAdapter = new SimpleCursorAdapter(
                     getContext(),
                     R.layout.autocomplete_lend_contact,
                     null,
-                    uiBindFrom,
-                    uiBindTo,
+                    new String[]{Contacts.DISPLAY_NAME, Contacts.PHOTO_URI},
+                    new int[]{R.id.contact_name, R.id.contact_icon},
                     0);
             contactEditText.setAdapter(contactAdapter);
 
+            // setup automcomplete adapter
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "Read contact permission granted, attach adapter to search in contact list");
+
+                // Listener on autocompete edit text to reload the contact loader
+                contactEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        Log.i(TAG, "Text has changed, reload contact adapter");
+                        getActivity().getSupportLoaderManager().restartLoader(CONTACT_LOADER_ID, new Bundle(), contactsLoader);
+                    }
+                });
+
             // Initialize the loader with a special ID and the defined callbacks from above
-            getActivity().getSupportLoaderManager().initLoader(CONTACT_LOADER_ID, new Bundle(),contactsLoader);
+            getActivity().getSupportLoaderManager().initLoader(CONTACT_LOADER_ID, new Bundle(), contactsLoader);
         }
 
 
@@ -152,7 +169,8 @@ public class LendContactDialog extends DialogFragment {
 
                     }
                 }).create();
-        // manually
+
+        // manually manage ok button
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
             @Override
@@ -198,38 +216,6 @@ public class LendContactDialog extends DialogFragment {
          * @param contact new contact
          */
         void onContactSet(String contact);
-    }
-
-    /**
-     * Adapter serving in
-     */
-    private class ContactAdapter extends BaseAdapter {
-
-        private ArrayList<String> contactList = new ArrayList<>();
-
-        @Override
-        public int getCount() {
-            return contactList.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return contactList.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            return null;
-        }
-
-        class ViewHolder {
-            TextView text;
-        }
     }
 
 }
