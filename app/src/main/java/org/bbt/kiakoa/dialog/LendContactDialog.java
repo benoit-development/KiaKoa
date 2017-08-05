@@ -20,7 +20,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 
 import org.bbt.kiakoa.R;
 
@@ -91,7 +93,7 @@ public class LendContactDialog extends DialogFragment {
     /**
      * Adapter managing display of contact
      */
-    private SimpleCursorAdapter contactAdapter;
+    private ContactAdapter contactAdapter;
 
     /**
      * Create a new instance of {@link LendContactDialog} with a contact
@@ -118,39 +120,43 @@ public class LendContactDialog extends DialogFragment {
         String contact = getArguments().getString("contact", "");
         contactEditText.setText(contact);
 
-            // Init adapter
-            contactAdapter = new SimpleCursorAdapter(
-                    getContext(),
-                    R.layout.autocomplete_lend_contact,
-                    null,
-                    new String[]{Contacts.DISPLAY_NAME, Contacts.PHOTO_URI},
-                    new int[]{R.id.contact_name, R.id.contact_icon},
-                    0);
-            contactEditText.setAdapter(contactAdapter);
+        // Init adapter
+        contactAdapter = new ContactAdapter();
+        contactEditText.setAdapter(contactAdapter);
 
-            // setup automcomplete adapter
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "Read contact permission granted, attach adapter to search in contact list");
+        // setup automcomplete adapter
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "Read contact permission granted, attach adapter to search in contact list");
 
-                // Listener on autocompete edit text to reload the contact loader
-                contactEditText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
+            // Listener on autocompete edit text to reload the contact loader
+            contactEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
 
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
 
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        Log.i(TAG, "Text has changed, reload contact adapter");
-                        getActivity().getSupportLoaderManager().restartLoader(CONTACT_LOADER_ID, new Bundle(), contactsLoader);
-                    }
-                });
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    Log.i(TAG, "Text has changed, reload contact adapter");
+                    getActivity().getSupportLoaderManager().restartLoader(CONTACT_LOADER_ID, new Bundle(), contactsLoader);
+                }
+            });
 
             // Initialize the loader with a special ID and the defined callbacks from above
             getActivity().getSupportLoaderManager().initLoader(CONTACT_LOADER_ID, new Bundle(), contactsLoader);
+
+            // Init listener on item selected in autompletion list
+            contactEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    String selectedContact = contactAdapter.getContact(i);
+                    Log.i(TAG, "Contact selected from search : " + selectedContact);
+                    contactEditText.setText(selectedContact);
+                }
+            });
         }
 
 
@@ -195,6 +201,50 @@ public class LendContactDialog extends DialogFragment {
 
 
         return dialog;
+    }
+
+    /**
+     * Adapter class for contact list
+     */
+    class ContactAdapter extends SimpleCursorAdapter {
+
+        public ContactAdapter() {
+            super(
+                    getContext(),
+                    R.layout.autocomplete_lend_contact,
+                    null,
+                    new String[]{Contacts.DISPLAY_NAME, Contacts.PHOTO_URI},
+                    new int[]{R.id.contact_name, R.id.contact_icon},
+                    0);
+            setViewBinder(getViewBinder());
+        }
+
+        /**
+         * To retrieve selected contact
+         *
+         * @param position contact position
+         * @return contact
+         */
+        public String getContact(int position) {
+            Cursor cursor = (Cursor) super.getItem(position);
+            return cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME));
+        }
+
+        @Override
+        public ViewBinder getViewBinder() {
+            return new ViewBinder() {
+                @Override
+                public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+                    String image = cursor.getString(cursor.getColumnIndex(Contacts.PHOTO_URI));
+                    if ((image == null) && (view instanceof ImageView)) {
+                        ((ImageView) view).setImageResource(R.drawable.ic_contact_gray_24dp);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            };
+        }
     }
 
     /**
