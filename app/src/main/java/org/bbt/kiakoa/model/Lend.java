@@ -33,6 +33,11 @@ public class Lend implements Parcelable {
      */
     private long returnDate = -1;
 
+    /**
+     * lend contact
+     */
+    private Contact contact;
+
     @Override
     public int describeContents() {
         return 0;
@@ -45,6 +50,7 @@ public class Lend implements Parcelable {
         out.writeString(item);
         out.writeLong(lendDate);
         out.writeLong(returnDate);
+        out.writeParcelable(contact, flags);
     }
 
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
@@ -68,6 +74,7 @@ public class Lend implements Parcelable {
         item = in.readString();
         lendDate = in.readLong();
         returnDate = in.readLong();
+        contact = in.readParcelable(Contact.class.getClassLoader());
     }
 
     /**
@@ -140,6 +147,24 @@ public class Lend implements Parcelable {
      */
     public void setReturnDate(long returnDate) {
         this.returnDate = returnDate;
+    }
+
+    /**
+     * contact getter
+     *
+     * @return contact
+     */
+    public Contact getContact() {
+        return contact;
+    }
+
+    /**
+     * contact setter
+     *
+     * @param contact contact
+     */
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 
     /**

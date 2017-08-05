@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract.Contacts;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
@@ -25,6 +26,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.model.Contact;
 
 /**
  * Dialog used to add a contact to the lend
@@ -49,7 +51,7 @@ public class LendContactDialog extends DialogFragment {
     /**
      * Asynchronous callback for the contacts data loader
      */
-    private LoaderManager.LoaderCallbacks<Cursor> contactsLoader =
+    private final LoaderManager.LoaderCallbacks<Cursor> contactsLoader =
             new LoaderManager.LoaderCallbacks<Cursor>() {
 
                 @Override
@@ -100,10 +102,10 @@ public class LendContactDialog extends DialogFragment {
      *
      * @param contact lend contact
      */
-    public static LendContactDialog newInstance(String contact) {
+    public static LendContactDialog newInstance(Contact contact) {
         LendContactDialog dialog = new LendContactDialog();
         Bundle args = new Bundle();
-        args.putString("contact", contact);
+        args.putParcelable("contact", contact);
         args.putInt("action", ACTION_UPDATE);
         dialog.setArguments(args);
         return dialog;
@@ -117,8 +119,11 @@ public class LendContactDialog extends DialogFragment {
         @SuppressLint
                 ("InflateParams") View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_lend_contact, null, false);
         contactEditText = view.findViewById(R.id.contact);
-        String contact = getArguments().getString("contact", "");
-        contactEditText.setText(contact);
+        Contact contact = getArguments().getParcelable("contact");
+        if (contact == null) {
+            contact = new Contact("");
+        }
+        contactEditText.setText(contact.getName());
 
         // Init adapter
         contactAdapter = new ContactAdapter();
@@ -152,9 +157,8 @@ public class LendContactDialog extends DialogFragment {
             contactEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    String selectedContact = contactAdapter.getContact(i);
-                    Log.i(TAG, "Contact selected from search : " + selectedContact);
-                    contactEditText.setText(selectedContact);
+                    // set lend contact from user contact list
+                    setLendContact(contactAdapter.getContact(i));
                 }
             });
         }
@@ -174,7 +178,14 @@ public class LendContactDialog extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
-                }).create();
+                })
+                .setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        setLendContact(null);
+                    }
+                })
+                .create();
 
         // manually manage ok button
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -186,14 +197,8 @@ public class LendContactDialog extends DialogFragment {
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String contact = contactEditText.getText().toString();
-                        if (onLendContactSetListener != null) {
-                            Log.i(TAG, "new contact : " + contact);
-                            onLendContactSetListener.onContactSet(contact);
-                        } else {
-                            Log.w(TAG, "No listener to call, lend contact typed");
-                        }
-                        dismiss();
+                        // set lend contact only with name
+                        setLendContact(new Contact(contactEditText.getText().toString()));
                     }
                 });
             }
@@ -204,11 +209,34 @@ public class LendContactDialog extends DialogFragment {
     }
 
     /**
+     * set contact then close dialog
+     * @param contact new contact
+     */
+    private void setLendContact(@Nullable Contact contact) {
+
+        // unset contact if it's not complete (a valid name)
+        if (contact == null || (contact.getName() == null) || (contact.getName().length() == 0)) {
+            Log.i(TAG, "No contact to set");
+            contact = null;
+        } else {
+            Log.i(TAG, "new contact : " + contact.getName());
+        }
+
+        // notify listener
+        if (onLendContactSetListener != null) {
+            onLendContactSetListener.onContactSet(contact);
+        } else {
+            Log.w(TAG, "No listener to call, lend contact typed");
+        }
+        dismiss();
+    }
+
+    /**
      * Adapter class for contact list
      */
-    class ContactAdapter extends SimpleCursorAdapter {
+    private class ContactAdapter extends SimpleCursorAdapter {
 
-        public ContactAdapter() {
+        private ContactAdapter() {
             super(
                     getContext(),
                     R.layout.autocomplete_lend_contact,
@@ -223,11 +251,20 @@ public class LendContactDialog extends DialogFragment {
          * To retrieve selected contact
          *
          * @param position contact position
-         * @return contact
+         * @return contact (can be null)
          */
-        public String getContact(int position) {
-            Cursor cursor = (Cursor) super.getItem(position);
-            return cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME));
+        @Nullable
+        private Contact getContact(int position) {
+            Object item = super.getItem(position);
+            if (item instanceof Cursor) {
+                Cursor cursor = (Cursor) item;
+                return new Contact(
+                        cursor.getLong(cursor.getColumnIndex(Contacts._ID)),
+                        cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME)),
+                        cursor.getString(cursor.getColumnIndex(Contacts.PHOTO_URI)));
+            } else {
+                return null;
+            }
         }
 
         @Override
@@ -265,7 +302,7 @@ public class LendContactDialog extends DialogFragment {
          *
          * @param contact new contact
          */
-        void onContactSet(String contact);
+        void onContactSet(Contact contact);
     }
 
 }

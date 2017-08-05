@@ -2,7 +2,9 @@ package org.bbt.kiakoa.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -22,6 +24,7 @@ import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.LendContactDialog;
 import org.bbt.kiakoa.dialog.LendDateDialog;
 import org.bbt.kiakoa.dialog.LendItemDialog;
+import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Lend;
 import org.bbt.kiakoa.model.LendLists;
 
@@ -149,7 +152,7 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
                 Log.i(TAG, "Permission result received");
@@ -180,7 +183,7 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
 
         // Create and show the dialog.
         // TODO get lend current contact name
-        LendContactDialog newContactDialog = LendContactDialog.newInstance("");
+        LendContactDialog newContactDialog = LendContactDialog.newInstance(lend.getContact());
         newContactDialog.setOnLendContactSetListener(this);
         newContactDialog.show(ft, "contact");
     }
@@ -233,9 +236,10 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
     }
 
     @Override
-    public void onContactSet(String contact) {
+    public void onContactSet(Contact contact) {
         Log.i(TAG, "New lend contact : " + contact);
-        // TODO update lend
+        lend.setContact(contact);
+        updateLend();
     }
 
     /**
@@ -311,9 +315,26 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                     break;
                 case 2:
                     // lend contact
-                    holder.icon.setImageResource(R.drawable.ic_contact_gray_24dp);
                     holder.description.setText(R.string.contact);
-                    holder.value.setText(R.string.contact);
+                    // contact details
+                    Contact contact = lend.getContact();
+                    if (contact != null) {
+                        String name = contact.getName();
+                        if (name != null) {
+                            holder.value.setText(name);
+                        } else {
+                            holder.value.setText(R.string.no_contact);
+                        }
+                        String photoUri = contact.getPhotoUri();
+                        if (photoUri != null) {
+                            holder.icon.setImageURI(Uri.parse(photoUri));
+                        } else {
+                            holder.icon.setImageResource(R.drawable.ic_contact_gray_24dp);
+                        }
+                    } else {
+                        holder.icon.setImageResource(R.drawable.ic_contact_gray_24dp);
+                        holder.value.setText(R.string.no_contact);
+                    }
                     break;
             }
 

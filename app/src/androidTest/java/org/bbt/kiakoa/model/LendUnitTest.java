@@ -21,6 +21,7 @@ public class LendUnitTest {
     private static final String LEND_ITEM = "a label";
     private static final String LEND_ANOTHER_ITEM = "a another label";
     final private Lend lendTest = new Lend(LEND_ITEM);
+    final private Contact contactTest = new Contact(17, "pouet", "photo_uri");
 
     @Test
     public void lend_parcelable() throws Exception {
@@ -38,6 +39,8 @@ public class LendUnitTest {
         assertEquals(lendTest.getLendDate(), newLend.getLendDate());
         // no date
         assertEquals(-1, newLend.getReturnDate());
+        // no contact
+        assertNull(newLend.getContact());
 
         // with a return date
         lendTest.setReturnDate(new Date().getTime());
@@ -46,6 +49,16 @@ public class LendUnitTest {
         parcel.setDataPosition(0);
         newLend = Lend.CREATOR.createFromParcel(parcel);
         assertEquals(lendTest.getReturnDate(), newLend.getReturnDate());
+
+        // with a contact
+        lendTest.setContact(contactTest);
+        parcel = Parcel.obtain();
+        lendTest.writeToParcel(parcel, lendTest.describeContents());
+        parcel.setDataPosition(0);
+        newLend = Lend.CREATOR.createFromParcel(parcel);
+        assertEquals(17, newLend.getContact().getId());
+        assertEquals("pouet", newLend.getContact().getName());
+        assertEquals("photo_uri", newLend.getContact().getPhotoUri());
     }
 
     @Test

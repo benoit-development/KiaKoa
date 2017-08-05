@@ -2,8 +2,6 @@ package org.bbt.kiakoa;
 
 
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +11,12 @@ import android.support.v7.widget.Toolbar;
  * Activity displaying application settings
  */
 public class SettingsActivity extends AppCompatActivity {
+
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+/*    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
@@ -41,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
             return true;
         }
     };
-
+*/
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
