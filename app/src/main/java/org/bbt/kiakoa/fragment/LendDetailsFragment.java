@@ -292,6 +292,7 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                 holder.icon = view.findViewById(R.id.icon);
                 holder.description = view.findViewById(R.id.description);
                 holder.value = view.findViewById(R.id.value);
+                holder.image = view.findViewById(R.id.image);
 
                 view.setTag(holder);
             } else {
@@ -306,33 +307,37 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                     holder.icon.setImageResource(R.drawable.ic_item_gray_24dp);
                     holder.description.setText(R.string.item);
                     holder.value.setText(lend.getItem());
+                    holder.image.setVisibility(View.GONE);
                     break;
                 case 1:
                     // lend date
                     holder.icon.setImageResource(R.drawable.ic_event_gray_24dp);
                     holder.description.setText(R.string.lend_date);
                     holder.value.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(lend.getLendDate()));
+                    holder.image.setVisibility(View.GONE);
                     break;
                 case 2:
                     // lend contact
                     holder.description.setText(R.string.contact);
+                    holder.image.setVisibility(View.GONE);
+                    holder.icon.setImageResource(R.drawable.ic_contact_gray_24dp);
                     // contact details
                     Contact contact = lend.getContact();
                     if (contact != null) {
+                        // set name if possible
                         String name = contact.getName();
                         if (name != null) {
                             holder.value.setText(name);
                         } else {
                             holder.value.setText(R.string.no_contact);
                         }
+                        // set image if possible
                         String photoUri = contact.getPhotoUri();
                         if (photoUri != null) {
-                            holder.icon.setImageURI(Uri.parse(photoUri));
-                        } else {
-                            holder.icon.setImageResource(R.drawable.ic_contact_gray_24dp);
+                            holder.image.setImageURI(Uri.parse(photoUri));
+                            holder.image.setVisibility(View.VISIBLE);
                         }
                     } else {
-                        holder.icon.setImageResource(R.drawable.ic_contact_gray_24dp);
                         holder.value.setText(R.string.no_contact);
                     }
                     break;
@@ -345,6 +350,7 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
             ImageView icon;
             TextView description;
             TextView value;
+            ImageView image;
         }
     }
 }

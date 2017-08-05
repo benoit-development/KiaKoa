@@ -98,6 +98,11 @@ public class LendContactDialog extends DialogFragment {
     private ContactAdapter contactAdapter;
 
     /**
+     * Instance of the current contact in lend
+     */
+    private Contact currentContact;
+
+    /**
      * Create a new instance of {@link LendContactDialog} with a contact
      *
      * @param contact lend contact
@@ -118,12 +123,14 @@ public class LendContactDialog extends DialogFragment {
         // Inflate view
         @SuppressLint
                 ("InflateParams") View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_lend_contact, null, false);
+
+        // custom autocomplete field
         contactEditText = view.findViewById(R.id.contact);
-        Contact contact = getArguments().getParcelable("contact");
-        if (contact == null) {
-            contact = new Contact("");
+        currentContact = getArguments().getParcelable("contact");
+        if (currentContact == null) {
+            currentContact = new Contact("");
         }
-        contactEditText.setText(contact.getName());
+        contactEditText.setText(currentContact.getName());
 
         // Init adapter
         contactAdapter = new ContactAdapter();
@@ -163,14 +170,28 @@ public class LendContactDialog extends DialogFragment {
             });
         }
 
+        // clear button
+        view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                contactEditText.setText("");
+            }
+        });
 
-        final AlertDialog dialog = new AlertDialog.Builder(getActivity())
+
+        return new AlertDialog.Builder(getActivity())
                 .setTitle((ACTION_CREATE == getArguments().getInt("action", ACTION_CREATE)) ? R.string.new_lend : R.string.contact)
                 .setView(view)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        // set lend contact only with name
+                        String newName = contactEditText.getText().toString();
+                        if (!currentContact.getName().equals(newName)) {
+                            setLendContact(new Contact(newName));
+                        } else {
+                            setLendContact(currentContact);
+                        }
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -186,33 +207,14 @@ public class LendContactDialog extends DialogFragment {
                     }
                 })
                 .create();
-
-        // manually manage ok button
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-
-                // Change positive button click listener to manage dismiss
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // set lend contact only with name
-                        setLendContact(new Contact(contactEditText.getText().toString()));
-                    }
-                });
-            }
-        });
-
-
-        return dialog;
     }
 
     /**
      * set contact then close dialog
-     * @param contact new contact
+     *
+     * @param contact new lend contact
      */
-    private void setLendContact(@Nullable Contact contact) {
+    private void setLendContact(Contact contact) {
 
         // unset contact if it's not complete (a valid name)
         if (contact == null || (contact.getName() == null) || (contact.getName().length() == 0)) {

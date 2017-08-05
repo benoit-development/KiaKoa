@@ -69,6 +69,14 @@ public class LendItemDialog extends DialogFragment {
         String item = getArguments().getString("item", "");
         itemEditText.setText(item);
 
+        // clear button
+        view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemEditText.setText("");
+            }
+        });
+
         final AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle((ACTION_CREATE == getArguments().getInt("action", ACTION_CREATE)) ? R.string.new_lend : R.string.item)
                 .setView(view)

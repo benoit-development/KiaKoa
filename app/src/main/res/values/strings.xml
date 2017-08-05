@@ -20,6 +20,7 @@
     <string name="contact">Contact</string>
     <string name="delete">Delete</string>
     <string name="no_contact">No contact</string>
+    <string name="clear">Clear</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>

@@ -16,7 +16,7 @@ public class Contact implements Parcelable {
     /**
      * name from Contacts.DISPLAY_NAME or not (depending on used constructor)
      */
-    private String name;
+    private final String name;
 
     /**
      * photo from Contacts.PHOTO_URI
@@ -89,14 +89,6 @@ public class Contact implements Parcelable {
     }
 
     /**
-     * id setter
-     * @param id id
-     */
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    /**
      * name getter
      * @return name
      */
@@ -105,27 +97,11 @@ public class Contact implements Parcelable {
     }
 
     /**
-     * name setter
-     * @param name name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * photo uri getter
      * @return photo uri
      */
     public String getPhotoUri() {
         return photoUri;
-    }
-
-    /**
-     * photo uri setter
-     * @param photoUri photo uri
-     */
-    public void setPhotoUri(String photoUri) {
-        this.photoUri = photoUri;
     }
 
 
