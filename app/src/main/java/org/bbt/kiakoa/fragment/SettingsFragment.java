@@ -10,10 +10,6 @@ import org.bbt.kiakoa.R;
  * Fragment managing settings
  */
 public class SettingsFragment extends PreferenceFragment {
-    /**
-     * For Log
-     */
-    private static final String TAG = "SettingsFragment";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

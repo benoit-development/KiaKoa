@@ -50,5 +50,8 @@ public class LendDetailsActivity extends AppCompatActivity {
 
         // send lend to fragment
         lendDetailFragment.setLend(lend);
+
+        // title
+        setTitle(R.string.lend_details);
     }
 }
