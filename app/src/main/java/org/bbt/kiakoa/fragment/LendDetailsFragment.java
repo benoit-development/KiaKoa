@@ -4,8 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -21,6 +23,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.LendContactDialog;
@@ -46,14 +49,24 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
     private static final String TAG = "LendDetailsFragment";
 
     /**
-     * To get the result of the permission request
+     * To get the result of the permission read contact request
      */
-    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 123;
 
     /**
      * To get a picture for the item
      */
-    private static final int REQUEST_CODE_GET_PICTURE = 234;
+    private static final int REQUEST_CODE_GET_PICTURE_GALLERY = 234;
+
+    /**
+     * To get a picture for the item
+     */
+    private static final int REQUEST_CODE_GET_PICTURE_CAMERA = 345;
+
+    /**
+     * To get the result of the permission write external storage request
+     */
+    private static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 456;
 
     /**
      * Current lend
@@ -64,6 +77,11 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
      * Instance of used {@link LendDetailsListAdapter}
      */
     private LendDetailsListAdapter adapter;
+
+    /**
+     * Intent to take a picture from camera
+     */
+    private final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
     @Override
     public void onResume() {
@@ -130,10 +148,44 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                 break;
             case 1:
                 Log.i(TAG, "Requesting picture for the item");
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_picture_item, lend.getItem())), REQUEST_CODE_GET_PICTURE);
+                PackageManager packageManager = getContext().getPackageManager();
+                // to check if we can display camera activity
+                boolean camera = false;
+                if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+
+                    Log.i(TAG, "Requesting picture : use camera");
+                    if (takePictureIntent.resolveActivity(packageManager) != null) {
+
+                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            // Should we show an explanation?
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                                // Show an explanation to the user *asynchronously*
+                                Log.i(TAG, "WRITE_EXTERNAL_STORAGE permission not granted");
+                                Toast.makeText(getContext(), R.string.write_external_storage_required, Toast.LENGTH_SHORT).show();
+                            } else {
+                                // No explanation needed, we can request the permission.
+                                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                            }
+                        } else {
+                            startActivityForResult(takePictureIntent, REQUEST_CODE_GET_PICTURE_CAMERA);
+                        }
+                        camera = true;
+
+                    } else {
+                        Log.w(TAG, "Camera request failed");
+                    }
+
+                }
+
+                if (!camera){
+
+                    Log.i(TAG, "Requesting picture : use gallery");
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_picture_item, lend.getItem())), REQUEST_CODE_GET_PICTURE_GALLERY);
+
+                }
                 break;
             case 2:
                 Log.i(TAG, "Lend date modification requested");
@@ -152,7 +204,7 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                         Log.i(TAG, "READ_CONTACTS permission not granted");
                     } else {
                         // No explanation needed, we can request the permission.
-                        requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                        requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
                         showDialog = false;
                     }
                 }
@@ -168,8 +220,8 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_CONTACTS:
-                Log.i(TAG, "Permission result received");
+            case PERMISSIONS_REQUEST_READ_CONTACTS:
+                Log.i(TAG, "Permission result received for read contact");
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission granted !
@@ -181,20 +233,47 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                 // in all cases we display contact dialog
                 showContactDialog();
                 break;
+            case PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
+                Log.i(TAG, "Permission result received for write external storage");
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission granted !
+                    Log.i(TAG, "WRITE_EXTERNAL_STORAGE permission granted");
+                    startActivityForResult(takePictureIntent, REQUEST_CODE_GET_PICTURE_CAMERA);
+                    // launch camera
+                } else {
+                    // permission denied
+                    Log.i(TAG, "WRITE_EXTERNAL_STORAGE permission denied");
+                }
+                break;
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_GET_PICTURE:
-                if(resultCode==Activity.RESULT_OK)
-                {
-                    Log.i(TAG, "Picture returned");
+            case REQUEST_CODE_GET_PICTURE_GALLERY:
+                if (resultCode == Activity.RESULT_OK) {
                     lend.setItemPicture(data.getData().toString());
                     updateLend();
                 } else {
-                    Log.i(TAG, "No picture returned");
+                    Log.i(TAG, "No picture returned from gallery");
+                }
+                break;
+            case REQUEST_CODE_GET_PICTURE_CAMERA:
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.i(TAG, "Picture returned from camera");
+                    Bundle extras = data.getExtras();
+                    String uri = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), (Bitmap) extras.get("data"), lend.getItem(), "");
+                    if (uri != null) {
+                        Log.i(TAG, "Image added to media store");
+                        lend.setItemPicture(uri);
+                        updateLend();
+                    } else {
+                        Log.e(TAG, "Image not added to media store :-(");
+                    }
+                } else {
+                    Log.w(TAG, "No picture returned from camera");
                 }
                 break;
         }

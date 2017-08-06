@@ -25,6 +25,7 @@
     <string name="picture">Picture</string>
     <string name="no_picture">No picture</string>
     <string name="choose_picture_item">Choose a picture for the item %s</string>
+    <string name="write_external_storage_required">Permission to write on external storage is required to take a picture</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>

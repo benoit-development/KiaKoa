@@ -50,6 +50,7 @@
         android:contentDescription="@string/contact"
         android:elevation="8dp"
         android:src="@drawable/ic_picture_24dp"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:scaleType="centerCrop" />
 
 </LinearLayout>
