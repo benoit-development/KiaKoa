@@ -72,6 +72,9 @@ public class LendUnitTest {
         // contact with picture
         lendTest.setContact(contactTest);
         assertEquals(Uri.parse(contactTest.getPhotoUri()), lendTest.getPicture());
+        // item with picture
+        lendTest.setItemPicture("coucou");
+        assertEquals(Uri.parse("coucou"), lendTest.getPicture());
     }
 
     @Test

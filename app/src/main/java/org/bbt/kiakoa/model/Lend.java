@@ -25,6 +25,11 @@ public class Lend implements Parcelable {
     private String item;
 
     /**
+     * an {@link Uri} path for the item picture
+     */
+    private String itemPicture;
+
+    /**
      * Lend date
      */
     private long lendDate = System.currentTimeMillis();
@@ -50,6 +55,7 @@ public class Lend implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(id);
         out.writeString(item);
+        out.writeString(itemPicture);
         out.writeLong(lendDate);
         out.writeLong(returnDate);
         out.writeParcelable(contact, flags);
@@ -74,6 +80,7 @@ public class Lend implements Parcelable {
     private Lend(Parcel in) {
         id = in.readLong();
         item = in.readString();
+        itemPicture = in.readString();
         lendDate = in.readLong();
         returnDate = in.readLong();
         contact = in.readParcelable(Contact.class.getClassLoader());
@@ -104,6 +111,24 @@ public class Lend implements Parcelable {
      */
     public void setItem(String item) {
         this.item = item;
+    }
+
+    /**
+     * item picture Getter
+     *
+     * @return item label
+     */
+    public String getItemPicture() {
+        return itemPicture;
+    }
+
+    /**
+     * item setter
+     *
+     * @param itemPicture item label
+     */
+    public void setItemPicture(String itemPicture) {
+        this.itemPicture = itemPicture;
     }
 
     /**
@@ -205,7 +230,9 @@ public class Lend implements Parcelable {
      */
     public @Nullable Uri getPicture() {
         Uri result = null;
-        if (contact != null) {
+        if (itemPicture != null) {
+            result = Uri.parse(itemPicture);
+        } else if (contact != null) {
             String contactPhoto = contact.getPhotoUri();
             if (contactPhoto != null) {
                 result = Uri.parse(contactPhoto);
