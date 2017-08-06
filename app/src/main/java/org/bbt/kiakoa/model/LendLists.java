@@ -369,4 +369,13 @@ public class LendLists {
         void onLendListsChanged();
     }
 
+    /**
+     * to get the number of lends in all lists
+     *
+     * @return lend count
+     */
+    public int getLendCount() {
+        return lendToList.size() + lendFromList.size() + lendArchiveList.size();
+    }
+
 }

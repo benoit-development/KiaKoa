@@ -61,17 +61,20 @@ public class LendListUnitTest {
         assertEquals(2, lendLists.getLendToList().size());
         assertEquals(3, lendLists.getLendFromList().size());
         assertEquals(1, lendLists.getLendArchiveList().size());
+        assertEquals(6, lendLists.getLendCount());
 
         assertTrue(lendLists.addLendArchive(lend4, context));
         assertEquals(2, lendLists.getLendToList().size());
         assertEquals(2, lendLists.getLendFromList().size());
         assertEquals(2, lendLists.getLendArchiveList().size());
+        assertEquals(6, lendLists.getLendCount());
 
         // clear lists
         lendLists.clearLists(context);
         assertEquals(0, lendLists.getLendToList().size());
         assertEquals(0, lendLists.getLendFromList().size());
         assertEquals(0, lendLists.getLendArchiveList().size());
+        assertEquals(0, lendLists.getLendCount());
 
     }
 

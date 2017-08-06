@@ -16,7 +16,7 @@
     <string name="close">Close</string>
     <string name="item_icon">Item icon</string>
     <string name="lend_lists">Lend lists</string>
-    <string name="configurations">Configurations</string>
+    <string name="tools">Tools</string>
     <string name="contact">Contact</string>
     <string name="delete">Delete</string>
     <string name="no_contact">No contact</string>
@@ -26,10 +26,18 @@
     <string name="no_picture">No picture</string>
     <string name="choose_picture_item">Choose a picture for the item %s</string>
     <string name="write_external_storage_required">Permission to write on external storage is required to take a picture</string>
+    <string name="clear_all_lists">Clear all lists</string>
+    <string name="clear_all_lists_question">Do you want to clear all lend lists ?</string>
+    <string name="all_lend_lists_already_empty">All lend lists are already empty</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="plural_item">
+        <item quantity="zero">%d item</item>
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
     </plurals>
 
 </resources>

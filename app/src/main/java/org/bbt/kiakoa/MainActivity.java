@@ -3,6 +3,8 @@ package org.bbt.kiakoa;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,7 +21,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.bbt.kiakoa.dialog.ClearAllDialog;
 import org.bbt.kiakoa.fragment.LendDetailsFragment;
 import org.bbt.kiakoa.fragment.LendListsPagerFragment;
 import org.bbt.kiakoa.model.Lend;
@@ -139,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Log.i(TAG, "item clicked : " + position);
 
-
         // change the displayed Lend list
         // first position of lend lists is 1 (0 is the first header)
         switch (position) {
@@ -148,15 +151,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case 3:
                 // change displayed page in viewpager
                 lendListsPager.showPage(position - 1);
-                mDrawerLayout.closeDrawer(mDrawerLeft);
                 break;
             case 5:
                 // launch setting activity
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
-                mDrawerLayout.closeDrawer(mDrawerLeft);
+                break;
+            case 6:
+                // check if there are lend lists to be clear
+                if (LendLists.getInstance().getLendCount() == 0) {
+                    Toast.makeText(this, R.string.all_lend_lists_already_empty, Toast.LENGTH_SHORT).show();
+                } else {
+                    // show dialog to confirm the user desire to clear all lists
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    Fragment clearAllDialog = getSupportFragmentManager().findFragmentByTag("confirm_clear");
+                    if (clearAllDialog != null) {
+                        ft.remove(clearAllDialog);
+                    }
+                    ft.addToBackStack(null);
+
+                    // Create and show the dialog
+                    ClearAllDialog newClearAllDialog = ClearAllDialog.newInstance();
+                    newClearAllDialog.show(ft, "confirm_clear");
+                }
                 break;
         }
+        mDrawerLayout.closeDrawer(mDrawerLeft);
     }
 
     @Override
@@ -180,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public int getCount() {
-            return 6;
+            return 7;
         }
 
         @Override
@@ -195,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         /**
          * 2 types possibles TYPE_ITEM and TYPE_HEADER
+         *
          * @return type count
          */
         @Override
@@ -268,11 +289,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     lendCount = LendLists.getInstance().getLendArchiveList().size();
                     break;
                 case 4:
-                    textId = R.string.configurations;
+                    textId = R.string.tools;
                     break;
                 case 5:
                     iconId = R.drawable.ic_settings_24dp;
                     textId = R.string.settings;
+                    break;
+                case 6:
+                    iconId = R.drawable.ic_delete_forever_24dp;
+                    textId = R.string.clear_all_lists;
                     break;
             }
             if (iconId != 0) {
@@ -285,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 holder.badge.setText(String.valueOf(lendCount));
             }
             if (itemViewType == TYPE_ITEM) {
-                holder.badge.setVisibility((lendCount == 0)?View.GONE:View.VISIBLE);
+                holder.badge.setVisibility((lendCount == 0) ? View.GONE : View.VISIBLE);
             }
 
             return view;
