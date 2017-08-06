@@ -1,9 +1,12 @@
 package org.bbt.kiakoa.fragment;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -47,6 +50,11 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
      * To get the result of the permission request
      */
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
+
+    /**
+     * To get a picture for the item
+     */
+    private static final int REQUEST_CODE_GET_PICTURE = 234;
 
     /**
      * Current lend
@@ -122,11 +130,18 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
 
                 break;
             case 1:
+                Log.i(TAG, "Requesting picture for the item");
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_picture_item, lend.getItem())), REQUEST_CODE_GET_PICTURE);
+                break;
+            case 2:
                 Log.i(TAG, "Lend date modification requested");
                 showDateDialog();
 
                 break;
-            case 2:
+            case 3:
                 Log.i(TAG, "Contact modification requested");
 
                 // check permission to read contacts
@@ -154,7 +169,7 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS:
                 Log.i(TAG, "Permission result received");
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -166,7 +181,23 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                 }
                 // in all cases we display contact dialog
                 showContactDialog();
-            }
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_GET_PICTURE:
+                if(resultCode==Activity.RESULT_OK)
+                {
+                    Log.i(TAG, "Picture returned");
+                    lend.setItemPicture(data.getData().toString());
+                    updateLend();
+                } else {
+                    Log.i(TAG, "No picture returned");
+                }
+                break;
         }
     }
 
@@ -182,7 +213,6 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        // TODO get lend current contact name
         LendContactDialog newContactDialog = LendContactDialog.newInstance(lend.getContact());
         newContactDialog.setOnLendContactSetListener(this);
         newContactDialog.show(ft, "contact");
@@ -266,7 +296,7 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
             if (lend == null) {
                 return 0;
             } else {
-                return 3;
+                return 4;
             }
         }
 
@@ -310,13 +340,28 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                     holder.image.setVisibility(View.GONE);
                     break;
                 case 1:
+                    // lend item picture
+                    holder.description.setText(R.string.picture);
+                    holder.icon.setImageResource(R.drawable.ic_picture_24dp);
+                    String pictureUri = lend.getItemPicture();
+                    if (pictureUri != null) {
+                        holder.image.setImageURI(Uri.parse(pictureUri));
+                        holder.image.setVisibility(View.VISIBLE);
+                        holder.value.setVisibility(View.INVISIBLE);
+                    } else {
+                        holder.image.setVisibility(View.GONE);
+                        holder.value.setVisibility(View.VISIBLE);
+                        holder.value.setText(R.string.no_picture);
+                    }
+                    break;
+                case 2:
                     // lend date
                     holder.icon.setImageResource(R.drawable.ic_event_24dp);
                     holder.description.setText(R.string.lend_date);
                     holder.value.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(lend.getLendDate()));
                     holder.image.setVisibility(View.GONE);
                     break;
-                case 2:
+                case 3:
                     // lend contact
                     holder.description.setText(R.string.contact);
                     holder.image.setVisibility(View.GONE);

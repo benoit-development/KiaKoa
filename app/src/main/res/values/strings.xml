@@ -22,6 +22,9 @@
     <string name="no_contact">No contact</string>
     <string name="clear">Clear</string>
     <string name="lend_details">Lend details</string>
+    <string name="picture">Picture</string>
+    <string name="no_picture">No picture</string>
+    <string name="choose_picture_item">Choose a picture for the item %s</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
