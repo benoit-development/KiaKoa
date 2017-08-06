@@ -2,6 +2,7 @@ package org.bbt.kiakoa.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Class of a contact for a lend
@@ -24,7 +25,7 @@ public class Contact implements Parcelable {
     private String photoUri;
 
     /**
-     * Constructor with contact inforamtion from user contact list
+     * Constructor with contact information from user contact list
      *
      * @param id contact id from Contacts._ID
      * @param name contact name from Contacts.DISPLAY_NAME
@@ -92,7 +93,7 @@ public class Contact implements Parcelable {
      * name getter
      * @return name
      */
-    public String getName() {
+    public @NonNull String getName() {
         return name;
     }
 

@@ -1,7 +1,9 @@
 package org.bbt.kiakoa.model;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 
@@ -194,5 +196,22 @@ public class Lend implements Parcelable {
         long different = System.currentTimeMillis() - lendDate;
         long dayInMillis = 1000 * 60 * 60 * 24;
         return (int) (different / dayInMillis);
+    }
+
+    /**
+     * getter on an {@link Uri} picture. It can return the photo of the item or the contact photo if any exists.
+     * return null otherwise.
+     * @return an Uri picture or null
+     */
+    public @Nullable Uri getPicture() {
+        Uri result = null;
+        if (contact != null) {
+            String contactPhoto = contact.getPhotoUri();
+            if (contactPhoto != null) {
+                result = Uri.parse(contactPhoto);
+            }
+        }
+
+        return result;
     }
 }

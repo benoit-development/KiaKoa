@@ -1,13 +1,16 @@
 package org.bbt.kiakoa.fragment.LendList;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Lend;
 
 import java.util.ArrayList;
@@ -51,7 +54,9 @@ class LendListAdapter extends BaseAdapter {
 
             // Creates a ViewHolder
             holder = new ViewHolder();
+            holder.picture = view.findViewById(R.id.picture);
             holder.item = view.findViewById(R.id.item);
+            holder.contact = view.findViewById(R.id.contact);
             holder.duration = view.findViewById(R.id.duration);
 
             view.setTag(holder);
@@ -62,15 +67,37 @@ class LendListAdapter extends BaseAdapter {
 
         // Bind the data efficiently with the holder.
         Lend lend = lendList.get(i);
+        // item
         holder.item.setText(lend.getItem());
+        // contact
+        Contact contact = lend.getContact();
+        if ((contact != null)) {
+            holder.contact.setText(contact.getName());
+            holder.contact.setVisibility(View.VISIBLE);
+        } else {
+            holder.contact.setVisibility(View.GONE);
+        }
+        // duration
         int days = lend.getDatesDifferenceInDays();
         holder.duration.setText(context.getResources().getQuantityString(R.plurals.plural_day, days, days));
+        // picture
+        Uri picture = lend.getPicture();
+        if (picture != null) {
+            holder.picture.setImageURI(picture);
+            holder.picture.setPadding(0, 0, 0, 0);
+        } else {
+            holder.picture.setImageResource(R.drawable.ic_item_24dp);
+            int padding = (int) context.getResources().getDimension(R.dimen.list_item_icon_padding);
+            holder.picture.setPadding(padding, padding, padding, padding);
+        }
 
         return view;
     }
 
     private static class ViewHolder {
+        ImageView picture;
         TextView item;
+        TextView contact;
         TextView duration;
     }
 }

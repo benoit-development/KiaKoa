@@ -136,11 +136,11 @@ public class LendContactDialog extends DialogFragment {
         contactAdapter = new ContactAdapter();
         contactEditText.setAdapter(contactAdapter);
 
-        // setup automcomplete adapter
+        // setup autocomplete adapter
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             Log.i(TAG, "Read contact permission granted, attach adapter to search in contact list");
 
-            // Listener on autocompete edit text to reload the contact loader
+            // Listener on autocomplete edit text to reload the contact loader
             contactEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -160,7 +160,7 @@ public class LendContactDialog extends DialogFragment {
             // Initialize the loader with a special ID and the defined callbacks from above
             getActivity().getSupportLoaderManager().initLoader(CONTACT_LOADER_ID, new Bundle(), contactsLoader);
 
-            // Init listener on item selected in autompletion list
+            // Init listener on item selected in autocompletion list
             contactEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -217,7 +217,7 @@ public class LendContactDialog extends DialogFragment {
     private void setLendContact(Contact contact) {
 
         // unset contact if it's not complete (a valid name)
-        if (contact == null || (contact.getName() == null) || (contact.getName().length() == 0)) {
+        if (contact == null || (contact.getName().length() == 0)) {
             Log.i(TAG, "No contact to set");
             contact = null;
         } else {
@@ -276,7 +276,7 @@ public class LendContactDialog extends DialogFragment {
                 public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
                     String image = cursor.getString(cursor.getColumnIndex(Contacts.PHOTO_URI));
                     if ((image == null) && (view instanceof ImageView)) {
-                        ((ImageView) view).setImageResource(R.drawable.ic_contact_gray_24dp);
+                        ((ImageView) view).setImageResource(R.drawable.ic_contact_24dp);
                         return true;
                     } else {
                         return false;

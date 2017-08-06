@@ -85,7 +85,7 @@ public class LendListUnitTest {
     }
 
     @Test
-    public void lend_lists_sharedpreferencces() {
+    public void lend_lists_shared_preferences() {
 
         // clear SharedPreferences
         lendLists.clearLists(context);

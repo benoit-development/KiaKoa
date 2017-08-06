@@ -41,7 +41,7 @@ public class LendListsPagerFragment extends Fragment {
         // get viewpager
         viewPager = view.findViewById(R.id.pager);
 
-        // PAger adapter
+        // Pager adapter
         LendPagerAdapter lendPagerAdapter = new LendPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(lendPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -61,7 +61,7 @@ public class LendListsPagerFragment extends Fragment {
             }
         });
 
-        // tablayout to display dots
+        // TabLayout to display dots
         TabLayout tabLayout = view.findViewById(R.id.tabDots);
         tabLayout.setupWithViewPager(viewPager, true);
 

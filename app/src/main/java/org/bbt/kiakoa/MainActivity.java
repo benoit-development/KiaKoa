@@ -253,17 +253,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     textId = R.string.lend_lists;
                     break;
                 case 1:
-                    iconId = R.drawable.ic_lend_to_gray_24dp;
+                    iconId = R.drawable.ic_lend_to_24dp;
                     textId = R.string.title_lend_to;
                     lendCount = LendLists.getInstance().getLendToList().size();
                     break;
                 case 2:
-                    iconId = R.drawable.ic_lend_from_gray_24dp;
+                    iconId = R.drawable.ic_lend_from_24dp;
                     textId = R.string.title_lend_from;
                     lendCount = LendLists.getInstance().getLendFromList().size();
                     break;
                 case 3:
-                    iconId = R.drawable.ic_archive_gray_24dp;
+                    iconId = R.drawable.ic_archive_24dp;
                     textId = R.string.title_archive;
                     lendCount = LendLists.getInstance().getLendArchiveList().size();
                     break;
@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     textId = R.string.configurations;
                     break;
                 case 5:
-                    iconId = R.drawable.ic_settings_white_24dp;
+                    iconId = R.drawable.ic_settings_24dp;
                     textId = R.string.settings;
                     break;
             }

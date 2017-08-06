@@ -1,5 +1,6 @@
 package org.bbt.kiakoa.model;
 
+import android.net.Uri;
 import android.os.Parcel;
 
 import com.google.gson.Gson;
@@ -59,6 +60,18 @@ public class LendUnitTest {
         assertEquals(17, newLend.getContact().getId());
         assertEquals("pouet", newLend.getContact().getName());
         assertEquals("photo_uri", newLend.getContact().getPhotoUri());
+    }
+
+    @Test
+    public void get_picture() {
+        // no contact
+        assertNull(lendTest.getPicture());
+        // contact without photo
+        lendTest.setContact(new Contact("pouet"));
+        assertNull(lendTest.getPicture());
+        // contact with picture
+        lendTest.setContact(contactTest);
+        assertEquals(Uri.parse(contactTest.getPhotoUri()), lendTest.getPicture());
     }
 
     @Test

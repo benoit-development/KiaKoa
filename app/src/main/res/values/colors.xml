@@ -8,4 +8,5 @@
     <color name="colorTabTextSelected">@android:color/white</color>
     <color name="colorText">#585858</color>
     <color name="colorTextLight">#a6a6a6</color>
+    <color name="colorIcon">@color/colorAccent</color>
 </resources>
