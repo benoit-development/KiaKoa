@@ -124,10 +124,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // update fragment with selected lend
             lendDetailsFragment.setLend(lend);
         } else {
-            // launch activity to display lend details
-            Intent intent = new Intent(this, LendDetailsActivity.class);
-            intent.putExtra(LendDetailsActivity.EXTRA_LEND, lend);
-            startActivity(intent);
+            if (lend != null) {
+                // launch activity to display lend details
+                Intent intent = new Intent(this, LendDetailsActivity.class);
+                intent.putExtra(LendDetailsActivity.EXTRA_LEND, lend);
+                startActivity(intent);
+            }
         }
     }
 
