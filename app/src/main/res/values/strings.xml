@@ -29,6 +29,7 @@
     <string name="clear_all_lists">Clear all lists</string>
     <string name="clear_all_lists_question">Do you want to clear all lend lists ?</string>
     <string name="all_lend_lists_already_empty">All lend lists are already empty</string>
+    <string name="all_lend_lists_cleared">All lend lists cleared</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
