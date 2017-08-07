@@ -20,7 +20,6 @@ import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.LendItemDialog;
 import org.bbt.kiakoa.model.Lend;
 import org.bbt.kiakoa.model.LendLists;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -100,7 +99,7 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
     /**
      * Method to update view visibility
      */
-    protected void updateView() {
+    private void updateView() {
         if (lendAdapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyTextView.setVisibility(View.VISIBLE);
