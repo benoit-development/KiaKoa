@@ -13,12 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.LendItemDialog;
 import org.bbt.kiakoa.model.Lend;
 import org.bbt.kiakoa.model.LendLists;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -42,6 +44,16 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
      */
     LendRecyclerAdapter lendAdapter;
 
+    /**
+     * Displayed when no lend is is the list
+     */
+    private TextView emptyTextView;
+
+    /**
+     * {@link RecyclerView} displaying lends
+     */
+    private RecyclerView recyclerView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lend_list, container, false);
@@ -51,7 +63,7 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
         fab.setOnClickListener(getFABOnClickListener());
 
         // recycler
-        RecyclerView recyclerView = view.findViewById(R.id.recycler);
+        recyclerView = view.findViewById(R.id.recycler);
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // adapter
@@ -65,6 +77,9 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
         });
         recyclerView.setAdapter(lendAdapter);
 
+        // empty text view
+        emptyTextView = view.findViewById(R.id.empty_element);
+
         return view;
     }
 
@@ -72,6 +87,7 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
     public void onResume() {
         super.onResume();
         lendAdapter.notifyDataSetChanged();
+        updateView();
         LendLists.getInstance().registerOnLendListsChangedListener(this, TAG);
     }
 
@@ -79,6 +95,19 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
     public void onPause() {
         super.onPause();
         LendLists.getInstance().unregisterOnLendListsChangedListener(this, TAG);
+    }
+
+    /**
+     * Method to update view visibility
+     */
+    protected void updateView() {
+        if (lendAdapter.getItemCount() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            emptyTextView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyTextView.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -139,8 +168,6 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
-        // TODO code to display empty text
-
         // attach this activity to the dialog if exists
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag(getLendListId());
@@ -159,5 +186,6 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
     @Override
     public void onLendListsChanged() {
         lendAdapter.notifyDataSetChanged();
+        updateView();
     }
 }
