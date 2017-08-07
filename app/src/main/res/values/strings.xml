@@ -30,6 +30,9 @@
     <string name="clear_all_lists_question">Do you want to clear all lend lists ?</string>
     <string name="all_lend_lists_already_empty">All lend lists are already empty</string>
     <string name="all_lend_lists_cleared">All lend lists cleared</string>
+    <string name="warnings_lend_duration">Alerts on lend lists</string>
+    <string name="yellow_alert_level">Yellow alert level</string>
+    <string name="red_alert_level">Red alert level</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>

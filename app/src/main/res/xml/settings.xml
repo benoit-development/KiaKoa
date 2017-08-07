@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--
-    Bad idea
-    <PreferenceCategory
-        android:title="@string/permissions">
 
-        <SwitchPreference
-            android:key="contact_read_permission"
-            android:title="@string/grant_contact_read_permission"
-            android:summary="@string/grant_contact_read_permission_summary" />
+    <PreferenceCategory android:title="@string/warnings_lend_duration">
+
+        <EditTextPreference
+            android:icon="@drawable/ic_warning_yellow_24dp"
+            android:inputType="number"
+            android:key="warning_duration"
+            android:title="@string/yellow_alert_level" />
+
+        <EditTextPreference
+            android:icon="@drawable/ic_error_red_24dp"
+            android:inputType="number"
+            android:key="warning_duration"
+            android:title="@string/red_alert_level" />
 
     </PreferenceCategory>
-    -->
+
 </PreferenceScreen>
