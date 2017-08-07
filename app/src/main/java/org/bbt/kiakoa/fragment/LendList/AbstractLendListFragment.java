@@ -6,6 +6,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 /**
  * Fragment displaying list of {@link org.bbt.kiakoa.model.Lend}
  */
-abstract public class AbstractLendListFragment extends ListFragment implements LendLists.OnLendListsChangedListener {
+abstract public class AbstractLendListFragment extends Fragment implements LendLists.OnLendListsChangedListener {
 
     /**
      * Tag for logs
@@ -38,23 +40,32 @@ abstract public class AbstractLendListFragment extends ListFragment implements L
     /**
      * Adapter used to display Lend list
      */
-    LendListAdapter lendAdapter;
+    LendRecyclerAdapter lendAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View inflate = inflater.inflate(R.layout.fragment_lend_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_lend_list, container, false);
 
         // Attach floating button
-        fab = inflate.findViewById(R.id.lend_list_fab);
+        fab = view.findViewById(R.id.lend_list_fab);
         fab.setOnClickListener(getFABOnClickListener());
 
-        // customize list
-        ListView listView = inflate.findViewById(android.R.id.list);
-        listView.setEmptyView(inflate.findViewById(R.id.empty_element));
-        lendAdapter = new LendListAdapter(getActivity(), getLendList());
-        listView.setAdapter(lendAdapter);
+        // recycler
+        RecyclerView recyclerView = view.findViewById(R.id.recycler);
+        // use a linear layout manager
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        // adapter
+        lendAdapter = new LendRecyclerAdapter(getLendList());
+        lendAdapter.setOnLendClickListener(new LendRecyclerAdapter.OnLendClickListener() {
+            @Override
+            public void onLendClick(Lend lend) {
+                Log.i(TAG, "Item clicked: " + lend.getItem());
+                ((MainActivity) getActivity()).displayLendDetails(lend);
+            }
+        });
+        recyclerView.setAdapter(lendAdapter);
 
-        return inflate;
+        return view;
     }
 
     @Override
@@ -70,14 +81,9 @@ abstract public class AbstractLendListFragment extends ListFragment implements L
         LendLists.getInstance().unregisterOnLendListsChangedListener(this, TAG);
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.i(TAG, "Item clicked: " + id);
-        ((MainActivity) getActivity()).displayLendDetails(getLendList().get(position));
-    }
-
     /**
      * {@link android.view.View.OnClickListener} getter for {@link FloatingActionButton} on this {@link android.app.Fragment}
+     *
      * @return the listener
      */
     View.OnClickListener getFABOnClickListener() {
@@ -112,12 +118,14 @@ abstract public class AbstractLendListFragment extends ListFragment implements L
 
     /**
      * list used to display the lend list of this {@link ListFragment}
+     *
      * @return the list to populate {@link ListView}
      */
     abstract protected ArrayList<Lend> getLendList();
 
     /**
      * Id to identify list used in subclasses
+     *
      * @return list id
      */
     abstract protected String getLendListId();
@@ -130,6 +138,8 @@ abstract public class AbstractLendListFragment extends ListFragment implements L
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+
+        // TODO code to display empty text
 
         // attach this activity to the dialog if exists
         FragmentTransaction ft = getFragmentManager().beginTransaction();
