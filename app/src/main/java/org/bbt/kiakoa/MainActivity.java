@@ -24,12 +24,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.dialog.ClearAllDialog;
-import org.bbt.kiakoa.fragment.LendDetailsFragment;
-import org.bbt.kiakoa.fragment.LendListsPagerFragment;
-import org.bbt.kiakoa.model.Lend;
-import org.bbt.kiakoa.model.LendLists;
+import org.bbt.kiakoa.fragment.LoanList.AbstractLoanListFragment;
+import org.bbt.kiakoa.fragment.LoanDetailsFragment;
+import org.bbt.kiakoa.fragment.LoanListsPagerFragment;
+import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.model.LoanLists;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LendLists.OnLendListsChangedListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LoanLists.OnLoanListsChangedListener {
 
     /**
      * For Log
@@ -44,12 +45,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private DrawerLayoutAdapter mDrawerLayoutAdapter;
 
     /**
-     * {@link android.support.v4.app.Fragment} displaying Lend detail
+     * {@link android.support.v4.app.Fragment} displaying Loan detail
      * Only exists on large screens
      */
-    private LendDetailsFragment lendDetailsFragment;
+    private LoanDetailsFragment loanDetailsFragment;
 
-    private LendListsPagerFragment lendListsPager;
+    private LoanListsPagerFragment loanListsPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +58,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
 
         // find fragments
-        lendListsPager = (LendListsPagerFragment) getSupportFragmentManager().findFragmentById(R.id.lend_pager_frag);
-        lendDetailsFragment = (LendDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.lend_details_frag);
+        loanListsPager = (LoanListsPagerFragment) getSupportFragmentManager().findFragmentById(R.id.loan_pager_frag);
+        loanDetailsFragment = (LoanDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.loan_details_frag);
 
         // toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -91,13 +92,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        LendLists.getInstance().registerOnLendListsChangedListener(this, TAG);
+        LoanLists.getInstance().registerOnLoanListsChangedListener(this, TAG);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LendLists.getInstance().unregisterOnLendListsChangedListener(this, TAG);
+        LoanLists.getInstance().unregisterOnLoanListsChangedListener(this, TAG);
     }
 
     @Override
@@ -114,20 +115,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     * Method called by an {@link org.bbt.kiakoa.fragment.LendList.AbstractLendListFragment} to
-     * display a lend details in {@link org.bbt.kiakoa.fragment.LendDetailsFragment}
+     * Method called by an {@link AbstractLoanListFragment} to
+     * display a loan details in {@link LoanDetailsFragment}
      *
-     * @param lend lend to display
+     * @param loan loan to display
      */
-    public void displayLendDetails(Lend lend) {
-        if (lendDetailsFragment != null) {
-            // update fragment with selected lend
-            lendDetailsFragment.setLend(lend);
+    public void displayLoanDetails(Loan loan) {
+        if (loanDetailsFragment != null) {
+            // update fragment with selected loan
+            loanDetailsFragment.setLoan(loan);
         } else {
-            if (lend != null) {
-                // launch activity to display lend details
-                Intent intent = new Intent(this, LendDetailsActivity.class);
-                intent.putExtra(LendDetailsActivity.EXTRA_LEND, lend);
+            if (loan != null) {
+                // launch activity to display loan details
+                Intent intent = new Intent(this, LoanDetailsActivity.class);
+                intent.putExtra(LoanDetailsActivity.EXTRA_LOAN, loan);
                 startActivity(intent);
             }
         }
@@ -145,14 +146,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Log.i(TAG, "item clicked : " + position);
 
-        // change the displayed Lend list
-        // first position of lend lists is 1 (0 is the first header)
+        // change the displayed Loan list
+        // first position of loan lists is 1 (0 is the first header)
         switch (position) {
             case 1:
             case 2:
             case 3:
                 // change displayed page in viewpager
-                lendListsPager.showPage(position - 1);
+                loanListsPager.showPage(position - 1);
                 break;
             case 5:
                 // launch setting activity
@@ -160,9 +161,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 startActivity(intent);
                 break;
             case 6:
-                // check if there are lend lists to be clear
-                if (LendLists.getInstance().getLendCount() == 0) {
-                    Toast.makeText(this, R.string.all_lend_lists_already_empty, Toast.LENGTH_SHORT).show();
+                // check if there are loan lists to be clear
+                if (LoanLists.getInstance().getLoanCount() == 0) {
+                    Toast.makeText(this, R.string.all_loan_lists_already_empty, Toast.LENGTH_SHORT).show();
                 } else {
                     // show dialog to confirm the user desire to clear all lists
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -182,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     @Override
-    public void onLendListsChanged() {
+    public void onLoanListsChanged() {
         mDrawerLayoutAdapter.notifyDataSetChanged();
     }
 
@@ -270,25 +271,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // Bind the data efficiently with the holder.
             int iconId = 0;
             int textId = 0;
-            int lendCount = 0;
+            int loanCount = 0;
             switch (position) {
                 case 0:
-                    textId = R.string.lend_lists;
+                    textId = R.string.loan_lists;
                     break;
                 case 1:
-                    iconId = R.drawable.ic_lend_to_24dp;
-                    textId = R.string.title_lend_to;
-                    lendCount = LendLists.getInstance().getLendToList().size();
+                    iconId = R.drawable.ic_lent_24dp;
+                    textId = R.string.title_lent;
+                    loanCount = LoanLists.getInstance().getLentList().size();
                     break;
                 case 2:
-                    iconId = R.drawable.ic_lend_from_24dp;
-                    textId = R.string.title_lend_from;
-                    lendCount = LendLists.getInstance().getLendFromList().size();
+                    iconId = R.drawable.ic_borrowed_24dp;
+                    textId = R.string.title_borrowed;
+                    loanCount = LoanLists.getInstance().getBorrowedList().size();
                     break;
                 case 3:
                     iconId = R.drawable.ic_archive_24dp;
                     textId = R.string.title_archive;
-                    lendCount = LendLists.getInstance().getLendArchiveList().size();
+                    loanCount = LoanLists.getInstance().getArchiveList().size();
                     break;
                 case 4:
                     textId = R.string.tools;
@@ -299,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     break;
                 case 6:
                     iconId = R.drawable.ic_delete_forever_24dp;
-                    textId = R.string.clear_all_lists;
+                    textId = R.string.clear_all_loan_lists;
                     break;
             }
             if (iconId != 0) {
@@ -308,11 +309,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if (textId != 0) {
                 holder.text.setText(textId);
             }
-            if (lendCount != 0) {
-                holder.badge.setText(String.valueOf(lendCount));
+            if (loanCount != 0) {
+                holder.badge.setText(String.valueOf(loanCount));
             }
             if (itemViewType == TYPE_ITEM) {
-                holder.badge.setVisibility((lendCount == 0) ? View.GONE : View.VISIBLE);
+                holder.badge.setVisibility((loanCount == 0) ? View.GONE : View.VISIBLE);
             }
 
             return view;

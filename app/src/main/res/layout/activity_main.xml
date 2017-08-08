@@ -24,8 +24,8 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <fragment
-            android:id="@+id/lend_pager_frag"
-            class="org.bbt.kiakoa.fragment.LendListsPagerFragment"
+            android:id="@+id/loan_pager_frag"
+            class="org.bbt.kiakoa.fragment.LoanListsPagerFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

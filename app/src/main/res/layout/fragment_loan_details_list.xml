@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/no_lend_selected"
+        android:text="@string/no_loan_selected"
         android:textSize="19.0sp"
         android:visibility="gone" />
 

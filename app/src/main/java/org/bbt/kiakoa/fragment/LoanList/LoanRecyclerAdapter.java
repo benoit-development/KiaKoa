@@ -1,4 +1,4 @@
-package org.bbt.kiakoa.fragment.LendList;
+package org.bbt.kiakoa.fragment.LoanList;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,31 +12,31 @@ import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.Contact;
-import org.bbt.kiakoa.model.Lend;
+import org.bbt.kiakoa.model.Loan;
 
 import java.util.ArrayList;
 
 /**
- * Adapter for the lend list {@link RecyclerView}
+ * Adapter for the loan list {@link RecyclerView}
  */
-class LendRecyclerAdapter extends RecyclerView.Adapter<LendRecyclerAdapter.ViewHolder> {
+class LoanRecyclerAdapter extends RecyclerView.Adapter<LoanRecyclerAdapter.ViewHolder> {
 
     /**
      * For log
      */
-    private static final String TAG = "LendRecycler.ViewHolder";
+    private static final String TAG = "LoanRecycler.ViewHolder";
 
     /**
      * lind list data set
      */
-    private final ArrayList<Lend> lendList;
+    private final ArrayList<Loan> loanList;
 
     /**
-     * lend click listener
+     * loan click listener
      */
-    private OnLendClickListener clickListener;
+    private OnLoanClickListener clickListener;
 
-    // Provide a reference to the views for a lend
+    // Provide a reference to the views for a loan
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private final Context context;
@@ -44,7 +44,7 @@ class LendRecyclerAdapter extends RecyclerView.Adapter<LendRecyclerAdapter.ViewH
         private final TextView itemView;
         private final TextView contactView;
         private final TextView durationView;
-        private Lend lend;
+        private Loan loan;
 
         /**
          * Constructor
@@ -55,10 +55,10 @@ class LendRecyclerAdapter extends RecyclerView.Adapter<LendRecyclerAdapter.ViewH
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i(TAG, "Lend view clicked");
+                    Log.i(TAG, "Loan view clicked");
                     if (clickListener != null) {
                         Log.i(TAG, "");
-                        clickListener.onLendClick(lend);
+                        clickListener.onLoanClick(loan);
                     } else {
                         Log.w(TAG, "No listener to call :-(");
                     }
@@ -72,15 +72,15 @@ class LendRecyclerAdapter extends RecyclerView.Adapter<LendRecyclerAdapter.ViewH
         }
 
         /**
-         * Set a new lend then update view
-         * @param lend lend to display
+         * Set a new loan then update view
+         * @param loan loan to display
          */
-        public void setLend(Lend lend) {
-            this.lend = lend;
+        public void setLoan(Loan loan) {
+            this.loan = loan;
             // item
-            itemView.setText(lend.getItem());
+            itemView.setText(loan.getItem());
             // contact
-            Contact contact = lend.getContact();
+            Contact contact = loan.getContact();
             if ((contact != null)) {
                 contactView.setText(contact.getName());
                 contactView.setVisibility(View.VISIBLE);
@@ -88,10 +88,10 @@ class LendRecyclerAdapter extends RecyclerView.Adapter<LendRecyclerAdapter.ViewH
                 contactView.setVisibility(View.GONE);
             }
             // duration
-            int days = lend.getDatesDifferenceInDays();
+            int days = loan.getDatesDifferenceInDays();
             durationView.setText(context.getResources().getQuantityString(R.plurals.plural_day, days, days));
             // pictureView
-            Uri picture = lend.getPicture();
+            Uri picture = loan.getPicture();
             if (picture != null) {
                 pictureView.setImageURI(picture);
                 pictureView.setPadding(0, 0, 0, 0);
@@ -104,47 +104,47 @@ class LendRecyclerAdapter extends RecyclerView.Adapter<LendRecyclerAdapter.ViewH
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    LendRecyclerAdapter(ArrayList<Lend> lendList) {
-        this.lendList = lendList;
+    LoanRecyclerAdapter(ArrayList<Loan> loanList) {
+        this.loanList = loanList;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public LendRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LoanRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_lend_item, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_loan_item, parent, false));
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         // Bind the data efficiently with the holder.
-        holder.setLend(lendList.get(position));
+        holder.setLoan(loanList.get(position));
 
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return lendList.size();
+        return loanList.size();
     }
 
     /**
-     * Listener interface used when a lend is clicked by the user
+     * Listener interface used when a loan is clicked by the user
      */
-    interface OnLendClickListener {
+    interface OnLoanClickListener {
         /**
-         * Method called when a lend is clicked by user
-         * @param lend clicked lend
+         * Method called when a loan is clicked by user
+         * @param loan clicked loan
          */
-        void onLendClick(Lend lend);
+        void onLoanClick(Loan loan);
     }
 
     /**
-     * Set {@link OnLendClickListener}
+     * Set {@link OnLoanClickListener}
      * @param listener listener
      */
-    void setOnLendClickListener (OnLendClickListener listener) {
+    void setOnLoanClickListener(OnLoanClickListener listener) {
         clickListener = listener;
     }
 }

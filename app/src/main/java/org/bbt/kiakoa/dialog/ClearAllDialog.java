@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.model.LendLists;
+import org.bbt.kiakoa.model.LoanLists;
 
 /**
  * Dialog used to pick an item
@@ -34,16 +34,16 @@ public class ClearAllDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.i(TAG, "Show dialog to clear all lists");
-        int lendCount = LendLists.getInstance().getLendCount();
+        int loanCount = LoanLists.getInstance().getLoanCount();
         return new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_warning_24dp)
-                .setTitle(getString(R.string.clear_all_lists_question) + " (" + getResources().getQuantityString(R.plurals.plural_item, lendCount, lendCount) + ")")
+                .setTitle(getString(R.string.clear_all_lists_question) + " (" + getResources().getQuantityString(R.plurals.plural_item, loanCount, loanCount) + ")")
                 .setPositiveButton(R.string.clear, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        LendLists.getInstance().clearLists(getContext());
-                        Toast.makeText(getContext(), R.string.all_lend_lists_cleared, Toast.LENGTH_SHORT).show();
-                        ((MainActivity) getActivity()).displayLendDetails(null);
+                        LoanLists.getInstance().clearLists(getContext());
+                        Toast.makeText(getContext(), R.string.all_loan_lists_cleared, Toast.LENGTH_SHORT).show();
+                        ((MainActivity) getActivity()).displayLoanDetails(null);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

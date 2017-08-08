@@ -8,14 +8,14 @@ import android.support.annotation.Nullable;
 import com.google.gson.Gson;
 
 /**
- * Class defining a Land
+ * Class defining a loan
  *
  * @author Benoit Bousquet
  */
-public class Lend implements Parcelable {
+public class Loan implements Parcelable {
 
     /**
-     * id of the {@link Lend} instance
+     * id of the {@link Loan} instance
      */
     private long id = System.currentTimeMillis();
 
@@ -30,18 +30,12 @@ public class Lend implements Parcelable {
     private String itemPicture;
 
     /**
-     * Lend date
+     * Loan date
      */
-    private long lendDate = System.currentTimeMillis();
+    private long loanDate = System.currentTimeMillis();
 
     /**
-     * date when item should be return
-     * init to -1 meaning there's not date
-     */
-    private long returnDate = -1;
-
-    /**
-     * lend contact
+     * loan contact
      */
     private Contact contact;
 
@@ -56,19 +50,18 @@ public class Lend implements Parcelable {
         out.writeLong(id);
         out.writeString(item);
         out.writeString(itemPicture);
-        out.writeLong(lendDate);
-        out.writeLong(returnDate);
+        out.writeLong(loanDate);
         out.writeParcelable(contact, flags);
     }
 
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
-    public static final Parcelable.Creator<Lend> CREATOR = new Parcelable.Creator<Lend>() {
-        public Lend createFromParcel(Parcel in) {
-            return new Lend(in);
+    public static final Parcelable.Creator<Loan> CREATOR = new Parcelable.Creator<Loan>() {
+        public Loan createFromParcel(Parcel in) {
+            return new Loan(in);
         }
 
-        public Lend[] newArray(int size) {
-            return new Lend[size];
+        public Loan[] newArray(int size) {
+            return new Loan[size];
         }
     };
 
@@ -77,21 +70,20 @@ public class Lend implements Parcelable {
      *
      * @param in the {@link Parcel}
      */
-    private Lend(Parcel in) {
+    private Loan(Parcel in) {
         id = in.readLong();
         item = in.readString();
         itemPicture = in.readString();
-        lendDate = in.readLong();
-        returnDate = in.readLong();
+        loanDate = in.readLong();
         contact = in.readParcelable(Contact.class.getClassLoader());
     }
 
     /**
      * Constructor
      *
-     * @param item lend item
+     * @param item loan item
      */
-    public Lend(String item) {
+    public Loan(String item) {
         this.item = item;
     }
 
@@ -141,39 +133,21 @@ public class Lend implements Parcelable {
     }
 
     /**
-     * lend date getter
+     * loan date getter
      *
-     * @return lend date
+     * @return loan date
      */
-    public long getLendDate() {
-        return lendDate;
+    public long getLoanDate() {
+        return loanDate;
     }
 
     /**
-     * lend date setter
+     * loan date setter
      *
-     * @param lendDate new lend date
+     * @param loanDate new loan date
      */
-    public void setLendDate(long lendDate) {
-        this.lendDate = lendDate;
-    }
-
-    /**
-     * return date getter
-     *
-     * @return return date
-     */
-    public long getReturnDate() {
-        return returnDate;
-    }
-
-    /**
-     * return date setter
-     *
-     * @param returnDate new return date
-     */
-    public void setReturnDate(long returnDate) {
-        this.returnDate = returnDate;
+    public void setLoanDate(long loanDate) {
+        this.loanDate = loanDate;
     }
 
     /**
@@ -195,7 +169,7 @@ public class Lend implements Parcelable {
     }
 
     /**
-     * Serialize this lend to JSON
+     * Serialize this loan to JSON
      *
      * @return json string
      */
@@ -205,20 +179,20 @@ public class Lend implements Parcelable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Lend) {
-            return (id == ((Lend) obj).id);
+        if (obj instanceof Loan) {
+            return (id == ((Loan) obj).id);
         } else {
             return super.equals(obj);
         }
     }
 
     /**
-     * Calculate duration of the lend in days
+     * Calculate duration of the loan in days
      *
      * @return day number
      */
     public int getDatesDifferenceInDays() {
-        long different = System.currentTimeMillis() - lendDate;
+        long different = System.currentTimeMillis() - loanDate;
         long dayInMillis = 1000 * 60 * 60 * 24;
         return (int) (different / dayInMillis);
     }

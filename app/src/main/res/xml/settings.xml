@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/warnings_lend_duration">
+    <PreferenceCategory android:title="@string/warnings_loan_duration">
+
+        <SwitchPreference
+            android:key="enable_alert"
+            android:title="@string/enable_alerts"
+            android:summary="@string/enable_alerts_summary"/>
 
         <EditTextPreference
             android:icon="@drawable/ic_warning_yellow_24dp"
             android:inputType="number"
-            android:key="warning_duration"
+            android:key="yellow_duration"
             android:title="@string/yellow_alert_level" />
 
         <EditTextPreference
             android:icon="@drawable/ic_error_red_24dp"
             android:inputType="number"
-            android:key="warning_duration"
+            android:key="red_duration"
             android:title="@string/red_alert_level" />
 
     </PreferenceCategory>

@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 /**
- * Class of a contact for a lend
+ * Class of a contact for a loan
  */
 public class Contact implements Parcelable {
 

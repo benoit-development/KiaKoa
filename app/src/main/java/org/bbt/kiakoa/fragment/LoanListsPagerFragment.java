@@ -12,38 +12,38 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.fragment.LendList.LendArchiveListFragment;
-import org.bbt.kiakoa.fragment.LendList.LendFromListFragment;
-import org.bbt.kiakoa.fragment.LendList.LendToListFragment;
+import org.bbt.kiakoa.fragment.LoanList.ArchiveListFragment;
+import org.bbt.kiakoa.fragment.LoanList.BorrowedListFragment;
+import org.bbt.kiakoa.fragment.LoanList.LoanToListFragment;
 
 /**
- * {@link android.app.Fragment} displaying lend lists
+ * {@link android.app.Fragment} displaying a loan lists
  *
  * @author Benoit Bousquet
  */
-public class LendListsPagerFragment extends Fragment {
+public class LoanListsPagerFragment extends Fragment {
 
     /**
      * For log
      */
-    private static final String TAG = "LendListsPagerFragment";
+    private static final String TAG = "LoanListsPagerFragment";
 
     /**
-     * {@link ViewPager} displaying different lend lists
+     * {@link ViewPager} displaying different loan lists
      */
     private ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_lend_list_pager, container, false);
+        View view = inflater.inflate(R.layout.fragment_loan_list_pager, container, false);
 
         // get viewpager
         viewPager = view.findViewById(R.id.pager);
 
         // Pager adapter
-        LendPagerAdapter lendPagerAdapter = new LendPagerAdapter(getChildFragmentManager());
-        viewPager.setAdapter(lendPagerAdapter);
+        LoanPagerAdapter loanPagerAdapter = new LoanPagerAdapter(getChildFragmentManager());
+        viewPager.setAdapter(loanPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -81,10 +81,10 @@ public class LendListsPagerFragment extends Fragment {
      */
     public void showPage(int pageNumber) {
         if (pageNumber < viewPager.getAdapter().getCount()) {
-            Log.i(TAG, "Change lend list displayed : " + pageNumber);
+            Log.i(TAG, "Change loan list displayed : " + pageNumber);
             viewPager.setCurrentItem(pageNumber, true);
         } else {
-            Log.i(TAG, "Lend list page incorrect : " + pageNumber);
+            Log.i(TAG, "Loan list page incorrect : " + pageNumber);
         }
     }
 
@@ -97,15 +97,15 @@ public class LendListsPagerFragment extends Fragment {
         Log.i(TAG, "Change Activity Title : " + page);
         switch (page) {
             case 0:
-                // lend to
-                getActivity().setTitle(R.string.title_lend_to);
+                // lent
+                getActivity().setTitle(R.string.title_lent);
                 break;
             case 1:
-                // lend from
-                getActivity().setTitle(R.string.title_lend_from);
+                // borrowed
+                getActivity().setTitle(R.string.title_borrowed);
                 break;
             case 2:
-                // lend archive
+                // archive
                 getActivity().setTitle(R.string.title_archive);
                 break;
         }
@@ -114,14 +114,14 @@ public class LendListsPagerFragment extends Fragment {
     /**
      * Adapter managing pager and fragments displayed inside
      */
-    private class LendPagerAdapter extends FragmentPagerAdapter {
+    private class LoanPagerAdapter extends FragmentPagerAdapter {
 
         /**
          * Constructor
          *
          * @param fm fragment manager
          */
-        private LendPagerAdapter(FragmentManager fm) {
+        private LoanPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -135,13 +135,13 @@ public class LendListsPagerFragment extends Fragment {
             Fragment fragment;
             switch (position) {
                 case 0:
-                    fragment = new LendToListFragment();
+                    fragment = new LoanToListFragment();
                     break;
                 case 1:
-                    fragment = new LendFromListFragment();
+                    fragment = new BorrowedListFragment();
                     break;
                 default:
-                    fragment = new LendArchiveListFragment();
+                    fragment = new ArchiveListFragment();
                     break;
             }
 

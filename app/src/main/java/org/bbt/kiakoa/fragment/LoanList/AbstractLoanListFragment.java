@@ -1,4 +1,4 @@
-package org.bbt.kiakoa.fragment.LendList;
+package org.bbt.kiakoa.fragment.LoanList;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,21 +17,21 @@ import android.widget.TextView;
 
 import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.dialog.LendItemDialog;
-import org.bbt.kiakoa.model.Lend;
-import org.bbt.kiakoa.model.LendLists;
+import org.bbt.kiakoa.dialog.LoanItemDialog;
+import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.model.LoanLists;
 
 import java.util.ArrayList;
 
 /**
- * Fragment displaying list of {@link org.bbt.kiakoa.model.Lend}
+ * Fragment displaying list of {@link Loan}
  */
-abstract public class AbstractLendListFragment extends Fragment implements LendLists.OnLendListsChangedListener {
+abstract public class AbstractLoanListFragment extends Fragment implements LoanLists.OnLoanListsChangedListener {
 
     /**
      * Tag for logs
      */
-    private static final String TAG = "AbstractLendListFragmen";
+    private static final String TAG = "AbstractLoanListFragmen";
 
     /**
      * Floating button used for various actions (add, empty, ...) depending on the list to display
@@ -39,26 +39,26 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
     FloatingActionButton fab;
 
     /**
-     * Adapter used to display Lend list
+     * Adapter used to display Loan list
      */
-    LendRecyclerAdapter lendAdapter;
+    LoanRecyclerAdapter loanAdapter;
 
     /**
-     * Displayed when no lend is is the list
+     * Displayed when no loan is is the list
      */
     private TextView emptyTextView;
 
     /**
-     * {@link RecyclerView} displaying lends
+     * {@link RecyclerView} displaying loans
      */
     private RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_lend_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_loan_list, container, false);
 
         // Attach floating button
-        fab = view.findViewById(R.id.lend_list_fab);
+        fab = view.findViewById(R.id.loan_list_fab);
         fab.setOnClickListener(getFABOnClickListener());
 
         // recycler
@@ -66,15 +66,15 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // adapter
-        lendAdapter = new LendRecyclerAdapter(getLendList());
-        lendAdapter.setOnLendClickListener(new LendRecyclerAdapter.OnLendClickListener() {
+        loanAdapter = new LoanRecyclerAdapter(getLoanList());
+        loanAdapter.setOnLoanClickListener(new LoanRecyclerAdapter.OnLoanClickListener() {
             @Override
-            public void onLendClick(Lend lend) {
-                Log.i(TAG, "Item clicked: " + lend.getItem());
-                ((MainActivity) getActivity()).displayLendDetails(lend);
+            public void onLoanClick(Loan loan) {
+                Log.i(TAG, "Item clicked: " + loan.getItem());
+                ((MainActivity) getActivity()).displayLoanDetails(loan);
             }
         });
-        recyclerView.setAdapter(lendAdapter);
+        recyclerView.setAdapter(loanAdapter);
 
         // empty text view
         emptyTextView = view.findViewById(R.id.empty_element);
@@ -85,22 +85,22 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
     @Override
     public void onResume() {
         super.onResume();
-        lendAdapter.notifyDataSetChanged();
+        loanAdapter.notifyDataSetChanged();
         updateView();
-        LendLists.getInstance().registerOnLendListsChangedListener(this, TAG);
+        LoanLists.getInstance().registerOnLoanListsChangedListener(this, TAG);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LendLists.getInstance().unregisterOnLendListsChangedListener(this, TAG);
+        LoanLists.getInstance().unregisterOnLoanListsChangedListener(this, TAG);
     }
 
     /**
      * Method to update view visibility
      */
     private void updateView() {
-        if (lendAdapter.getItemCount() == 0) {
+        if (loanAdapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyTextView.setVisibility(View.VISIBLE);
         } else {
@@ -123,45 +123,45 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
                 // in a transaction.  We also want to remove any currently showing
                 // dialog, so make our own transaction and take care of that here.
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment prev = getFragmentManager().findFragmentByTag(getLendListId());
+                Fragment prev = getFragmentManager().findFragmentByTag(getLoanListId());
                 if (prev != null) {
                     ft.remove(prev);
                 }
                 ft.addToBackStack(null);
 
                 // Create and show the dialog.
-                LendItemDialog newItemDialog = LendItemDialog.newInstance();
-                newItemDialog.setOnLendItemSetListener(new LendItemDialog.OnLendItemSetListener() {
+                LoanItemDialog newItemDialog = LoanItemDialog.newInstance();
+                newItemDialog.setOnLoanItemSetListener(new LoanItemDialog.OnLoanItemSetListener() {
                     @Override
                     public void onItemSet(String item) {
-                        Lend lend = new Lend(item);
-                        addLend(lend);
-                        ((MainActivity) getActivity()).displayLendDetails(lend);
+                        Loan loan = new Loan(item);
+                        addLoan(loan);
+                        ((MainActivity) getActivity()).displayLoanDetails(loan);
                     }
                 });
-                newItemDialog.show(ft, getLendListId());
+                newItemDialog.show(ft, getLoanListId());
             }
         };
     }
 
     /**
-     * list used to display the lend list of this {@link ListFragment}
+     * list used to display the loan list of this {@link ListFragment}
      *
      * @return the list to populate {@link ListView}
      */
-    abstract protected ArrayList<Lend> getLendList();
+    abstract protected ArrayList<Loan> getLoanList();
 
     /**
      * Id to identify list used in subclasses
      *
      * @return list id
      */
-    abstract protected String getLendListId();
+    abstract protected String getLoanListId();
 
     /**
-     * Add a new created {@link Lend} to {@link LendLists}
+     * Add a new created {@link Loan} to {@link LoanLists}
      */
-    abstract protected void addLend(Lend lend);
+    abstract protected void addLoan(Loan loan);
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
@@ -169,13 +169,13 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
 
         // attach this activity to the dialog if exists
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(getLendListId());
-        if ((prev != null) && (prev instanceof LendItemDialog)) {
-            ((LendItemDialog) prev).setOnLendItemSetListener(new LendItemDialog.OnLendItemSetListener() {
+        Fragment prev = getFragmentManager().findFragmentByTag(getLoanListId());
+        if ((prev != null) && (prev instanceof LoanItemDialog)) {
+            ((LoanItemDialog) prev).setOnLoanItemSetListener(new LoanItemDialog.OnLoanItemSetListener() {
                 @Override
                 public void onItemSet(String item) {
-                    addLend(new Lend(item));
-                    lendAdapter.notifyDataSetChanged();
+                    addLoan(new Loan(item));
+                    loanAdapter.notifyDataSetChanged();
                 }
             });
         }
@@ -183,8 +183,8 @@ abstract public class AbstractLendListFragment extends Fragment implements LendL
     }
 
     @Override
-    public void onLendListsChanged() {
-        lendAdapter.notifyDataSetChanged();
+    public void onLoanListsChanged() {
+        loanAdapter.notifyDataSetChanged();
         updateView();
     }
 }

@@ -29,24 +29,24 @@ import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.Contact;
 
 /**
- * Dialog used to add a contact to the lend
+ * Dialog used to add a contact to the loan
  */
-public class LendContactDialog extends DialogFragment {
+public class LoanContactDialog extends DialogFragment {
 
     /**
      * For log
      */
-    private static final String TAG = "LendContactDialog";
+    private static final String TAG = "LoanContactDialog";
     private static final int ACTION_CREATE = 0;
     private static final int ACTION_UPDATE = 1;
     private static final int CONTACT_LOADER_ID = 2;
 
     /**
-     * contact for a lend
+     * contact for a loan
      */
     private AutoCompleteTextView contactEditText;
 
-    private OnLendContactSetListener onLendContactSetListener;
+    private OnLoanContactSetListener onLoanContactSetListener;
 
     /**
      * Asynchronous callback for the contacts data loader
@@ -98,17 +98,17 @@ public class LendContactDialog extends DialogFragment {
     private ContactAdapter contactAdapter;
 
     /**
-     * Instance of the current contact in lend
+     * Instance of the current contact in loan
      */
     private Contact currentContact;
 
     /**
-     * Create a new instance of {@link LendContactDialog} with a contact
+     * Create a new instance of {@link LoanContactDialog} with a contact
      *
-     * @param contact lend contact
+     * @param contact loan contact
      */
-    public static LendContactDialog newInstance(Contact contact) {
-        LendContactDialog dialog = new LendContactDialog();
+    public static LoanContactDialog newInstance(Contact contact) {
+        LoanContactDialog dialog = new LoanContactDialog();
         Bundle args = new Bundle();
         args.putParcelable("contact", contact);
         args.putInt("action", ACTION_UPDATE);
@@ -122,7 +122,7 @@ public class LendContactDialog extends DialogFragment {
 
         // Inflate view
         @SuppressLint
-                ("InflateParams") View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_lend_contact, null, false);
+                ("InflateParams") View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_loan_contact, null, false);
 
         // custom autocomplete field
         contactEditText = view.findViewById(R.id.contact);
@@ -164,8 +164,8 @@ public class LendContactDialog extends DialogFragment {
             contactEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    // set lend contact from user contact list
-                    setLendContact(contactAdapter.getContact(i));
+                    // set loan contact from user contact list
+                    setLoanContact(contactAdapter.getContact(i));
                 }
             });
         }
@@ -180,17 +180,17 @@ public class LendContactDialog extends DialogFragment {
 
 
         return new AlertDialog.Builder(getActivity())
-                .setTitle((ACTION_CREATE == getArguments().getInt("action", ACTION_CREATE)) ? R.string.new_lend : R.string.contact)
+                .setTitle((ACTION_CREATE == getArguments().getInt("action", ACTION_CREATE)) ? R.string.new_loan : R.string.contact)
                 .setView(view)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // set lend contact only with name
+                        // set loan contact only with name
                         String newName = contactEditText.getText().toString();
                         if (!currentContact.getName().equals(newName)) {
-                            setLendContact(new Contact(newName));
+                            setLoanContact(new Contact(newName));
                         } else {
-                            setLendContact(currentContact);
+                            setLoanContact(currentContact);
                         }
                     }
                 })
@@ -203,7 +203,7 @@ public class LendContactDialog extends DialogFragment {
                 .setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        setLendContact(null);
+                        setLoanContact(null);
                     }
                 })
                 .create();
@@ -212,9 +212,9 @@ public class LendContactDialog extends DialogFragment {
     /**
      * set contact then close dialog
      *
-     * @param contact new lend contact
+     * @param contact new loan contact
      */
-    private void setLendContact(Contact contact) {
+    private void setLoanContact(Contact contact) {
 
         // unset contact if it's not complete (a valid name)
         if (contact == null || (contact.getName().length() == 0)) {
@@ -225,10 +225,10 @@ public class LendContactDialog extends DialogFragment {
         }
 
         // notify listener
-        if (onLendContactSetListener != null) {
-            onLendContactSetListener.onContactSet(contact);
+        if (onLoanContactSetListener != null) {
+            onLoanContactSetListener.onContactSet(contact);
         } else {
-            Log.w(TAG, "No listener to call, lend contact typed");
+            Log.w(TAG, "No listener to call, loan contact typed");
         }
         dismiss();
     }
@@ -241,7 +241,7 @@ public class LendContactDialog extends DialogFragment {
         private ContactAdapter() {
             super(
                     getContext(),
-                    R.layout.autocomplete_lend_contact,
+                    R.layout.autocomplete_loan_contact,
                     null,
                     new String[]{Contacts.DISPLAY_NAME, Contacts.PHOTO_URI},
                     new int[]{R.id.contact_name, R.id.contact_icon},
@@ -287,18 +287,18 @@ public class LendContactDialog extends DialogFragment {
     }
 
     /**
-     * Set listener from Lend contact typed
+     * Set listener from Loan contact typed
      *
-     * @param onLendContactSetListener listener
+     * @param onLoanContactSetListener listener
      */
-    public void setOnLendContactSetListener(OnLendContactSetListener onLendContactSetListener) {
-        this.onLendContactSetListener = onLendContactSetListener;
+    public void setOnLoanContactSetListener(OnLoanContactSetListener onLoanContactSetListener) {
+        this.onLoanContactSetListener = onLoanContactSetListener;
     }
 
     /**
-     * Listener interference called when lend contact is set
+     * Listener interference called when loan contact is set
      */
-    public interface OnLendContactSetListener {
+    public interface OnLoanContactSetListener {
         /**
          * Called when contact has been set
          *

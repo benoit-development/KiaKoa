@@ -1,4 +1,4 @@
-package org.bbt.kiakoa.fragment.LendList;
+package org.bbt.kiakoa.fragment.LoanList;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,22 +8,22 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.model.Lend;
-import org.bbt.kiakoa.model.LendLists;
+import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.model.LoanLists;
 
 import java.util.ArrayList;
 
 /**
- * Lend archive fragment list
+ * Loan archive fragment list
  *
  * @author Benoît BOUSQUET
  */
-public class LendArchiveListFragment extends AbstractLendListFragment {
+public class ArchiveListFragment extends AbstractLoanListFragment {
 
     /**
      * Tag for logs
      */
-    private static final String TAG = "LendArchiveListFragment";
+    private static final String TAG = "ArchiveListFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,25 +43,25 @@ public class LendArchiveListFragment extends AbstractLendListFragment {
 
                 Log.i(TAG, "fabOnclickListener: empty archive");
                 Toast.makeText(getActivity(), "Empty list", Toast.LENGTH_LONG).show();
-                LendLists.getInstance().getLendArchiveList().clear();
-                lendAdapter.notifyDataSetChanged();
+                LoanLists.getInstance().getArchiveList().clear();
+                loanAdapter.notifyDataSetChanged();
             }
         };
     }
 
     @Override
-    protected ArrayList<Lend> getLendList() {
-        return LendLists.getInstance().getLendArchiveList();
+    protected ArrayList<Loan> getLoanList() {
+        return LoanLists.getInstance().getArchiveList();
     }
 
     @Override
-    protected String getLendListId() {
-        return LendLists.LEND_ARCHIVE;
+    protected String getLoanListId() {
+        return LoanLists.SHARED_PREFERENCES_ARCHIVE_ID;
     }
 
     @Override
-    protected void addLend(Lend lend) {
-        // this class does not directly add Lend
+    protected void addLoan(Loan loan) {
+        // this class does not directly add Loan
         // no action to do here
     }
 }

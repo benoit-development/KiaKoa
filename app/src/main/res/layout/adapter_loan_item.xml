@@ -24,7 +24,7 @@
             android:layout_gravity="center"
             android:layout_marginEnd="20dp"
             android:adjustViewBounds="true"
-            android:contentDescription="@string/lend_date"
+            android:contentDescription="@string/loan_date"
             android:padding="@dimen/list_item_icon_padding"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_item_24dp" />

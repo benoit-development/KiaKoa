@@ -26,27 +26,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.dialog.LendContactDialog;
-import org.bbt.kiakoa.dialog.LendDateDialog;
-import org.bbt.kiakoa.dialog.LendItemDialog;
+import org.bbt.kiakoa.dialog.LoanContactDialog;
+import org.bbt.kiakoa.dialog.LoanDateDialog;
+import org.bbt.kiakoa.dialog.LoanItemDialog;
 import org.bbt.kiakoa.model.Contact;
-import org.bbt.kiakoa.model.Lend;
-import org.bbt.kiakoa.model.LendLists;
+import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.model.LoanLists;
 
 import java.text.DateFormat;
 
 /**
- * Activity displaying {@link LendDetailsFragment}
+ * Activity displaying {@link LoanDetailsFragment}
  * Activity used only on normal layout (not large)
  *
  * @author Benoit Bousquet
  */
-public class LendDetailsFragment extends ListFragment implements LendItemDialog.OnLendItemSetListener, LendDateDialog.OnLendDateSetListener, LendContactDialog.OnLendContactSetListener {
+public class LoanDetailsFragment extends ListFragment implements LoanItemDialog.OnLoanItemSetListener, LoanDateDialog.OnLoanDateSetListener, LoanContactDialog.OnLoanContactSetListener {
 
     /**
      * For log
      */
-    private static final String TAG = "LendDetailsFragment";
+    private static final String TAG = "LoanDetailsFragment";
 
     /**
      * To get the result of the permission read contact request
@@ -69,14 +69,14 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
     private static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 456;
 
     /**
-     * Current lend
+     * Current loan
      */
-    private Lend lend;
+    private Loan loan;
 
     /**
-     * Instance of used {@link LendDetailsListAdapter}
+     * Instance of used {@link LoanDetailsListAdapter}
      */
-    private LendDetailsListAdapter adapter;
+    private LoanDetailsListAdapter adapter;
 
     /**
      * Intent to take a picture from camera
@@ -91,29 +91,29 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_lend_details_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_loan_details_list, container, false);
 
         // customize list
         ListView listView = view.findViewById(android.R.id.list);
         listView.setEmptyView(view.findViewById(R.id.empty_element));
-        adapter = new LendDetailsListAdapter();
+        adapter = new LoanDetailsListAdapter();
         listView.setAdapter(adapter);
 
         return view;
     }
 
     /**
-     * Set the lend to display in this fragment
+     * Set the loan to display in this fragment
      *
-     * @param lend lend to display
+     * @param loan loan to display
      */
-    public void setLend(Lend lend) {
-        this.lend = lend;
+    public void setLoan(Loan loan) {
+        this.loan = loan;
         updateView();
     }
 
     /**
-     * Update the data of the view with current lend
+     * Update the data of the view with current loan
      */
     private void updateView() {
         adapter.notifyDataSetChanged();
@@ -122,14 +122,14 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("lend", lend);
+        outState.putParcelable("loan", loan);
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
-            setLend((Lend) savedInstanceState.getParcelable("lend"));
+            setLoan((Loan) savedInstanceState.getParcelable("loan"));
         }
     }
 
@@ -183,12 +183,12 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_picture_item, lend.getItem())), REQUEST_CODE_GET_PICTURE_GALLERY);
+                    startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_picture_item, loan.getItem())), REQUEST_CODE_GET_PICTURE_GALLERY);
 
                 }
                 break;
             case 2:
-                Log.i(TAG, "Lend date modification requested");
+                Log.i(TAG, "Loan date modification requested");
                 showDateDialog();
 
                 break;
@@ -254,8 +254,8 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
         switch (requestCode) {
             case REQUEST_CODE_GET_PICTURE_GALLERY:
                 if (resultCode == Activity.RESULT_OK) {
-                    lend.setItemPicture(data.getData().toString());
-                    updateLend();
+                    loan.setItemPicture(data.getData().toString());
+                    updateLoan();
                 } else {
                     Log.i(TAG, "No picture returned from gallery");
                 }
@@ -264,11 +264,11 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                 if (resultCode == Activity.RESULT_OK) {
                     Log.i(TAG, "Picture returned from camera");
                     Bundle extras = data.getExtras();
-                    String uri = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), (Bitmap) extras.get("data"), lend.getItem(), "");
+                    String uri = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), (Bitmap) extras.get("data"), loan.getItem(), "");
                     if (uri != null) {
                         Log.i(TAG, "Image added to media store");
-                        lend.setItemPicture(uri);
-                        updateLend();
+                        loan.setItemPicture(uri);
+                        updateLoan();
                     } else {
                         Log.e(TAG, "Image not added to media store :-(");
                     }
@@ -280,7 +280,7 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
     }
 
     /**
-     * Display dialog to set the lend contact
+     * Display dialog to set the loan contact
      */
     private void showContactDialog() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -291,25 +291,25 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        LendContactDialog newContactDialog = LendContactDialog.newInstance(lend.getContact());
-        newContactDialog.setOnLendContactSetListener(this);
+        LoanContactDialog newContactDialog = LoanContactDialog.newInstance(loan.getContact());
+        newContactDialog.setOnLoanContactSetListener(this);
         newContactDialog.show(ft, "contact");
     }
 
     /**
-     * Display dialog to change the lend date
+     * Display dialog to change the loan date
      */
     private void showDateDialog() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment lendDateDialog = getFragmentManager().findFragmentByTag("lend_date");
-        if (lendDateDialog != null) {
-            ft.remove(lendDateDialog);
+        Fragment loanDateDialog = getFragmentManager().findFragmentByTag("loan_date");
+        if (loanDateDialog != null) {
+            ft.remove(loanDateDialog);
         }
 
         // Create and show the dialog
-        LendDateDialog newLendDateDialog = LendDateDialog.newInstance(lend.getLendDate());
-        newLendDateDialog.setOnLendDateSetListener(this);
-        newLendDateDialog.show(ft, "lend_date");
+        LoanDateDialog newLoanDateDialog = LoanDateDialog.newInstance(loan.getLoanDate());
+        newLoanDateDialog.setOnLoanDateSetListener(this);
+        newLoanDateDialog.show(ft, "loan_date");
     }
 
     /**
@@ -324,54 +324,54 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        LendItemDialog newItemDialog = LendItemDialog.newInstance(lend.getItem());
-        newItemDialog.setOnLendItemSetListener(this);
+        LoanItemDialog newItemDialog = LoanItemDialog.newInstance(loan.getItem());
+        newItemDialog.setOnLoanItemSetListener(this);
         newItemDialog.show(ft, "item");
     }
 
     @Override
     public void onItemSet(String item) {
         Log.i(TAG, "New item : " + item);
-        lend.setItem(item);
-        updateLend();
+        loan.setItem(item);
+        updateLoan();
     }
 
     @Override
-    public void onDateSet(long lendDate) {
-        Log.i(TAG, "New lend date : " + lendDate);
-        lend.setLendDate(lendDate);
-        updateLend();
+    public void onDateSet(long loanDate) {
+        Log.i(TAG, "New loan date : " + loanDate);
+        loan.setLoanDate(loanDate);
+        updateLoan();
     }
 
     @Override
     public void onContactSet(Contact contact) {
-        Log.i(TAG, "New lend contact : " + contact);
-        lend.setContact(contact);
-        updateLend();
+        Log.i(TAG, "New loan contact : " + contact);
+        loan.setContact(contact);
+        updateLoan();
     }
 
     /**
-     * Update lend and notify for changes
+     * Update loan and notify for changes
      */
-    private void updateLend() {
-        LendLists.getInstance().updateLend(lend, getContext());
+    private void updateLoan() {
+        LoanLists.getInstance().updateLoan(loan, getContext());
         adapter.notifyDataSetChanged();
-        LendLists.getInstance().notifyLendListsChanged();
+        LoanLists.getInstance().notifyLoanListsChanged();
     }
 
     /**
-     * Adapter in charge of displaying {@link Lend} details.
+     * Adapter in charge of displaying {@link Loan} details.
      * Here is the details displayed :
      * <ol>
      * <li>item</li>
-     * <li>lend date</li>
+     * <li>loan date</li>
      * </ol>
      */
-    private class LendDetailsListAdapter extends BaseAdapter {
+    private class LoanDetailsListAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            if (lend == null) {
+            if (loan == null) {
                 return 0;
             } else {
                 return 4;
@@ -393,10 +393,10 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
             ViewHolder holder;
 
             if (view == null) {
-                view = getActivity().getLayoutInflater().inflate(R.layout.adapter_lend_detail_item, viewGroup, false);
+                view = getActivity().getLayoutInflater().inflate(R.layout.adapter_loan_detail_item, viewGroup, false);
 
                 // Creates a ViewHolder
-                holder = new LendDetailsListAdapter.ViewHolder();
+                holder = new LoanDetailsListAdapter.ViewHolder();
                 holder.icon = view.findViewById(R.id.icon);
                 holder.description = view.findViewById(R.id.description);
                 holder.value = view.findViewById(R.id.value);
@@ -414,14 +414,14 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                     // item
                     holder.icon.setImageResource(R.drawable.ic_item_24dp);
                     holder.description.setText(R.string.item);
-                    holder.value.setText(lend.getItem());
+                    holder.value.setText(loan.getItem());
                     holder.image.setVisibility(View.GONE);
                     break;
                 case 1:
-                    // lend item picture
+                    // loan item picture
                     holder.description.setText(R.string.picture);
                     holder.icon.setImageResource(R.drawable.ic_picture_24dp);
-                    String pictureUri = lend.getItemPicture();
+                    String pictureUri = loan.getItemPicture();
                     if (pictureUri != null) {
                         holder.image.setImageURI(Uri.parse(pictureUri));
                         holder.image.setVisibility(View.VISIBLE);
@@ -433,19 +433,19 @@ public class LendDetailsFragment extends ListFragment implements LendItemDialog.
                     }
                     break;
                 case 2:
-                    // lend date
+                    // loan date
                     holder.icon.setImageResource(R.drawable.ic_event_24dp);
-                    holder.description.setText(R.string.lend_date);
-                    holder.value.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(lend.getLendDate()));
+                    holder.description.setText(R.string.loan_date);
+                    holder.value.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(loan.getLoanDate()));
                     holder.image.setVisibility(View.GONE);
                     break;
                 case 3:
-                    // lend contact
+                    // loan contact
                     holder.description.setText(R.string.contact);
                     holder.image.setVisibility(View.GONE);
                     holder.icon.setImageResource(R.drawable.ic_contact_24dp);
                     // contact details
-                    Contact contact = lend.getContact();
+                    Contact contact = loan.getContact();
                     if (contact != null) {
                         // set name if possible
                         holder.value.setText(contact.getName());

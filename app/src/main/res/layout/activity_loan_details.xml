@@ -17,8 +17,8 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <fragment
-        android:id="@+id/lend_detail"
-        class="org.bbt.kiakoa.fragment.LendDetailsFragment"
+        android:id="@+id/loan_details"
+        class="org.bbt.kiakoa.fragment.LoanDetailsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

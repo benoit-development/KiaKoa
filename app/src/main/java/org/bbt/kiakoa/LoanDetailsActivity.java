@@ -6,25 +6,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
-import org.bbt.kiakoa.fragment.LendDetailsFragment;
-import org.bbt.kiakoa.model.Lend;
+import org.bbt.kiakoa.fragment.LoanDetailsFragment;
+import org.bbt.kiakoa.model.Loan;
 
-public class LendDetailsActivity extends AppCompatActivity {
+public class LoanDetailsActivity extends AppCompatActivity {
 
     /**
-     * EXTRA key to provide lend to display
+     * EXTRA key to provide loan to display
      */
-    public static final String EXTRA_LEND = "org.bbt.kiakoa.lend";
+    public static final String EXTRA_LOAN = "org.bbt.kiakoa.loan";
 
     /**
      * For log
      */
-    private static final String TAG = "LendDetailsActivity";
+    private static final String TAG = "LoanDetailsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lend_details);
+        setContentView(R.layout.activity_loan_details);
 
         // toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -39,19 +39,19 @@ public class LendDetailsActivity extends AppCompatActivity {
         }
 
         // getFragment
-        LendDetailsFragment lendDetailFragment = (LendDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.lend_detail);
+        LoanDetailsFragment loanDetailFragment = (LoanDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.loan_details);
 
-        // get Lend to display
-        Lend lend = getIntent().getParcelableExtra(EXTRA_LEND);
-        if (lend == null) {
-            Log.i(TAG, "Lend is null. Ending activity.");
+        // get Loan to display
+        Loan loan = getIntent().getParcelableExtra(EXTRA_LOAN);
+        if (loan == null) {
+            Log.i(TAG, "Loan is null. Ending activity.");
             finish();
         }
 
-        // send lend to fragment
-        lendDetailFragment.setLend(lend);
+        // send loan to fragment
+        loanDetailFragment.setLoan(loan);
 
         // title
-        setTitle(R.string.lend_details);
+        setTitle(R.string.loan_details);
     }
 }

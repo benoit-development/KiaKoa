@@ -17,27 +17,27 @@ import org.bbt.kiakoa.R;
 /**
  * Dialog used to pick an item
  */
-public class LendItemDialog extends DialogFragment {
+public class LoanItemDialog extends DialogFragment {
 
     /**
      * For log
      */
-    private static final String TAG = "LendItemDialog";
+    private static final String TAG = "LoanItemDialog";
     private static final int ACTION_CREATE = 0;
     private static final int ACTION_UPDATE = 1;
 
     /**
-     * item for a lend
+     * item for a loan
      */
     private EditText itemEditText;
 
-    private OnLendItemSetListener onLendItemSetListener;
+    private OnLoanItemSetListener onLoanItemSetListener;
 
     /**
-     * Create a new instance of LendItemDialog
+     * Create a new instance of LoanItemDialog
      */
-    public static LendItemDialog newInstance() {
-        LendItemDialog dialog = new LendItemDialog();
+    public static LoanItemDialog newInstance() {
+        LoanItemDialog dialog = new LoanItemDialog();
         Bundle args = new Bundle();
         args.putInt("action", ACTION_CREATE);
         dialog.setArguments(args);
@@ -45,12 +45,12 @@ public class LendItemDialog extends DialogFragment {
     }
 
     /**
-     * Create a new instance of LendItemDialog with item
+     * Create a new instance of LoanItemDialog with item
      *
-     * @param item lend item
+     * @param item loan item
      */
-    public static LendItemDialog newInstance(String item) {
-        LendItemDialog dialog = new LendItemDialog();
+    public static LoanItemDialog newInstance(String item) {
+        LoanItemDialog dialog = new LoanItemDialog();
         Bundle args = new Bundle();
         args.putString("item", item);
         args.putInt("action", ACTION_UPDATE);
@@ -64,7 +64,7 @@ public class LendItemDialog extends DialogFragment {
 
         // Inflate view
         @SuppressLint
-                ("InflateParams") View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_lend_item, null, false);
+                ("InflateParams") View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_loan_item, null, false);
         itemEditText = view.findViewById(R.id.item);
         String item = getArguments().getString("item", "");
         itemEditText.setText(item);
@@ -78,7 +78,7 @@ public class LendItemDialog extends DialogFragment {
         });
 
         final AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setTitle((ACTION_CREATE == getArguments().getInt("action", ACTION_CREATE)) ? R.string.new_lend : R.string.item)
+                .setTitle((ACTION_CREATE == getArguments().getInt("action", ACTION_CREATE)) ? R.string.new_loan : R.string.item)
                 .setView(view)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -105,11 +105,11 @@ public class LendItemDialog extends DialogFragment {
                     public void onClick(View view) {
                         String item = itemEditText.getText().toString();
                         if (item.length() > 0) {
-                            if (onLendItemSetListener != null) {
+                            if (onLoanItemSetListener != null) {
                                 Log.i(TAG, "new item : " + item);
-                                onLendItemSetListener.onItemSet(item);
+                                onLoanItemSetListener.onItemSet(item);
                             } else {
-                                Log.w(TAG, "No listener to call, lend item typed");
+                                Log.w(TAG, "No listener to call, loan item typed");
                             }
                             dismiss();
                         } else {
@@ -126,18 +126,18 @@ public class LendItemDialog extends DialogFragment {
     }
 
     /**
-     * Set listener from Lend item typed
+     * Set listener from Loan item typed
      *
-     * @param onLendItemSetListener listener
+     * @param onLoanItemSetListener listener
      */
-    public void setOnLendItemSetListener(OnLendItemSetListener onLendItemSetListener) {
-        this.onLendItemSetListener = onLendItemSetListener;
+    public void setOnLoanItemSetListener(OnLoanItemSetListener onLoanItemSetListener) {
+        this.onLoanItemSetListener = onLoanItemSetListener;
     }
 
     /**
-     * Listener interference called when lend item type
+     * Listener interference called when loan item type
      */
-    public interface OnLendItemSetListener {
+    public interface OnLoanItemSetListener {
         /**
          * Called when item has been set
          *
