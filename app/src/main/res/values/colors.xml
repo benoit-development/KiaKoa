@@ -9,4 +9,5 @@
     <color name="colorIcon">@color/colorAccent</color>
     <color name="warning">#ffd209</color>
     <color name="alert">#ff3e09</color>
+    <color name="light_gray">#CCCCCC</color>
 </resources>

@@ -20,6 +20,7 @@ import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.LoanItemDialog;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
+import org.bbt.kiakoa.tools.ListItemClickRecyclerAdapter;
 
 import java.util.ArrayList;
 
@@ -31,7 +32,7 @@ abstract public class AbstractLoanListFragment extends Fragment implements LoanL
     /**
      * Tag for logs
      */
-    private static final String TAG = "AbstractLoanListFragmen";
+    private static final String TAG = "AbsLoanListFragment";
 
     /**
      * Floating button used for various actions (add, empty, ...) depending on the list to display
@@ -67,12 +68,14 @@ abstract public class AbstractLoanListFragment extends Fragment implements LoanL
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // adapter
         loanAdapter = new LoanRecyclerAdapter(getLoanList());
-        loanAdapter.setOnLoanClickListener(new LoanRecyclerAdapter.OnLoanClickListener() {
+        loanAdapter.setOnItemClickListener(new ListItemClickRecyclerAdapter.OnListItemClickListener<Loan>() {
+
             @Override
-            public void onLoanClick(Loan loan) {
-                Log.i(TAG, "Item clicked: " + loan.getItem());
-                ((MainActivity) getActivity()).displayLoanDetails(loan);
+            public void onListItemClick(Loan item) {
+                Log.i(TAG, "Item clicked: " + item.getItem());
+                ((MainActivity) getActivity()).displayLoanDetails(item);
             }
+
         });
         recyclerView.setAdapter(loanAdapter);
 
