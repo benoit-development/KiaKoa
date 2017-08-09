@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
+        mDrawerLayoutAdapter.notifyDataSetChanged();
         LoanLists.getInstance().registerOnLoanListsChangedListener(this, TAG);
     }
 

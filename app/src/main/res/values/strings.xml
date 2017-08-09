@@ -35,6 +35,7 @@
     <string name="red_alert_level">Red alert level</string>
     <string name="enable_alerts">Enable alerts</string>
     <string name="enable_alerts_summary">These alerts will be displayed in loan lists</string>
+    <string name="archive_loan">Archive this loan</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>

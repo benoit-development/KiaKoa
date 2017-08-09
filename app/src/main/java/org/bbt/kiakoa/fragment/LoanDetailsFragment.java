@@ -17,6 +17,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -90,6 +93,17 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
      */
     private TextView emptyTextView;
 
+    /**
+     * {@link MenuItem} to archive the displayed loan
+     */
+    private MenuItem archiveMenuItem;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -113,6 +127,27 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
         emptyTextView = view.findViewById(R.id.empty_element);
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.loan_details, menu);
+
+        // retrieve instance of archive button
+        archiveMenuItem = menu.findItem(R.id.action_archive);
+        archiveMenuItem.setVisible((loan != null) && (!loan.isArchived()));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_archive:
+                LoanLists.getInstance().addArchive(loan, getContext());
+                archiveMenuItem.setVisible(false);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**

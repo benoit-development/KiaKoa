@@ -148,4 +148,29 @@ public class LoanListUnitTest {
 
     }
 
+    @Test
+    public void loan_states() {
+        Loan loan = new Loan("test");
+
+        // not in any list
+        assertEquals(LoanState.NONE, loan.getState());
+        assertFalse(loan.isArchived());
+
+        // in lent list
+        loanLists.addLent(loan, context);
+        assertEquals(LoanState.LENT, loan.getState());
+        assertFalse(loan.isArchived());
+
+        // in borrowed list
+        loanLists.clearLists(context);
+        loanLists.addBorrowed(loan, context);
+        assertEquals(LoanState.BORROWED, loan.getState());
+        assertFalse(loan.isArchived());
+
+        // moved in archive list
+        loanLists.addArchive(loan, context);
+        assertEquals(LoanState.ARCHIVED, loan.getState());
+        assertTrue(loan.isArchived());
+    }
+
 }

@@ -173,7 +173,7 @@ public class Loan implements Parcelable {
      *
      * @return json string
      */
-    public String toJson() {
+    String toJson() {
         return new Gson().toJson(this);
     }
 
@@ -214,5 +214,33 @@ public class Loan implements Parcelable {
         }
 
         return result;
+    }
+
+    /**
+     * Method to determine this {@link Loan} state in the {@link LoanLists} instance
+     *
+     * @return current state
+     */
+    public LoanState getState() {
+        LoanLists loanLists = LoanLists.getInstance();
+
+        if (loanLists.getLentList().contains(this)) {
+            return LoanState.LENT;
+        } else if (loanLists.getBorrowedList().contains(this)) {
+            return LoanState.BORROWED;
+        } else if (loanLists.getArchiveList().contains(this)) {
+            return LoanState.ARCHIVED;
+        } else {
+            return LoanState.NONE;
+        }
+    }
+
+    /**
+     * Test if this {@link Loan} is archived
+     *
+     * @return is archived or not
+     */
+    public boolean isArchived() {
+        return getState().equals(LoanState.ARCHIVED);
     }
 }
