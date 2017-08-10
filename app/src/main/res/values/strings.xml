@@ -39,6 +39,8 @@
     <string name="archive_loan">Archive this loan</string>
     <string name="status">Status</string>
     <string name="loan_archived">Loan has been archived</string>
+    <string name="yellow_greater_than_red_warning">Yellow alert can\'t be greater than red alert</string>
+    <string name="red_lower_than_yellow_warning">Red alert can\'t be lower than yellow alert</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
