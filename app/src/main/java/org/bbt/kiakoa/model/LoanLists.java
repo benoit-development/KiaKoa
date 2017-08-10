@@ -32,9 +32,9 @@ public class LoanLists {
     public static final String SHARED_PREFERENCES_BORROWED_ID = "borrowed";
 
     /**
-     * Loan archive list identifier for shared preferences
+     * Loan archived list identifier for shared preferences
      */
-    public static final String SHARED_PREFERENCES_ARCHIVE_ID = "archive";
+    public static final String SHARED_PREFERENCES_ARCHIVED_ID = "archived";
 
     /**
      * Tag for logs
@@ -52,9 +52,9 @@ public class LoanLists {
     private ArrayList<Loan> borrowedList;
 
     /**
-     * archive loaned items
+     * archived loaned items
      */
-    private ArrayList<Loan> archiveList;
+    private ArrayList<Loan> archivedList;
 
     /**
      * Singleton instance
@@ -115,7 +115,7 @@ public class LoanLists {
             }.getType());
             borrowedList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_BORROWED_ID, "[]"), new TypeToken<ArrayList<Loan>>() {
             }.getType());
-            archiveList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_ARCHIVE_ID, "[]"), new TypeToken<ArrayList<Loan>>() {
+            archivedList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_ARCHIVED_ID, "[]"), new TypeToken<ArrayList<Loan>>() {
             }.getType());
 
             sortLists();
@@ -126,12 +126,12 @@ public class LoanLists {
 
             lentList = new ArrayList<>();
             borrowedList = new ArrayList<>();
-            archiveList = new ArrayList<>();
+            archivedList = new ArrayList<>();
         }
 
         Log.d(TAG, "initLists: lent count:     " + lentList.size());
         Log.d(TAG, "initLists: borrowed count: " + borrowedList.size());
-        Log.d(TAG, "initLists: archive count:  " + archiveList.size());
+        Log.d(TAG, "initLists: archived count: " + archivedList.size());
     }
 
     /**
@@ -140,7 +140,7 @@ public class LoanLists {
     private void sortLists() {
         sortList(lentList);
         sortList(borrowedList);
-        sortList(archiveList);
+        sortList(archivedList);
     }
 
     /**
@@ -160,6 +160,11 @@ public class LoanLists {
      */
     public boolean addLent(Loan loan, Context context) {
         Log.i(TAG, "addLent: " + loan.toJson());
+
+        // delete from other lists if necessary
+        borrowedList.remove(loan);
+        archivedList.remove(loan);
+
         boolean result = lentList.add(loan);
 
         // if there is a context, then save list
@@ -188,6 +193,11 @@ public class LoanLists {
      */
     public boolean addBorrowed(Loan loan, Context context) {
         Log.i(TAG, "addBorrowed: " + loan.toJson());
+
+        // delete from other lists if necessary
+        lentList.remove(loan);
+        archivedList.remove(loan);
+
         boolean result = borrowedList.add(loan);
 
         // if there is a context, then save list
@@ -208,32 +218,32 @@ public class LoanLists {
 
 
     /**
-     * add a {@link Loan} from the Archive list
+     * add a {@link Loan} from the Archived list
      *
      * @param loan    loan from add
      * @param context a {@link Context}
      * @return if add is success or not
      */
-    public boolean addArchive(Loan loan, Context context) {
-        Log.i(TAG, "addArchive: " + loan.toJson());
+    public boolean addArchived(Loan loan, Context context) {
+        Log.i(TAG, "addArchived: " + loan.toJson());
 
         // remove this loan from its previous lists
         lentList.remove(loan);
         borrowedList.remove(loan);
 
-        // add to archive list
-        boolean result = archiveList.add(loan);
+        // add to archived list
+        boolean result = archivedList.add(loan);
 
         // if there is a context, then save list
         if (context != null) {
             SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(SHARED_PREFERENCES_ARCHIVE_ID, new Gson().toJson(archiveList));
+            editor.putString(SHARED_PREFERENCES_ARCHIVED_ID, new Gson().toJson(archivedList));
             editor.apply();
         }
 
         if (result) {
-            sortList(archiveList);
+            sortList(archivedList);
             notifyLoanListsChanged();
         }
 
@@ -261,10 +271,10 @@ public class LoanLists {
             result |= addBorrowed(loan, context);
             sortList(borrowedList);
         }
-        if (archiveList.remove(loan)) {
-            // loan removed from loan archive list
-            result |= addArchive(loan, context);
-            sortList(archiveList);
+        if (archivedList.remove(loan)) {
+            // loan removed from loan archived list
+            result |= addArchived(loan, context);
+            sortList(archivedList);
         }
 
         if (result) {
@@ -293,12 +303,12 @@ public class LoanLists {
     }
 
     /**
-     * Archive list getter
+     * Archived list getter
      *
-     * @return archive list
+     * @return archived list
      */
-    public ArrayList<Loan> getArchiveList() {
-        return archiveList;
+    public ArrayList<Loan> getArchivedList() {
+        return archivedList;
     }
 
     /**
@@ -315,14 +325,14 @@ public class LoanLists {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.remove(SHARED_PREFERENCES_LENT_ID);
             editor.remove(SHARED_PREFERENCES_BORROWED_ID);
-            editor.remove(SHARED_PREFERENCES_ARCHIVE_ID);
+            editor.remove(SHARED_PREFERENCES_ARCHIVED_ID);
             editor.apply();
         }
 
         // empty lists
         lentList.clear();
         borrowedList.clear();
-        archiveList.clear();
+        archivedList.clear();
 
         // notify changes
         notifyLoanListsChanged();
@@ -375,7 +385,7 @@ public class LoanLists {
      * @return loans count
      */
     public int getLoanCount() {
-        return lentList.size() + borrowedList.size() + archiveList.size();
+        return lentList.size() + borrowedList.size() + archivedList.size();
     }
 
 }

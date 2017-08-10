@@ -18,12 +18,12 @@ import java.util.ArrayList;
  *
  * @author Benoît BOUSQUET
  */
-public class ArchiveListFragment extends AbstractLoanListFragment {
+public class ArchivedListFragment extends AbstractLoanListFragment {
 
     /**
      * Tag for logs
      */
-    private static final String TAG = "ArchiveListFragment";
+    private static final String TAG = "ArchivedListFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,9 +41,9 @@ public class ArchiveListFragment extends AbstractLoanListFragment {
             @Override
             public void onClick(View view) {
 
-                Log.i(TAG, "fabOnclickListener: empty archive");
+                Log.i(TAG, "fabOnclickListener: empty archived list");
                 Toast.makeText(getActivity(), "Empty list", Toast.LENGTH_LONG).show();
-                LoanLists.getInstance().getArchiveList().clear();
+                LoanLists.getInstance().getArchivedList().clear();
                 loanAdapter.notifyDataSetChanged();
             }
         };
@@ -51,12 +51,12 @@ public class ArchiveListFragment extends AbstractLoanListFragment {
 
     @Override
     protected ArrayList<Loan> getLoanList() {
-        return LoanLists.getInstance().getArchiveList();
+        return LoanLists.getInstance().getArchivedList();
     }
 
     @Override
     protected String getLoanListId() {
-        return LoanLists.SHARED_PREFERENCES_ARCHIVE_ID;
+        return LoanLists.SHARED_PREFERENCES_ARCHIVED_ID;
     }
 
     @Override

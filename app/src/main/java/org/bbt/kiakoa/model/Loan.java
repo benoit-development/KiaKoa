@@ -221,17 +221,17 @@ public class Loan implements Parcelable {
      *
      * @return current state
      */
-    public LoanState getState() {
+    public LoanStatus getStatus() {
         LoanLists loanLists = LoanLists.getInstance();
 
         if (loanLists.getLentList().contains(this)) {
-            return LoanState.LENT;
+            return LoanStatus.LENT;
         } else if (loanLists.getBorrowedList().contains(this)) {
-            return LoanState.BORROWED;
-        } else if (loanLists.getArchiveList().contains(this)) {
-            return LoanState.ARCHIVED;
+            return LoanStatus.BORROWED;
+        } else if (loanLists.getArchivedList().contains(this)) {
+            return LoanStatus.ARCHIVED;
         } else {
-            return LoanState.NONE;
+            return LoanStatus.NONE;
         }
     }
 
@@ -241,6 +241,6 @@ public class Loan implements Parcelable {
      * @return is archived or not
      */
     public boolean isArchived() {
-        return getState().equals(LoanState.ARCHIVED);
+        return getStatus().equals(LoanStatus.ARCHIVED);
     }
 }

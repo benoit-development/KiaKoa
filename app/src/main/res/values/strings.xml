@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">KiaKoa</string>
     <string name="settings">Settings</string>
-    <string name="title_lent">Lent</string>
-    <string name="title_borrowed">Borrowed</string>
-    <string name="title_archive">Archive</string>
+    <string name="lent">Lent</string>
+    <string name="borrowed">Borrowed</string>
+    <string name="archived">Archived</string>
+    <string name="none">None</string>
     <string name="empty_loan_list">Empty loan list</string>
     <string name="item">Item</string>
     <string name="loan_date">Loan date</string>
@@ -36,6 +37,8 @@
     <string name="enable_alerts">Enable alerts</string>
     <string name="enable_alerts_summary">These alerts will be displayed in loan lists</string>
     <string name="archive_loan">Archive this loan</string>
+    <string name="status">Status</string>
+    <string name="loan_archived">Loan has been archived</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
@@ -46,5 +49,9 @@
         <item quantity="one">%d item</item>
         <item quantity="other">%d items</item>
     </plurals>
-
+    <string-array name="status_list">
+        <item>@string/lent</item>
+        <item>@string/borrowed</item>
+        <item>@string/archived</item>
+    </string-array>
 </resources>

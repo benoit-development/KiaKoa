@@ -25,13 +25,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.bbt.kiakoa.LoanDetailsActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.LoanContactDialog;
 import org.bbt.kiakoa.dialog.LoanDateDialog;
 import org.bbt.kiakoa.dialog.LoanItemDialog;
+import org.bbt.kiakoa.dialog.LoanStatusDialog;
 import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
+import org.bbt.kiakoa.model.LoanStatus;
 import org.bbt.kiakoa.tools.ItemClickRecyclerAdapter;
 import org.bbt.kiakoa.tools.SimpleDividerItemDecoration;
 
@@ -41,7 +44,7 @@ import org.bbt.kiakoa.tools.SimpleDividerItemDecoration;
  *
  * @author Benoit Bousquet
  */
-public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLoanItemSetListener, LoanDateDialog.OnLoanDateSetListener, LoanContactDialog.OnLoanContactSetListener, ItemClickRecyclerAdapter.OnItemClickListener {
+public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLoanItemSetListener, LoanDateDialog.OnLoanDateSetListener, LoanContactDialog.OnLoanContactSetListener, ItemClickRecyclerAdapter.OnItemClickListener, LoanStatusDialog.OnLoanStatusSetListener {
 
     /**
      * For log
@@ -132,18 +135,21 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.loan_details, menu);
-
         // retrieve instance of archive button
         archiveMenuItem = menu.findItem(R.id.action_archive);
-        archiveMenuItem.setVisible((loan != null) && (!loan.isArchived()));
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_archive:
-                LoanLists.getInstance().addArchive(loan, getContext());
-                archiveMenuItem.setVisible(false);
+                LoanLists.getInstance().addArchived(loan, getContext());
+                if (getActivity() instanceof LoanDetailsActivity) {
+                    getActivity().finish();
+                } else {
+                    updateView();
+                }
+                Toast.makeText(getContext(), R.string.loan_archived, Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -166,12 +172,19 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
      */
     private void updateView() {
         loanDetailsAdapter.setLoan(loan);
+
+        // set display if there is a loan to display
         if (loanDetailsAdapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyTextView.setVisibility(View.VISIBLE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             emptyTextView.setVisibility(View.GONE);
+        }
+
+        // update menuitem depending on loan status
+        if (archiveMenuItem != null) {
+            archiveMenuItem.setVisible((loan != null) && (!loan.isArchived()));
         }
     }
 
@@ -301,10 +314,48 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
         newItemDialog.show(ft, "item");
     }
 
+    /**
+     * Display dialog to enter a new status
+     */
+    private void showStatusDialog() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment statusDialog = getFragmentManager().findFragmentByTag("status");
+        if (statusDialog != null) {
+            ft.remove(statusDialog);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        LoanStatusDialog newItemDialog = LoanStatusDialog.newInstance(loan.getStatus());
+        newItemDialog.setOnLoanStatusSetListener(this);
+        newItemDialog.show(ft, "status");
+    }
+
     @Override
     public void onItemSet(String item) {
         Log.i(TAG, "New item : " + item);
         loan.setItem(item);
+        updateLoan();
+    }
+
+    @Override
+    public void onStatusSet(LoanStatus status) {
+        Log.i(TAG, "New status : " + status);
+        LoanLists loanList = LoanLists.getInstance();
+        switch (status) {
+            case LENT:
+                loanList.addLent(loan, getContext());
+                break;
+            case BORROWED:
+                loanList.addBorrowed(loan, getContext());
+                break;
+            case ARCHIVED:
+                loanList.addArchived(loan, getContext());
+                break;
+            case NONE:
+                Log.e(TAG, "None status found, should not happen");
+                break;
+        }
         updateLoan();
     }
 
@@ -327,7 +378,7 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
      */
     private void updateLoan() {
         LoanLists.getInstance().updateLoan(loan, getContext());
-        loanDetailsAdapter.notifyDataSetChanged();
+        updateView();
         LoanLists.getInstance().notifyLoanListsChanged();
     }
 
@@ -345,6 +396,11 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
 
                 break;
             case 1:
+                Log.i(TAG, "Item status requested");
+                showStatusDialog();
+
+                break;
+            case 2:
                 Log.i(TAG, "Requesting picture for the item");
                 PackageManager packageManager = getContext().getPackageManager();
                 // to check if we can display camera activity
@@ -385,12 +441,12 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
 
                 }
                 break;
-            case 2:
+            case 3:
                 Log.i(TAG, "Loan date modification requested");
                 showDateDialog();
 
                 break;
-            case 3:
+            case 4:
                 Log.i(TAG, "Contact modification requested");
 
                 // check permission to read contacts

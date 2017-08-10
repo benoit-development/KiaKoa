@@ -68,7 +68,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
     @Override
     public int getItemCount() {
         if (loan != null) {
-            return 4;
+            return 5;
         } else {
             return 0;
         }
@@ -93,6 +93,13 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                 holder.image.setVisibility(View.GONE);
                 break;
             case 1:
+                // item
+                holder.icon.setImageResource(loan.getStatus().getIconId());
+                holder.description.setText(R.string.status);
+                holder.value.setText(loan.getStatus().getLabelId());
+                holder.image.setVisibility(View.GONE);
+                break;
+            case 2:
                 // loan item picture
                 holder.description.setText(R.string.picture);
                 holder.icon.setImageResource(R.drawable.ic_picture_24dp);
@@ -107,14 +114,14 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                     holder.value.setText(R.string.no_picture);
                 }
                 break;
-            case 2:
+            case 3:
                 // loan date
                 holder.icon.setImageResource(R.drawable.ic_event_24dp);
                 holder.description.setText(R.string.loan_date);
                 holder.value.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(loan.getLoanDate()));
                 holder.image.setVisibility(View.GONE);
                 break;
-            case 3:
+            case 4:
                 // loan contact
                 holder.description.setText(R.string.contact);
                 holder.image.setVisibility(View.GONE);

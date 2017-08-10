@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.fragment.LoanList.ArchiveListFragment;
+import org.bbt.kiakoa.fragment.LoanList.ArchivedListFragment;
 import org.bbt.kiakoa.fragment.LoanList.BorrowedListFragment;
 import org.bbt.kiakoa.fragment.LoanList.LoanToListFragment;
 
@@ -98,15 +98,15 @@ public class LoanListsPagerFragment extends Fragment {
         switch (page) {
             case 0:
                 // lent
-                getActivity().setTitle(R.string.title_lent);
+                getActivity().setTitle(R.string.lent);
                 break;
             case 1:
                 // borrowed
-                getActivity().setTitle(R.string.title_borrowed);
+                getActivity().setTitle(R.string.borrowed);
                 break;
             case 2:
                 // archive
-                getActivity().setTitle(R.string.title_archive);
+                getActivity().setTitle(R.string.archived);
                 break;
         }
     }
@@ -141,7 +141,7 @@ public class LoanListsPagerFragment extends Fragment {
                     fragment = new BorrowedListFragment();
                     break;
                 default:
-                    fragment = new ArchiveListFragment();
+                    fragment = new ArchivedListFragment();
                     break;
             }
 

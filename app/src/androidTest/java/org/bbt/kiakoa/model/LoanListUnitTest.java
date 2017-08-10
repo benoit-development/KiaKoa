@@ -57,23 +57,23 @@ public class LoanListUnitTest {
 
 
         // add some archive
-        assertTrue(loanLists.addArchive(loan1, context));
+        assertTrue(loanLists.addArchived(loan1, context));
         assertEquals(2, loanLists.getLentList().size());
         assertEquals(3, loanLists.getBorrowedList().size());
-        assertEquals(1, loanLists.getArchiveList().size());
+        assertEquals(1, loanLists.getArchivedList().size());
         assertEquals(6, loanLists.getLoanCount());
 
-        assertTrue(loanLists.addArchive(loan4, context));
+        assertTrue(loanLists.addArchived(loan4, context));
         assertEquals(2, loanLists.getLentList().size());
         assertEquals(2, loanLists.getBorrowedList().size());
-        assertEquals(2, loanLists.getArchiveList().size());
+        assertEquals(2, loanLists.getArchivedList().size());
         assertEquals(6, loanLists.getLoanCount());
 
         // clear lists
         loanLists.clearLists(context);
         assertEquals(0, loanLists.getLentList().size());
         assertEquals(0, loanLists.getBorrowedList().size());
-        assertEquals(0, loanLists.getArchiveList().size());
+        assertEquals(0, loanLists.getArchivedList().size());
         assertEquals(0, loanLists.getLoanCount());
 
     }
@@ -124,7 +124,7 @@ public class LoanListUnitTest {
         assertFalse(loanLists.updateLoan(anotherLoan, context));
         assertEquals(1, loanLists.getLentList().size());
         assertEquals(0, loanLists.getBorrowedList().size());
-        assertEquals(0, loanLists.getArchiveList().size());
+        assertEquals(0, loanLists.getArchivedList().size());
 
         //update loan to list
         loanLists.clearLists(context);
@@ -134,17 +134,17 @@ public class LoanListUnitTest {
         assertFalse(loanLists.updateLoan(anotherLoan, context));
         assertEquals(0, loanLists.getLentList().size());
         assertEquals(1, loanLists.getBorrowedList().size());
-        assertEquals(0, loanLists.getArchiveList().size());
+        assertEquals(0, loanLists.getArchivedList().size());
 
         //update loan to list
         loanLists.clearLists(context);
-        loanLists.addArchive(loan, context);
+        loanLists.addArchived(loan, context);
         assertTrue(loanLists.updateLoan(loan, context));
         assertTrue(loanLists.updateLoan(sameLoan, context));
         assertFalse(loanLists.updateLoan(anotherLoan, context));
         assertEquals(0, loanLists.getLentList().size());
         assertEquals(0, loanLists.getBorrowedList().size());
-        assertEquals(1, loanLists.getArchiveList().size());
+        assertEquals(1, loanLists.getArchivedList().size());
 
     }
 
@@ -153,23 +153,23 @@ public class LoanListUnitTest {
         Loan loan = new Loan("test");
 
         // not in any list
-        assertEquals(LoanState.NONE, loan.getState());
+        assertEquals(LoanStatus.NONE, loan.getStatus());
         assertFalse(loan.isArchived());
 
         // in lent list
         loanLists.addLent(loan, context);
-        assertEquals(LoanState.LENT, loan.getState());
+        assertEquals(LoanStatus.LENT, loan.getStatus());
         assertFalse(loan.isArchived());
 
         // in borrowed list
         loanLists.clearLists(context);
         loanLists.addBorrowed(loan, context);
-        assertEquals(LoanState.BORROWED, loan.getState());
+        assertEquals(LoanStatus.BORROWED, loan.getStatus());
         assertFalse(loan.isArchived());
 
         // moved in archive list
-        loanLists.addArchive(loan, context);
-        assertEquals(LoanState.ARCHIVED, loan.getState());
+        loanLists.addArchived(loan, context);
+        assertEquals(LoanStatus.ARCHIVED, loan.getStatus());
         assertTrue(loan.isArchived());
     }
 
