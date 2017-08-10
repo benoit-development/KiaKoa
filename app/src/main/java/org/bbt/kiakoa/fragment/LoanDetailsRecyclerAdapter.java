@@ -1,6 +1,7 @@
 package org.bbt.kiakoa.fragment;
 
 
+import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,11 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
     private Loan loan;
 
     /**
+     * a context
+     */
+    private Context context;
+
+    /**
      * Loan setter. setting a new loan will refresh adapter.
      *
      * @param loan loan details to be displayed
@@ -50,6 +56,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
         final TextView description;
         final TextView value;
         final ImageView image;
+        final ImageView circleView;
 
         /**
          * Constructor
@@ -62,6 +69,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
             description = view.findViewById(R.id.description);
             value = view.findViewById(R.id.value);
             image = view.findViewById(R.id.image);
+            circleView = view.findViewById(R.id.circle_view);
         }
     }
 
@@ -76,6 +84,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        this.context = parent.getContext();
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_loan_detail_item, parent, false));
     }
 
@@ -91,6 +100,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                 holder.description.setText(R.string.item);
                 holder.value.setText(loan.getItem());
                 holder.image.setVisibility(View.GONE);
+                holder.circleView.setVisibility(View.GONE);
                 break;
             case 1:
                 // item
@@ -98,18 +108,20 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                 holder.description.setText(R.string.status);
                 holder.value.setText(loan.getStatus().getLabelId());
                 holder.image.setVisibility(View.GONE);
+                holder.circleView.setVisibility(View.GONE);
                 break;
             case 2:
                 // loan item picture
                 holder.description.setText(R.string.picture);
                 holder.icon.setImageResource(R.drawable.ic_picture_24dp);
                 String pictureUri = loan.getItemPicture();
+                holder.image.setVisibility(View.GONE);
                 if (pictureUri != null) {
-                    holder.image.setImageURI(Uri.parse(pictureUri));
-                    holder.image.setVisibility(View.VISIBLE);
+                    holder.circleView.setImageURI(Uri.parse(pictureUri));
+                    holder.circleView.setVisibility(View.VISIBLE);
                     holder.value.setVisibility(View.INVISIBLE);
                 } else {
-                    holder.image.setVisibility(View.GONE);
+                    holder.circleView.setVisibility(View.GONE);
                     holder.value.setVisibility(View.VISIBLE);
                     holder.value.setText(R.string.no_picture);
                 }
@@ -119,23 +131,37 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                 holder.icon.setImageResource(R.drawable.ic_event_24dp);
                 holder.description.setText(R.string.loan_date);
                 holder.value.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(loan.getLoanDate()));
-                holder.image.setVisibility(View.GONE);
+                holder.circleView.setVisibility(View.GONE);
+                switch (loan.getAlertLevel(context)) {
+                    case RED:
+                        holder.image.setImageResource(R.drawable.ic_warning_red_24dp);
+                        holder.image.setVisibility(View.VISIBLE);
+                        break;
+                    case YELLOW:
+                        holder.image.setImageResource(R.drawable.ic_warning_yellow_24dp);
+                        holder.image.setVisibility(View.VISIBLE);
+                        break;
+                    case NONE:
+                        holder.image.setVisibility(View.GONE);
+                        break;
+                }
                 break;
             case 4:
                 // loan contact
                 holder.description.setText(R.string.contact);
-                holder.image.setVisibility(View.GONE);
+                holder.circleView.setVisibility(View.GONE);
                 holder.icon.setImageResource(R.drawable.ic_contact_24dp);
+                holder.image.setVisibility(View.GONE);
                 // contact details
                 Contact contact = loan.getContact();
                 if (contact != null) {
                     // set name if possible
                     holder.value.setText(contact.getName());
-                    // set image if possible
+                    // set circleView if possible
                     String photoUri = contact.getPhotoUri();
                     if (photoUri != null) {
-                        holder.image.setImageURI(Uri.parse(photoUri));
-                        holder.image.setVisibility(View.VISIBLE);
+                        holder.circleView.setImageURI(Uri.parse(photoUri));
+                        holder.circleView.setVisibility(View.VISIBLE);
                     }
                 } else {
                     holder.value.setText(R.string.no_contact);

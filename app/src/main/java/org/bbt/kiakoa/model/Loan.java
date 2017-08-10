@@ -1,5 +1,7 @@
 package org.bbt.kiakoa.model;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -242,5 +244,25 @@ public class Loan implements Parcelable {
      */
     public boolean isArchived() {
         return getStatus().equals(LoanStatus.ARCHIVED);
+    }
+
+    /**
+     * Get alert level depending on loan date
+     *
+     * @param context context to access {@link SharedPreferences}
+     * @return alert level
+     */
+    public LoanAlertLevel getAlertLevel(Context context) {
+        int yellow = LoanAlertLevel.getYellowLevel(context);
+        int red = LoanAlertLevel.getRedLevel(context);
+        int duration = getDatesDifferenceInDays();
+
+        if (duration >= red) {
+            return LoanAlertLevel.RED;
+        } else if (duration >= yellow) {
+            return LoanAlertLevel.YELLOW;
+        } else {
+            return LoanAlertLevel.NONE;
+        }
     }
 }

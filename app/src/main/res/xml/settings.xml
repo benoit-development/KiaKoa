@@ -4,7 +4,7 @@
     <PreferenceCategory android:title="@string/warnings_loan_duration">
 
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="@bool/alert_enabled_default_value"
             android:key="enable_alert"
             android:summary="@string/enable_alerts_summary"
             android:title="@string/enable_alerts" />

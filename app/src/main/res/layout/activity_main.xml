@@ -25,7 +25,7 @@
 
         <fragment
             android:id="@+id/loan_pager_frag"
-            class="org.bbt.kiakoa.fragment.LoanListsPagerFragment"
+            class="org.bbt.kiakoa.fragment.LoanList.LoanListsPagerFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

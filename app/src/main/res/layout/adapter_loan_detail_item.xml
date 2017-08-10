@@ -43,8 +43,17 @@
 
     </LinearLayout>
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="5dp"
+        android:contentDescription="@string/alert"
+        android:src="@drawable/ic_warning_red_24dp" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circle_view"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center"

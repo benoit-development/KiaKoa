@@ -26,7 +26,7 @@ import android.widget.Toast;
 import org.bbt.kiakoa.dialog.ClearAllDialog;
 import org.bbt.kiakoa.fragment.LoanList.AbstractLoanListFragment;
 import org.bbt.kiakoa.fragment.LoanDetailsFragment;
-import org.bbt.kiakoa.fragment.LoanListsPagerFragment;
+import org.bbt.kiakoa.fragment.LoanList.LoanListsPagerFragment;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
 

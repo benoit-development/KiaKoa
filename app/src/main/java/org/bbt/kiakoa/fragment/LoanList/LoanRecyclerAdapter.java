@@ -2,6 +2,7 @@ package org.bbt.kiakoa.fragment.LoanList;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.model.LoanAlertLevel;
 import org.bbt.kiakoa.tools.ListItemClickRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -27,9 +29,10 @@ class LoanRecyclerAdapter extends ListItemClickRecyclerAdapter<LoanRecyclerAdapt
     private Context context;
 
     // Provide a reference to the views for a loan
-    public class ViewHolder extends ListItemClickRecyclerAdapter.ViewHolder {
+    class ViewHolder extends ListItemClickRecyclerAdapter.ViewHolder {
 
         private final ImageView pictureView;
+        private final ImageView alertView;
         private final TextView itemView;
         private final TextView contactView;
         private final TextView durationView;
@@ -41,6 +44,7 @@ class LoanRecyclerAdapter extends ListItemClickRecyclerAdapter<LoanRecyclerAdapt
         private ViewHolder(View view) {
             super(view);
             this.pictureView = view.findViewById(R.id.picture);
+            this.alertView = view.findViewById(R.id.alert);
             this.itemView = view.findViewById(R.id.item);
             this.contactView = view.findViewById(R.id.contact);
             this.durationView = view.findViewById(R.id.duration);
@@ -82,6 +86,23 @@ class LoanRecyclerAdapter extends ListItemClickRecyclerAdapter<LoanRecyclerAdapt
         // duration
         int days = loan.getDatesDifferenceInDays();
         holder.durationView.setText(context.getResources().getQuantityString(R.plurals.plural_day, days, days));
+        LoanAlertLevel alertLevel = loan.getAlertLevel(context);
+        switch (alertLevel) {
+            case RED:
+                holder.alertView.setImageResource(R.drawable.ic_warning_red_24dp);
+                holder.alertView.setVisibility(View.VISIBLE);
+                holder.durationView.setTextColor(ContextCompat.getColor(context, alertLevel.getColorLevel()));
+                break;
+            case YELLOW:
+                holder.alertView.setImageResource(R.drawable.ic_warning_yellow_24dp);
+                holder.alertView.setVisibility(View.VISIBLE);
+                holder.durationView.setTextColor(ContextCompat.getColor(context, alertLevel.getColorLevel()));
+                break;
+            case NONE:
+                holder.alertView.setVisibility(View.GONE);
+                holder.durationView.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
+                break;
+        }
         // pictureView
         Uri picture = loan.getPicture();
         if (picture != null) {

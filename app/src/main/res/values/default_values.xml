@@ -2,4 +2,5 @@
 <resources>
     <integer name="yellow_alert_default_value">50</integer>
     <integer name="red_alert_default_value">100</integer>
+    <bool name="alert_enabled_default_value">true</bool>
 </resources>

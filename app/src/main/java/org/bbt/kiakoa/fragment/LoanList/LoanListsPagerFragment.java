@@ -1,4 +1,4 @@
-package org.bbt.kiakoa.fragment;
+package org.bbt.kiakoa.fragment.LoanList;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;

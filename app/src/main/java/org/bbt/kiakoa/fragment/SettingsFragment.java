@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.model.LoanAlertLevel;
 
 /**
  * Fragment managing settings
@@ -21,9 +22,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
      * For log
      */
     private static final String TAG = "SettingsFragment";
-    private static final String KEY_ENABLE_ALERTS = "enable_alert";
-    private static final String KEY_YELLOW_ALERT = "yellow_alert";
-    private static final String KEY_RED_ALERT = "red_alert";
+    public static final String KEY_ENABLE_ALERTS = "enable_alert";
+    public static final String KEY_YELLOW_ALERT = "yellow_alert";
+    public static final String KEY_RED_ALERT = "red_alert";
 
     /**
      * preference context
@@ -88,7 +89,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 break;
             case KEY_YELLOW_ALERT:
                 try {
-                    int yellowValue = Integer.valueOf(sharedPreferences.getString(key, String.valueOf(getResources().getInteger(R.integer.yellow_alert_default_value))));
+                    String value = sharedPreferences.getString(key, String.valueOf(getResources().getInteger(R.integer.yellow_alert_default_value)));
+                    int yellowValue = Integer.valueOf(value);
                     int redValue = Integer.valueOf(redAlert.getText());
                     if (yellowValue >= redValue) {
                         yellowValue = redValue - 1;
@@ -98,6 +100,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                     }
                     updateSummaries();
                 } catch (NumberFormatException e) {
+                    yellowAlert.setText(String.valueOf(LoanAlertLevel.getYellowLevel(context)));
                     Log.e(TAG, "Format exception. Should not happen because of type numer on this preference.");
                     Log.e(TAG, "Message : " + e.getMessage());
                 }
@@ -113,6 +116,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                         Toast.makeText(context, R.string.red_lower_than_yellow_warning, Toast.LENGTH_SHORT).show();
                     }
                 } catch (NumberFormatException e) {
+                    redAlert.setText(String.valueOf(LoanAlertLevel.getRedLevel(context)));
                     Log.e(TAG, "Format exception. Should not happen because of type numer on this preference.");
                     Log.e(TAG, "Message : " + e.getMessage());
                 }

@@ -14,6 +14,8 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Loan unit test executed on device
+ *
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class LoanListUnitTest {
 

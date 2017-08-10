@@ -435,7 +435,7 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
 
                     Log.i(TAG, "Requesting picture : use gallery");
                     Intent intent = new Intent();
-                    intent.setType("image/*");
+                    intent.setType("circleView/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_picture_item, loan.getItem())), REQUEST_CODE_GET_PICTURE_GALLERY);
 

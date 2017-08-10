@@ -1,10 +1,18 @@
 package org.bbt.kiakoa.model;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Parcel;
+import android.preference.PreferenceManager;
+import android.support.test.InstrumentationRegistry;
 
 import com.google.gson.Gson;
 
+import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.fragment.SettingsFragment;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -26,6 +34,10 @@ public class LoanUnitTest {
     private static final String LOAN_ANOTHER_ITEM = "a another label";
     final private Loan loanTest = new Loan(LOAN_ITEM);
     final private Contact contactTest = new Contact(17, "pouet", "photo_uri");
+    /**
+     * a {@link Context}
+     */
+    private final Context context = InstrumentationRegistry.getTargetContext();
 
     @Test
     public void loan_parcelable() throws Exception {
@@ -118,5 +130,67 @@ public class LoanUnitTest {
         assertEquals(2, list.size());
         list.remove(sameLoan);
         assertEquals(1, list.size());
+    }
+
+    @SuppressLint("ApplySharedPref")
+    @Test
+    public void get_level() {
+        // clear sharedpreferences data
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Editor editor = prefs.edit();
+        editor.clear();
+        editor.commit();
+
+        // get default values
+        assertEquals(context.getResources().getInteger(R.integer.yellow_alert_default_value), LoanAlertLevel.getYellowLevel(context));
+        assertEquals(context.getResources().getInteger(R.integer.red_alert_default_value), LoanAlertLevel.getRedLevel(context));
+
+        // false values
+        editor.putString(SettingsFragment.KEY_YELLOW_ALERT, "pouet");
+        editor.putString(SettingsFragment.KEY_RED_ALERT, "prout");
+        editor.commit();
+        assertEquals(context.getResources().getInteger(R.integer.yellow_alert_default_value), LoanAlertLevel.getYellowLevel(context));
+        assertEquals(context.getResources().getInteger(R.integer.red_alert_default_value), LoanAlertLevel.getRedLevel(context));
+
+        // custom values
+        editor.putString(SettingsFragment.KEY_YELLOW_ALERT, "10");
+        editor.putString(SettingsFragment.KEY_RED_ALERT, "20");
+        editor.commit();
+        assertEquals(10, LoanAlertLevel.getYellowLevel(context));
+        assertEquals(20, LoanAlertLevel.getRedLevel(context));
+
+        // test method
+        loanTest.setLoanDate(System.currentTimeMillis());
+        assertEquals(LoanAlertLevel.NONE, loanTest.getAlertLevel(context));
+        long dayInMillis = 86400000L;
+        loanTest.setLoanDate(System.currentTimeMillis() - 5 * dayInMillis);
+        assertEquals(LoanAlertLevel.NONE, loanTest.getAlertLevel(context));
+        loanTest.setLoanDate(System.currentTimeMillis() - 10 * dayInMillis);
+        assertEquals(LoanAlertLevel.YELLOW, loanTest.getAlertLevel(context));
+        loanTest.setLoanDate(System.currentTimeMillis() - 15 * dayInMillis);
+        assertEquals(LoanAlertLevel.YELLOW, loanTest.getAlertLevel(context));
+        loanTest.setLoanDate(System.currentTimeMillis() - 20 * dayInMillis);
+        assertEquals(LoanAlertLevel.RED, loanTest.getAlertLevel(context));
+        loanTest.setLoanDate(System.currentTimeMillis() - 25 * dayInMillis);
+        assertEquals(LoanAlertLevel.RED, loanTest.getAlertLevel(context));
+    }
+
+
+    @SuppressLint("ApplySharedPref")
+    @Test
+    public void is_alerts_enabled() {
+        // clear sharedpreferences data
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Editor editor = prefs.edit();
+        editor.clear();
+        editor.commit();
+
+        // get default values
+        assertTrue(LoanAlertLevel.isAlertActive(context));
+
+        // force value
+        editor.putBoolean(SettingsFragment.KEY_ENABLE_ALERTS, false);
+        editor.commit();
+        assertFalse(LoanAlertLevel.isAlertActive(context));
     }
 }
