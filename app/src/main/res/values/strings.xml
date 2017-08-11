@@ -42,6 +42,13 @@
     <string name="yellow_greater_than_red_warning">Yellow alert can\'t be greater than red alert</string>
     <string name="red_lower_than_yellow_warning">Red alert can\'t be lower than yellow alert</string>
     <string name="alert">Alert</string>
+    <string name="notification">Notification</string>
+    <string name="loan_notification_summary">You will be notified when the alert dates are reached</string>
+    <string name="loan_reached_alert_level">%1$s has reached %2$s alert level (%3$s)</string>
+    <string name="click_see_loan_details">Click here to see loan details</string>
+    <string name="level_yellow">yellow</string>
+    <string name="level_red">red</string>
+    <string name="level_none">none</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>

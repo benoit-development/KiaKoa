@@ -2,6 +2,9 @@ package org.bbt.kiakoa.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,6 +15,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.LoanDetailsActivity;
+import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.LoanContactDialog;
 import org.bbt.kiakoa.dialog.LoanDateDialog;
@@ -162,7 +168,7 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
      * @param loan loan to display
      */
     public void setLoan(Loan loan) {
-        Log.d(TAG, "Displaying loan details : " + ((loan == null)?"null":loan.getItem()));
+        Log.d(TAG, "Displaying loan details : " + ((loan == null) ? "null" : loan.getItem()));
         this.loan = loan;
         updateView();
     }
@@ -385,10 +391,6 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
     @Override
     public void onItemClick(int position) {
 
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
-
         switch (position) {
             case 0:
                 Log.i(TAG, "Item modification requested");
@@ -467,6 +469,46 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
                     showContactDialog();
                 }
 
+                break;
+            case 5:
+                Log.i(TAG, "Loan notification request");
+                int datesDifferenceInDays = loan.getDatesDifferenceInDays();
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(getContext())
+                                .setSmallIcon(R.drawable.ic_stat_kiakoa)
+                                .setContentTitle(
+                                        getString(R.string.loan_reached_alert_level, loan.getItem(),
+                                        getString(loan.getAlertLevel(getContext()).getLabelId()),
+                                        getResources().getQuantityString(R.plurals.plural_day, Math.abs(datesDifferenceInDays), datesDifferenceInDays)))
+                                .setContentText(getString(R.string.click_see_loan_details))
+                                .setAutoCancel(true);
+// Creates an explicit intent for an Activity in your app
+                Intent resultIntent = new Intent(getContext(), MainActivity.class);
+                resultIntent.putExtra(MainActivity.EXTRA_NOTIFICATION_LOAN, loan);
+
+// The stack builder object will contain an artificial back stack for the
+// started Activity.
+// This ensures that navigating backward from the Activity leads out of
+// your application to the Home screen.
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+// Adds the back stack for the Intent (but not the Intent itself)
+                stackBuilder.addParentStack(MainActivity.class);
+// Adds the Intent that starts the Activity to the top of the stack
+                stackBuilder.addNextIntent(resultIntent);
+                PendingIntent resultPendingIntent =
+                        stackBuilder.getPendingIntent(
+                                0,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        );
+                mBuilder.setContentIntent(resultPendingIntent);
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+
+// mNotificationId is a unique integer your app uses to identify the
+// notification. For example, to cancel the notification, you can pass its ID
+// number to NotificationManager.cancel().
+                mNotificationManager.notify((int) loan.getId(), mBuilder.build());
                 break;
         }
     }

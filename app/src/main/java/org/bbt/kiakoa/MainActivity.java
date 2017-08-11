@@ -36,6 +36,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * For Log
      */
     private static final String TAG = "MainActivity";
+
+    /**
+     * extra key used by notification to display a loan
+     */
+    public static final String EXTRA_NOTIFICATION_LOAN = "loan";
+
     /**
      * For navigation
      */
@@ -87,6 +93,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.addDrawerListener(mDrawerToggle);
+
+        // Check if this activity is displayed because of a loan notification
+        try {
+            Loan notificationLoan = getIntent().getParcelableExtra(EXTRA_NOTIFICATION_LOAN);
+            if (notificationLoan != null) {
+                Log.i(TAG, "This activity has been launch from notification");
+                Log.i(TAG, "Displaying loan : " + notificationLoan.getItem());
+                displayLoanDetails(notificationLoan);
+            }
+        } catch (Exception e) {
+            // something wrong occured
+            Log.e(TAG, "Error retrieving loan from notification : " + e.getMessage());
+        }
     }
 
     @Override

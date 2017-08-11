@@ -86,4 +86,19 @@ public enum LoanAlertLevel {
             return defaultValue;
         }
     }
+
+    /**
+     * Get string id for each alert level
+     * @return string id
+     */
+    public int getLabelId() {
+        switch (this) {
+            case YELLOW:
+                return R.string.level_yellow;
+            case RED:
+                return R.string.level_red;
+            default:
+                return R.string.level_none;
+        }
+    }
 }
