@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceFragment;
-import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
@@ -30,7 +29,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
      * preference context
      */
     private Context context;
-    private SwitchPreference enableAlert;
     private EditTextPreference yellowAlert;
     private EditTextPreference redAlert;
 
@@ -45,7 +43,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         context = getPreferenceScreen().getContext();
 
         // get preferences
-        enableAlert = (SwitchPreference) findPreference("enable_alert");
         yellowAlert = (EditTextPreference) findPreference(KEY_YELLOW_ALERT);
         redAlert = (EditTextPreference) findPreference(KEY_RED_ALERT);
     }
@@ -53,7 +50,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     /**
      * Update summaries depending on preference values
      */
-    private void updateSummaries() {
+    private void updateViews() {
         // yellow alert
         int yellowValue = Integer.valueOf(yellowAlert.getText());
         yellowAlert.setSummary(context.getResources().getQuantityString(R.plurals.plural_day, Math.abs(yellowValue), yellowValue));
@@ -61,12 +58,16 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         // red alert
         int redValue = Integer.valueOf(redAlert.getText());
         redAlert.setSummary(context.getResources().getQuantityString(R.plurals.plural_day, Math.abs(redValue), redValue));
+
+        // update enable status visuals
+        yellowAlert.setEnabled(LoanAlertLevel.isAlertActive(context));
+        redAlert.setEnabled(LoanAlertLevel.isAlertActive(context));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        updateSummaries();
+        updateViews();
         // Set up a listener whenever a key changes
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
@@ -81,12 +82,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch(key) {
-            case KEY_ENABLE_ALERTS:
-                boolean enableAlertChecked = enableAlert.isChecked();
-                yellowAlert.setEnabled(enableAlertChecked);
-                redAlert.setEnabled(enableAlertChecked);
-                Log.i(TAG, "warning and red alert enabled : " + enableAlertChecked);
-                break;
             case KEY_YELLOW_ALERT:
                 try {
                     String value = sharedPreferences.getString(key, String.valueOf(getResources().getInteger(R.integer.yellow_alert_default_value)));
@@ -98,7 +93,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                         Log.w(TAG, "yellow alert can't be greater than red alert");
                         Toast.makeText(context, R.string.yellow_greater_than_red_warning, Toast.LENGTH_SHORT).show();
                     }
-                    updateSummaries();
                 } catch (NumberFormatException e) {
                     yellowAlert.setText(String.valueOf(LoanAlertLevel.getYellowLevel(context)));
                     Log.e(TAG, "Format exception. Should not happen because of type numer on this preference.");
@@ -122,6 +116,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 }
                 break;
         }
-        updateSummaries();
+        updateViews();
     }
 }
