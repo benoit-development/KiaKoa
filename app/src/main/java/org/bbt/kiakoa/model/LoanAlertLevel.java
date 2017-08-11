@@ -24,10 +24,10 @@ public enum LoanAlertLevel {
         int result = 0;
         switch (this) {
             case YELLOW:
-                result = R.color.warning_yellow_state;
+                result = R.color.alertYellowText;
                 break;
             case RED:
-                result = R.color.warning_red_state;
+                result = R.color.alertRedText;
                 break;
         }
         return result;

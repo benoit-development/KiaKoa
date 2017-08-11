@@ -37,7 +37,7 @@ public class ClearAllDialog extends DialogFragment {
         int loanCount = LoanLists.getInstance().getLoanCount();
         return new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_warning_24dp)
-                .setTitle(getString(R.string.clear_all_lists_question) + " (" + getResources().getQuantityString(R.plurals.plural_item, loanCount, loanCount) + ")")
+                .setTitle(getString(R.string.clear_all_lists_question) + " (" + getResources().getQuantityString(R.plurals.plural_item, Math.abs(loanCount), loanCount) + ")")
                 .setPositiveButton(R.string.clear, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

@@ -56,11 +56,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     private void updateSummaries() {
         // yellow alert
         int yellowValue = Integer.valueOf(yellowAlert.getText());
-        yellowAlert.setSummary(context.getResources().getQuantityString(R.plurals.plural_day, yellowValue, yellowValue));
+        yellowAlert.setSummary(context.getResources().getQuantityString(R.plurals.plural_day, Math.abs(yellowValue), yellowValue));
 
         // red alert
         int redValue = Integer.valueOf(redAlert.getText());
-        redAlert.setSummary(context.getResources().getQuantityString(R.plurals.plural_day, redValue, redValue));
+        redAlert.setSummary(context.getResources().getQuantityString(R.plurals.plural_day, Math.abs(redValue), redValue));
     }
 
     @Override

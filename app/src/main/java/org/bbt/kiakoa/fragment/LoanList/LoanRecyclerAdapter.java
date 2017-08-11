@@ -85,7 +85,7 @@ class LoanRecyclerAdapter extends ListItemClickRecyclerAdapter<LoanRecyclerAdapt
         }
         // duration
         int days = loan.getDatesDifferenceInDays();
-        holder.durationView.setText(context.getResources().getQuantityString(R.plurals.plural_day, days, days));
+        holder.durationView.setText(context.getResources().getQuantityString(R.plurals.plural_day, Math.abs(days), days));
         LoanAlertLevel alertLevel = loan.getAlertLevel(context);
         switch (alertLevel) {
             case RED:
