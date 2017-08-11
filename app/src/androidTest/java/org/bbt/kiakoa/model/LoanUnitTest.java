@@ -139,6 +139,7 @@ public class LoanUnitTest {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Editor editor = prefs.edit();
         editor.clear();
+        editor.putBoolean(SettingsFragment.KEY_ENABLE_ALERTS, true);
         editor.commit();
 
         // get default values
@@ -160,9 +161,9 @@ public class LoanUnitTest {
         assertEquals(20, LoanAlertLevel.getRedLevel(context));
 
         // test method
+        long dayInMillis = 86400000L;
         loanTest.setLoanDate(System.currentTimeMillis());
         assertEquals(LoanAlertLevel.NONE, loanTest.getAlertLevel(context));
-        long dayInMillis = 86400000L;
         loanTest.setLoanDate(System.currentTimeMillis() - 5 * dayInMillis);
         assertEquals(LoanAlertLevel.NONE, loanTest.getAlertLevel(context));
         loanTest.setLoanDate(System.currentTimeMillis() - 10 * dayInMillis);
@@ -173,6 +174,22 @@ public class LoanUnitTest {
         assertEquals(LoanAlertLevel.RED, loanTest.getAlertLevel(context));
         loanTest.setLoanDate(System.currentTimeMillis() - 25 * dayInMillis);
         assertEquals(LoanAlertLevel.RED, loanTest.getAlertLevel(context));
+
+        // disable alerts
+        editor.putBoolean(SettingsFragment.KEY_ENABLE_ALERTS, false);
+        editor.commit();
+        loanTest.setLoanDate(System.currentTimeMillis());
+        assertEquals(LoanAlertLevel.NONE, loanTest.getAlertLevel(context));
+        loanTest.setLoanDate(System.currentTimeMillis() - 5 * dayInMillis);
+        assertEquals(LoanAlertLevel.NONE, loanTest.getAlertLevel(context));
+        loanTest.setLoanDate(System.currentTimeMillis() - 10 * dayInMillis);
+        assertEquals(LoanAlertLevel.NONE, loanTest.getAlertLevel(context));
+        loanTest.setLoanDate(System.currentTimeMillis() - 15 * dayInMillis);
+        assertEquals(LoanAlertLevel.NONE, loanTest.getAlertLevel(context));
+        loanTest.setLoanDate(System.currentTimeMillis() - 20 * dayInMillis);
+        assertEquals(LoanAlertLevel.NONE, loanTest.getAlertLevel(context));
+        loanTest.setLoanDate(System.currentTimeMillis() - 25 * dayInMillis);
+        assertEquals(LoanAlertLevel.NONE, loanTest.getAlertLevel(context));
     }
 
 
