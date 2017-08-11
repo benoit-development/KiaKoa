@@ -253,6 +253,12 @@ public class Loan implements Parcelable {
      * @return alert level
      */
     public LoanAlertLevel getAlertLevel(Context context) {
+
+        // check if Alert are active
+        if (!LoanAlertLevel.isAlertActive(context)) {
+            return LoanAlertLevel.NONE;
+        }
+
         int yellow = LoanAlertLevel.getYellowLevel(context);
         int red = LoanAlertLevel.getRedLevel(context);
         int duration = getDatesDifferenceInDays();
