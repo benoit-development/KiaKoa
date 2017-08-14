@@ -121,10 +121,6 @@ abstract public class AbstractLoanListFragment extends Fragment implements LoanL
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // DialogFragment.show() will take care of adding the fragment
-                // in a transaction.  We also want to remove any currently showing
-                // dialog, so make our own transaction and take care of that here.
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 Fragment prev = getFragmentManager().findFragmentByTag(getLoanListId());
                 if (prev != null) {

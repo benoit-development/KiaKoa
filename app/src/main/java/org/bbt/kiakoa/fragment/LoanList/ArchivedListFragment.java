@@ -1,13 +1,18 @@
 package org.bbt.kiakoa.fragment.LoanList;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.dialog.ClearArchiveDialog;
+import org.bbt.kiakoa.dialog.LoanItemDialog;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
 
@@ -42,9 +47,18 @@ public class ArchivedListFragment extends AbstractLoanListFragment {
             public void onClick(View view) {
 
                 Log.i(TAG, "fabOnclickListener: empty archived list");
-                Toast.makeText(getActivity(), "Empty list", Toast.LENGTH_LONG).show();
-                LoanLists.getInstance().getArchivedList().clear();
-                loanAdapter.notifyDataSetChanged();
+
+                // show dialog to confirm archive clearing
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment prev = getFragmentManager().findFragmentByTag("clear_archive");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+                // Create and show the dialog.
+                ClearArchiveDialog newDialog = ClearArchiveDialog.newInstance();
+                newDialog.show(ft, "clear_archive");
             }
         };
     }

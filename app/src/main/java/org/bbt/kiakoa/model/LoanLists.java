@@ -339,6 +339,29 @@ public class LoanLists {
     }
 
     /**
+     * empty archive loan list
+     *
+     * @param context a {@link Context}
+     */
+    public void clearArchiveList(Context context) {
+        Log.i(TAG, "clearArchiveList");
+
+        if (context != null) {
+            // remove data from shared preferences
+            SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.remove(SHARED_PREFERENCES_ARCHIVED_ID);
+            editor.apply();
+        }
+
+        // empty list
+        archivedList.clear();
+
+        // notify changes
+        notifyLoanListsChanged();
+    }
+
+    /**
      * Method called to notify changes
      */
     public void notifyLoanListsChanged() {

@@ -71,7 +71,16 @@ public class LoanListUnitTest {
         assertEquals(2, loanLists.getArchivedList().size());
         assertEquals(6, loanLists.getLoanCount());
 
+        // clear archive list
+        loanLists.clearArchiveList(context);
+        assertEquals(2, loanLists.getLentList().size());
+        assertEquals(2, loanLists.getBorrowedList().size());
+        assertEquals(0, loanLists.getArchivedList().size());
+        assertEquals(4, loanLists.getLoanCount());
+
         // clear lists
+        assertTrue(loanLists.addArchived(new Loan("7"), context));
+        assertTrue(loanLists.addArchived(new Loan("8"), context));
         loanLists.clearLists(context);
         assertEquals(0, loanLists.getLentList().size());
         assertEquals(0, loanLists.getBorrowedList().size());
