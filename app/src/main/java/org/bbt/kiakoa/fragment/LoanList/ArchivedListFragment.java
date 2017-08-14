@@ -46,19 +46,24 @@ public class ArchivedListFragment extends AbstractLoanListFragment {
             @Override
             public void onClick(View view) {
 
-                Log.i(TAG, "fabOnclickListener: empty archived list");
+                Log.i(TAG, "fabOnclickListener: clear archived list");
 
-                // show dialog to confirm archive clearing
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment prev = getFragmentManager().findFragmentByTag("clear_archive");
-                if (prev != null) {
-                    ft.remove(prev);
+                if (LoanLists.getInstance().getArchivedList().size() == 0) {
+                    Log.i(TAG, "fabOnclickListener: list already cleared");
+                    Toast.makeText(getContext(), R.string.archive_loan_lists_already_empty, Toast.LENGTH_SHORT).show();
+                } else {
+                    // show dialog to confirm archive clearing
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    Fragment prev = getFragmentManager().findFragmentByTag("clear_archive");
+                    if (prev != null) {
+                        ft.remove(prev);
+                    }
+                    ft.addToBackStack(null);
+
+                    // Create and show the dialog.
+                    ClearArchiveDialog newDialog = ClearArchiveDialog.newInstance();
+                    newDialog.show(ft, "clear_archive");
                 }
-                ft.addToBackStack(null);
-
-                // Create and show the dialog.
-                ClearArchiveDialog newDialog = ClearArchiveDialog.newInstance();
-                newDialog.show(ft, "clear_archive");
             }
         };
     }
