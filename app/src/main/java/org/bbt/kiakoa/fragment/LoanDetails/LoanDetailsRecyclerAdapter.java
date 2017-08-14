@@ -1,4 +1,4 @@
-package org.bbt.kiakoa.fragment;
+package org.bbt.kiakoa.fragment.LoanDetails;
 
 
 import android.content.Context;

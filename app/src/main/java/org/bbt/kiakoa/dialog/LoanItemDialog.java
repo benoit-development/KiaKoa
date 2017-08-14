@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.model.LoanLists;
 
 /**
  * Dialog used to pick an item
@@ -31,15 +33,14 @@ public class LoanItemDialog extends DialogFragment {
      */
     private EditText itemEditText;
 
-    private OnLoanItemSetListener onLoanItemSetListener;
-
     /**
      * Create a new instance of LoanItemDialog
      */
-    public static LoanItemDialog newInstance() {
+    public static LoanItemDialog newInstance(String loanList) {
         LoanItemDialog dialog = new LoanItemDialog();
         Bundle args = new Bundle();
         args.putInt("action", ACTION_CREATE);
+        args.putString("list", loanList);
         dialog.setArguments(args);
         return dialog;
     }
@@ -47,12 +48,12 @@ public class LoanItemDialog extends DialogFragment {
     /**
      * Create a new instance of LoanItemDialog with item
      *
-     * @param item loan item
+     * @param loan loan to be updated
      */
-    public static LoanItemDialog newInstance(String item) {
+    public static LoanItemDialog newInstance(Loan loan) {
         LoanItemDialog dialog = new LoanItemDialog();
         Bundle args = new Bundle();
-        args.putString("item", item);
+        args.putParcelable("loan", loan);
         args.putInt("action", ACTION_UPDATE);
         dialog.setArguments(args);
         return dialog;
@@ -66,8 +67,24 @@ public class LoanItemDialog extends DialogFragment {
         @SuppressLint
                 ("InflateParams") View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_loan_item, null, false);
         itemEditText = view.findViewById(R.id.item);
-        String item = getArguments().getString("item", "");
-        itemEditText.setText(item);
+
+        // arguments
+        int action = getArguments().getInt("action", ACTION_CREATE);
+        String list = null;
+        Loan loan = null;
+        if (action == ACTION_UPDATE) {
+            // get loan to update
+            loan = getArguments().getParcelable("loan");
+            if (loan != null) {
+                itemEditText.setText(loan.getItem());
+            } else {
+                Log.e(TAG, "No loan to update");
+                dismiss();
+            }
+        } else {
+            // get list to add new loan
+            list = getArguments().getString("list", LoanLists.SHARED_PREFERENCES_LENT_ID);
+        }
 
         // clear button
         view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
@@ -78,7 +95,7 @@ public class LoanItemDialog extends DialogFragment {
         });
 
         final AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setTitle((ACTION_CREATE == getArguments().getInt("action", ACTION_CREATE)) ? R.string.new_loan : R.string.item)
+                .setTitle((ACTION_CREATE == action) ? R.string.new_loan : R.string.item)
                 .setView(view)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -94,6 +111,8 @@ public class LoanItemDialog extends DialogFragment {
                 }).create();
 
         // manually manage ok button
+        final Loan finalLoan = loan;
+        final String finalList = list;
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
             @Override
@@ -105,11 +124,20 @@ public class LoanItemDialog extends DialogFragment {
                     public void onClick(View view) {
                         String item = itemEditText.getText().toString();
                         if (item.length() > 0) {
-                            if (onLoanItemSetListener != null) {
-                                Log.i(TAG, "new item : " + item);
-                                onLoanItemSetListener.onItemSet(item);
+                            if (finalLoan != null) {
+                                // update existing item
+                                Log.w(TAG, "update existing loan : " + item);
+                                finalLoan.setItem(item);
+                                LoanLists.getInstance().updateLoan(finalLoan, getContext());
                             } else {
-                                Log.w(TAG, "No listener to call, loan item typed");
+                                // new item to add
+                                Log.i(TAG, "new item : " + item);
+                                Loan newLoan = new Loan(item);
+                                if (LoanLists.SHARED_PREFERENCES_BORROWED_ID.equals(finalList)) {
+                                    LoanLists.getInstance().addBorrowed(newLoan, getContext());
+                                } else {
+                                    LoanLists.getInstance().addLent(newLoan, getContext());
+                                }
                             }
                             dismiss();
                         } else {
@@ -123,26 +151,5 @@ public class LoanItemDialog extends DialogFragment {
 
 
         return dialog;
-    }
-
-    /**
-     * Set listener from Loan item typed
-     *
-     * @param onLoanItemSetListener listener
-     */
-    public void setOnLoanItemSetListener(OnLoanItemSetListener onLoanItemSetListener) {
-        this.onLoanItemSetListener = onLoanItemSetListener;
-    }
-
-    /**
-     * Listener interference called when loan item type
-     */
-    public interface OnLoanItemSetListener {
-        /**
-         * Called when item has been set
-         *
-         * @param item new item
-         */
-        void onItemSet(String item);
     }
 }

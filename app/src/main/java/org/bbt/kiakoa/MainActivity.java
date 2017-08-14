@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import org.bbt.kiakoa.dialog.ClearAllDialog;
 import org.bbt.kiakoa.fragment.LoanList.AbstractLoanListFragment;
-import org.bbt.kiakoa.fragment.LoanDetailsFragment;
+import org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment;
 import org.bbt.kiakoa.fragment.LoanList.LoanListsPagerFragment;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 displayLoanDetails(notificationLoan);
             }
         } catch (Exception e) {
-            // something wrong occured
+            // something wrong occurred
             Log.e(TAG, "Error retrieving loan from notification : " + e.getMessage());
         }
     }

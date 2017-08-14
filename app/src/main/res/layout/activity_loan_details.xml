@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/loan_details"
-        class="org.bbt.kiakoa.fragment.LoanDetailsFragment"
+        class="org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

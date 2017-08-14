@@ -27,6 +27,8 @@ import android.widget.ImageView;
 
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.Contact;
+import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.model.LoanLists;
 
 /**
  * Dialog used to add a contact to the loan
@@ -37,16 +39,12 @@ public class LoanContactDialog extends DialogFragment {
      * For log
      */
     private static final String TAG = "LoanContactDialog";
-    private static final int ACTION_CREATE = 0;
-    private static final int ACTION_UPDATE = 1;
     private static final int CONTACT_LOADER_ID = 2;
 
     /**
      * contact for a loan
      */
     private AutoCompleteTextView contactEditText;
-
-    private OnLoanContactSetListener onLoanContactSetListener;
 
     /**
      * Asynchronous callback for the contacts data loader
@@ -103,15 +101,19 @@ public class LoanContactDialog extends DialogFragment {
     private Contact currentContact;
 
     /**
+     * {@link Loan} to update
+     */
+    private Loan loan;
+
+    /**
      * Create a new instance of {@link LoanContactDialog} with a contact
      *
-     * @param contact loan contact
+     * @param loan loan
      */
-    public static LoanContactDialog newInstance(Contact contact) {
+    public static LoanContactDialog newInstance(Loan loan) {
         LoanContactDialog dialog = new LoanContactDialog();
         Bundle args = new Bundle();
-        args.putParcelable("contact", contact);
-        args.putInt("action", ACTION_UPDATE);
+        args.putParcelable("loan", loan);
         dialog.setArguments(args);
         return dialog;
     }
@@ -126,9 +128,15 @@ public class LoanContactDialog extends DialogFragment {
 
         // custom autocomplete field
         contactEditText = view.findViewById(R.id.contact);
-        currentContact = getArguments().getParcelable("contact");
-        if (currentContact == null) {
-            currentContact = new Contact("");
+        loan = getArguments().getParcelable("loan");
+        if (loan != null) {
+            currentContact = loan.getContact();
+            if (currentContact == null) {
+                currentContact = new Contact("");
+            }
+        } else {
+            Log.e(TAG, "loan not found, should not happen");
+            dismiss();
         }
         contactEditText.setText(currentContact.getName());
 
@@ -180,7 +188,7 @@ public class LoanContactDialog extends DialogFragment {
 
 
         return new AlertDialog.Builder(getActivity())
-                .setTitle((ACTION_CREATE == getArguments().getInt("action", ACTION_CREATE)) ? R.string.new_loan : R.string.contact)
+                .setTitle(R.string.contact)
                 .setView(view)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -225,10 +233,11 @@ public class LoanContactDialog extends DialogFragment {
         }
 
         // notify listener
-        if (onLoanContactSetListener != null) {
-            onLoanContactSetListener.onContactSet(contact);
+        if (loan != null) {
+            loan.setContact(contact);
+            LoanLists.getInstance().updateLoan(loan, getContext());
         } else {
-            Log.w(TAG, "No listener to call, loan contact typed");
+            Log.w(TAG, "No loan to update");
         }
         dismiss();
     }
@@ -284,27 +293,6 @@ public class LoanContactDialog extends DialogFragment {
                 }
             };
         }
-    }
-
-    /**
-     * Set listener from Loan contact typed
-     *
-     * @param onLoanContactSetListener listener
-     */
-    public void setOnLoanContactSetListener(OnLoanContactSetListener onLoanContactSetListener) {
-        this.onLoanContactSetListener = onLoanContactSetListener;
-    }
-
-    /**
-     * Listener interference called when loan contact is set
-     */
-    public interface OnLoanContactSetListener {
-        /**
-         * Called when contact has been set
-         *
-         * @param contact new contact
-         */
-        void onContactSet(Contact contact);
     }
 
 }

@@ -1,4 +1,4 @@
-package org.bbt.kiakoa.fragment;
+package org.bbt.kiakoa.fragment.LoanDetails;
 
 import android.Manifest;
 import android.app.Activity;
@@ -33,15 +33,13 @@ import android.widget.Toast;
 import org.bbt.kiakoa.LoanDetailsActivity;
 import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.dialog.LoanDateDialog;
 import org.bbt.kiakoa.dialog.LoanContactDialog;
+import org.bbt.kiakoa.dialog.LoanDateDialog;
 import org.bbt.kiakoa.dialog.LoanItemDialog;
 import org.bbt.kiakoa.dialog.LoanStatusDialog;
 import org.bbt.kiakoa.dialog.ReturnDateDialog;
-import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
-import org.bbt.kiakoa.model.LoanStatus;
 import org.bbt.kiakoa.tools.ItemClickRecyclerAdapter;
 import org.bbt.kiakoa.tools.SimpleDividerItemDecoration;
 
@@ -51,7 +49,7 @@ import org.bbt.kiakoa.tools.SimpleDividerItemDecoration;
  *
  * @author Benoit Bousquet
  */
-public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLoanItemSetListener, LoanDateDialog.OnLoanDateSetListener, LoanContactDialog.OnLoanContactSetListener, ItemClickRecyclerAdapter.OnItemClickListener, LoanStatusDialog.OnLoanStatusSetListener, ReturnDateDialog.OnReturnDateSetListener {
+public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAdapter.OnItemClickListener, LoanLists.OnLoanListsChangedListener {
 
     /**
      * For log
@@ -117,7 +115,14 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
     @Override
     public void onResume() {
         super.onResume();
+        LoanLists.getInstance().registerOnLoanListsChangedListener(this, TAG);
         updateView();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LoanLists.getInstance().unregisterOnLoanListsChangedListener(this, TAG);
     }
 
     @Override
@@ -189,7 +194,7 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
             emptyTextView.setVisibility(View.GONE);
         }
 
-        // update menuitem depending on loan status
+        // update menu item depending on loan status
         if (archiveMenuItem != null) {
             archiveMenuItem.setVisible((loan != null) && (!loan.isArchived()));
         }
@@ -283,8 +288,7 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        LoanContactDialog newContactDialog = LoanContactDialog.newInstance(loan.getContact());
-        newContactDialog.setOnLoanContactSetListener(this);
+        LoanContactDialog newContactDialog = LoanContactDialog.newInstance(loan);
         newContactDialog.show(ft, "contact");
     }
 
@@ -299,8 +303,7 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
         }
 
         // Create and show the dialog
-        LoanDateDialog newLoanDateDialog = LoanDateDialog.newInstance(loan.getLoanDate());
-        newLoanDateDialog.setOnLoanDateSetListener(this);
+        LoanDateDialog newLoanDateDialog = LoanDateDialog.newInstance(loan);
         newLoanDateDialog.show(ft, "loan_date");
     }
 
@@ -315,8 +318,7 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
         }
 
         // Create and show the dialog
-        ReturnDateDialog newReturnDateDialog = ReturnDateDialog.newInstance(loan.getReturnDate());
-        newReturnDateDialog.setOnReturnDateSetListener(this);
+        ReturnDateDialog newReturnDateDialog = ReturnDateDialog.newInstance(loan);
         newReturnDateDialog.show(ft, "return_date");
     }
 
@@ -332,8 +334,7 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        LoanItemDialog newItemDialog = LoanItemDialog.newInstance(loan.getItem());
-        newItemDialog.setOnLoanItemSetListener(this);
+        LoanItemDialog newItemDialog = LoanItemDialog.newInstance(loan);
         newItemDialog.show(ft, "item");
     }
 
@@ -349,58 +350,8 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        LoanStatusDialog newItemDialog = LoanStatusDialog.newInstance(loan.getStatus());
-        newItemDialog.setOnLoanStatusSetListener(this);
+        LoanStatusDialog newItemDialog = LoanStatusDialog.newInstance(loan);
         newItemDialog.show(ft, "status");
-    }
-
-    @Override
-    public void onItemSet(String item) {
-        Log.i(TAG, "New item : " + item);
-        loan.setItem(item);
-        updateLoan();
-    }
-
-    @Override
-    public void onStatusSet(LoanStatus status) {
-        Log.i(TAG, "New status : " + status);
-        LoanLists loanList = LoanLists.getInstance();
-        switch (status) {
-            case LENT:
-                loanList.addLent(loan, getContext());
-                break;
-            case BORROWED:
-                loanList.addBorrowed(loan, getContext());
-                break;
-            case ARCHIVED:
-                loanList.addArchived(loan, getContext());
-                break;
-            case NONE:
-                Log.e(TAG, "None status found, should not happen");
-                break;
-        }
-        updateLoan();
-    }
-
-    @Override
-    public void onLoanDateSet(long loanDate) {
-        Log.i(TAG, "New loan date : " + loanDate);
-        loan.setLoanDate(loanDate);
-        updateLoan();
-    }
-
-    @Override
-    public void onReturnDateSet(long returnDate) {
-        Log.i(TAG, "New return date : " + returnDate);
-        loan.setReturnDate(returnDate);
-        updateLoan();
-    }
-
-    @Override
-    public void onContactSet(Contact contact) {
-        Log.i(TAG, "New loan contact : " + contact);
-        loan.setContact(contact);
-        updateLoan();
     }
 
     /**
@@ -536,5 +487,10 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
                 mNotificationManager.notify((int) loan.getId(), mBuilder.build());
                 break;
         }
+    }
+
+    @Override
+    public void onLoanListsChanged() {
+        updateView();
     }
 }

@@ -35,7 +35,6 @@
     <string name="all_loan_lists_cleared">All loan lists cleared</string>
     <string name="archive_loan_list_cleared">Archive loan list cleared</string>
     <string name="notifications">Notification</string>
-    <string name="enable_alerts">Enable alerts</string>
     <string name="notification_date_return_summary">You\'ll be notified when loans date return are reached</string>
     <string name="archive_loan">Archive this loan</string>
     <string name="status">Status</string>
@@ -49,6 +48,16 @@
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="plural_day_left">
+        <item quantity="zero">%d day left</item>
+        <item quantity="one">%d day left</item>
+        <item quantity="other">%d days left</item>
+    </plurals>
+    <plurals name="plural_day_late">
+        <item quantity="zero">%d day late</item>
+        <item quantity="one">%d day late</item>
+        <item quantity="other">%d days late</item>
     </plurals>
     <plurals name="plural_item">
         <item quantity="zero">%d item</item>

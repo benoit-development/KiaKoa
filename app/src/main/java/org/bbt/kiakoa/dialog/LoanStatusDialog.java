@@ -9,7 +9,8 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.model.LoanStatus;
+import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.model.LoanLists;
 
 /**
  * Dialog used to pick a status
@@ -22,19 +23,14 @@ public class LoanStatusDialog extends DialogFragment {
     private static final String TAG = "LoanStatusDialog";
 
     /**
-     * listener
-     */
-    private OnLoanStatusSetListener onLoanStatusSetListener;
-
-    /**
      * Create a new instance of {@link LoanStatusDialog}
      *
-     * @param status loan status
+     * @param loan loan to update
      */
-    public static LoanStatusDialog newInstance(@NonNull LoanStatus status) {
+    public static LoanStatusDialog newInstance(Loan loan) {
         LoanStatusDialog dialog = new LoanStatusDialog();
         Bundle args = new Bundle();
-        args.putSerializable("status", status);
+        args.putParcelable("loan", loan);
         dialog.setArguments(args);
         return dialog;
     }
@@ -43,57 +39,36 @@ public class LoanStatusDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        LoanStatus status = (LoanStatus) getArguments().getSerializable("status");
-        status = (status != null)?status:LoanStatus.NONE;
+        final Loan loan = getArguments().getParcelable("loan");
+        if (loan == null) {
+            Log.e(TAG, "No loan found, should not happen");
+            dismiss();
+        }
 
+        //noinspection ConstantConditions
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.status)
-                .setSingleChoiceItems(R.array.status_list, status.getIndex(), new DialogInterface.OnClickListener() {
+                .setSingleChoiceItems(R.array.status_list, loan.getStatus().getIndex(), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (onLoanStatusSetListener != null) {
-                            LoanStatus result;
-                            switch (i) {
-                                case 0:
-                                    result = LoanStatus.LENT;
-                                    break;
-                                case 1:
-                                    result = LoanStatus.BORROWED;
-                                    break;
-                                case 2:
-                                    result = LoanStatus.ARCHIVED;
-                                    break;
-                                default:
-                                    result = LoanStatus.NONE;
-                                    break;
-                            }
-                            Log.i(TAG, "Selected status : " + result);
-                            onLoanStatusSetListener.onStatusSet(result);
+                        LoanLists loanLists = LoanLists.getInstance();
+                        switch (i) {
+                            case 0:
+                                loanLists.addLent(loan, getContext());
+                                break;
+                            case 1:
+                                loanLists.addBorrowed(loan, getContext());
+                                break;
+                            case 2:
+                                loanLists.addArchived(loan, getContext());
+                                break;
+                            default:
+                                Log.e(TAG, "None status found, should not happen");
+                                break;
                         }
                         dismiss();
                     }
                 })
                 .create();
-    }
-
-    /**
-     * Set listener from Loan status chosen
-     *
-     * @param onLoanStatusSetListener listener
-     */
-    public void setOnLoanStatusSetListener(OnLoanStatusSetListener onLoanStatusSetListener) {
-        this.onLoanStatusSetListener = onLoanStatusSetListener;
-    }
-
-    /**
-     * Listener interference called when loan status is set
-     */
-    public interface OnLoanStatusSetListener {
-        /**
-         * Called when status has been set
-         *
-         * @param status new status
-         */
-        void onStatusSet(LoanStatus status);
     }
 }

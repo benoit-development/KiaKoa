@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -48,7 +49,6 @@ public class Loan implements Parcelable {
      * loan contact
      */
     private Contact contact;
-    private String result;
 
     @Override
     public int describeContents() {
@@ -105,6 +105,7 @@ public class Loan implements Parcelable {
      *
      * @return item label
      */
+    @NonNull
     public String getItem() {
         return item;
     }
@@ -219,13 +220,18 @@ public class Loan implements Parcelable {
 
     /**
      * Calculate duration of the loan in days
+     * This method return -1 if returnDate is not set
      *
-     * @return day number
+     * @return day number or -1
      */
     public int getDatesDifferenceInDays() {
-        long different = System.currentTimeMillis() - loanDate;
-        long dayInMillis = 1000 * 60 * 60 * 24;
-        return (int) (different / dayInMillis);
+        if (returnDate == -1) {
+            return -1;
+        } else {
+            long different = returnDate - System.currentTimeMillis();
+            long dayInMillis = 1000 * 60 * 60 * 24;
+            return (int) (different / dayInMillis);
+        }
     }
 
     /**

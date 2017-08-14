@@ -82,8 +82,7 @@ class LoanRecyclerAdapter extends ListItemClickRecyclerAdapter<LoanRecyclerAdapt
             holder.contactView.setVisibility(View.GONE);
         }
         // duration
-        int days = loan.getDatesDifferenceInDays();
-        holder.durationView.setText(context.getResources().getQuantityString(R.plurals.plural_day, Math.abs(days), days));
+        holder.durationView.setText(loan.getLoanDateString());
         holder.alertView.setVisibility(View.GONE);
 
         // pictureView

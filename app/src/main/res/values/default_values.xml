@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="yellow_alert_default_value">50</integer>
-    <integer name="red_alert_default_value">100</integer>
     <bool name="notifications_date_return_enabled_default_value">true</bool>
 </resources>

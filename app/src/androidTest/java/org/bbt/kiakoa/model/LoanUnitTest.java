@@ -1,18 +1,10 @@
 package org.bbt.kiakoa.model;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Parcel;
-import android.preference.PreferenceManager;
-import android.support.test.InstrumentationRegistry;
 
 import com.google.gson.Gson;
 
-import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.fragment.SettingsFragment;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -34,10 +26,6 @@ public class LoanUnitTest {
     private static final String LOAN_ANOTHER_ITEM = "a another label";
     final private Loan loanTest = new Loan(LOAN_ITEM);
     final private Contact contactTest = new Contact(17, "pouet", "photo_uri");
-    /**
-     * a {@link Context}
-     */
-    private final Context context = InstrumentationRegistry.getTargetContext();
 
     @Test
     public void loan_parcelable() throws Exception {
@@ -131,6 +119,25 @@ public class LoanUnitTest {
         assertEquals(2, list.size());
         list.remove(sameLoan);
         assertEquals(1, list.size());
+    }
+
+    @Test
+    public void date_difference() {
+
+        // with no return date
+        loanTest.setReturnDate(-1);
+        assertEquals(-1, loanTest.getDatesDifferenceInDays());
+
+        // with a return date
+        loanTest.setReturnDate(System.currentTimeMillis());
+        assertEquals(0, loanTest.getDatesDifferenceInDays());
+        // minus 5 days
+        loanTest.setReturnDate(System.currentTimeMillis() - (86400000 * 5));
+        assertEquals(-5, loanTest.getDatesDifferenceInDays());
+        // plus 2 days
+        loanTest.setReturnDate(System.currentTimeMillis() + (86400000 * 2));
+        assertEquals(2, loanTest.getDatesDifferenceInDays());
+
     }
 
 }

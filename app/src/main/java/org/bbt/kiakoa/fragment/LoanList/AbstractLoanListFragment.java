@@ -1,7 +1,6 @@
 package org.bbt.kiakoa.fragment.LoanList;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -42,7 +41,7 @@ abstract public class AbstractLoanListFragment extends Fragment implements LoanL
     /**
      * Adapter used to display Loan list
      */
-    LoanRecyclerAdapter loanAdapter;
+    private LoanRecyclerAdapter loanAdapter;
 
     /**
      * Displayed when no loan is is the list
@@ -129,15 +128,7 @@ abstract public class AbstractLoanListFragment extends Fragment implements LoanL
                 ft.addToBackStack(null);
 
                 // Create and show the dialog.
-                LoanItemDialog newItemDialog = LoanItemDialog.newInstance();
-                newItemDialog.setOnLoanItemSetListener(new LoanItemDialog.OnLoanItemSetListener() {
-                    @Override
-                    public void onItemSet(String item) {
-                        Loan loan = new Loan(item);
-                        addLoan(loan);
-                        ((MainActivity) getActivity()).displayLoanDetails(loan);
-                    }
-                });
+                LoanItemDialog newItemDialog = LoanItemDialog.newInstance(getLoanListId());
                 newItemDialog.show(ft, getLoanListId());
             }
         };
@@ -161,25 +152,6 @@ abstract public class AbstractLoanListFragment extends Fragment implements LoanL
      * Add a new created {@link Loan} to {@link LoanLists}
      */
     abstract protected void addLoan(Loan loan);
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-
-        // attach this activity to the dialog if exists
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(getLoanListId());
-        if ((prev != null) && (prev instanceof LoanItemDialog)) {
-            ((LoanItemDialog) prev).setOnLoanItemSetListener(new LoanItemDialog.OnLoanItemSetListener() {
-                @Override
-                public void onItemSet(String item) {
-                    addLoan(new Loan(item));
-                    loanAdapter.notifyDataSetChanged();
-                }
-            });
-        }
-        ft.commit();
-    }
 
     @Override
     public void onLoanListsChanged() {

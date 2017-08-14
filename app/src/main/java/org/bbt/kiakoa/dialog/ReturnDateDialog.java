@@ -10,6 +10,8 @@ import android.util.Log;
 import android.widget.DatePicker;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.model.LoanLists;
 
 import java.util.Calendar;
 
@@ -24,19 +26,19 @@ public class ReturnDateDialog extends DialogFragment implements DatePickerDialog
     private static final String TAG = "ReturnDateDialog";
 
     /**
-     * listener
+     * loan to update
      */
-    private OnReturnDateSetListener onReturnDateSetListener;
+    private Loan loan;
 
     /**
      * Create a new instance of {@link ReturnDateDialog} with a return date set
      *
-     * @param returnDate return date
+     * @param loan loan to update
      */
-    public static ReturnDateDialog newInstance(long returnDate) {
+    public static ReturnDateDialog newInstance(Loan loan) {
         ReturnDateDialog dialog = new ReturnDateDialog();
         Bundle args = new Bundle();
-        args.putLong("return_date", returnDate);
+        args.putParcelable("loan", loan);
         dialog.setArguments(args);
         return dialog;
     }
@@ -45,12 +47,23 @@ public class ReturnDateDialog extends DialogFragment implements DatePickerDialog
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(getArguments().getLong("loan_date", System.currentTimeMillis()));
+
+        loan = getArguments().getParcelable("loan");
+        if (loan == null) {
+            Log.e(TAG, "No loan found, should not happen");
+            dismiss();
+        }
+        long returnDate = loan.getReturnDate();
+        if (returnDate != -1) {
+            cal.setTimeInMillis(returnDate);
+        }
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.setButton(DatePickerDialog.BUTTON_NEUTRAL, getString(R.string.delete), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                onReturnDateSetListener.onReturnDateSet(-1);
+                Log.i(TAG, "Delete return date");
+                setReturnDate(-1);
             }
         });
         return datePickerDialog;
@@ -59,32 +72,19 @@ public class ReturnDateDialog extends DialogFragment implements DatePickerDialog
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         Log.i(TAG, "New return date picked : " + year + " " + month + " " + day);
-        if (onReturnDateSetListener != null) {
-            final Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.YEAR, year);
-            cal.set(Calendar.MONTH, month);
-            cal.set(Calendar.DAY_OF_MONTH, day);
-            onReturnDateSetListener.onReturnDateSet(cal.getTimeInMillis());
-        }
+        final Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        setReturnDate(cal.getTimeInMillis());
     }
 
     /**
-     * lister setter
-     * @param listener return date listener
+     * Set loan return date
+     * @param returnDate return date
      */
-    public void setOnReturnDateSetListener(OnReturnDateSetListener listener) {
-        this.onReturnDateSetListener = listener;
-    }
-
-    /**
-     * Listener interference called when loan item type
-     */
-    public interface OnReturnDateSetListener {
-        /**
-         * Called when return date has been set
-         *
-         * @param returnDate new loan date
-         */
-        void onReturnDateSet(long returnDate);
+    private void setReturnDate(long returnDate) {
+        loan.setReturnDate(returnDate);
+        LoanLists.getInstance().updateLoan(loan, getContext());
     }
 }
