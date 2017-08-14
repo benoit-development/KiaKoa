@@ -14,8 +14,6 @@ import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.tools.ItemClickRecyclerAdapter;
 
-import java.text.DateFormat;
-
 /**
  * Adapter in charge of displaying {@link Loan} details.
  * Here is the details displayed :
@@ -76,7 +74,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
     @Override
     public int getItemCount() {
         if (loan != null) {
-            return 6;
+            return 7;
         } else {
             return 0;
         }
@@ -92,7 +90,6 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
     public void onBindViewHolder(ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
 
-        // Bind the data efficiently with the holder.
         switch (position) {
             case 0:
                 // item
@@ -130,23 +127,19 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                 // loan date
                 holder.icon.setImageResource(R.drawable.ic_event_24dp);
                 holder.description.setText(R.string.loan_date);
-                holder.value.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(loan.getLoanDate()));
+                holder.value.setText(loan.getLoanDateString());
                 holder.circleView.setVisibility(View.GONE);
-                switch (loan.getAlertLevel(context)) {
-                    case RED:
-                        holder.image.setImageResource(R.drawable.ic_warning_red_24dp);
-                        holder.image.setVisibility(View.VISIBLE);
-                        break;
-                    case YELLOW:
-                        holder.image.setImageResource(R.drawable.ic_warning_yellow_24dp);
-                        holder.image.setVisibility(View.VISIBLE);
-                        break;
-                    case NONE:
-                        holder.image.setVisibility(View.GONE);
-                        break;
-                }
+                holder.image.setVisibility(View.GONE);
                 break;
             case 4:
+                // return date
+                holder.icon.setImageResource(R.drawable.ic_return_24dp);
+                holder.description.setText(R.string.return_date);
+                holder.value.setText(loan.getReturnDateString(context));
+                holder.circleView.setVisibility(View.GONE);
+                holder.image.setVisibility(View.GONE);
+                break;
+            case 5:
                 // loan contact
                 holder.description.setText(R.string.contact);
                 holder.circleView.setVisibility(View.GONE);
@@ -167,7 +160,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                     holder.value.setText(R.string.no_contact);
                 }
                 break;
-            case 5:
+            case 6:
                 // enable notification for this loan
                 holder.description.setText(R.string.notification);
                 holder.value.setText(R.string.loan_notification_summary);

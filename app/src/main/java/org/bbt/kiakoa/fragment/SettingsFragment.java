@@ -10,27 +10,21 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.model.LoanAlertLevel;
 
 /**
  * Fragment managing settings
  */
-public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragment {
 
     /**
      * For log
      */
     private static final String TAG = "SettingsFragment";
-    public static final String KEY_ENABLE_ALERTS = "enable_alert";
-    public static final String KEY_YELLOW_ALERT = "yellow_alert";
-    public static final String KEY_RED_ALERT = "red_alert";
 
     /**
      * preference context
      */
     private Context context;
-    private EditTextPreference yellowAlert;
-    private EditTextPreference redAlert;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,84 +32,5 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings);
-
-        // theme to manage enable/disable state of the preferences
-        context = getPreferenceScreen().getContext();
-
-        // get preferences
-        yellowAlert = (EditTextPreference) findPreference(KEY_YELLOW_ALERT);
-        redAlert = (EditTextPreference) findPreference(KEY_RED_ALERT);
-    }
-
-    /**
-     * Update summaries depending on preference values
-     */
-    private void updateViews() {
-        // yellow alert
-        int yellowValue = Integer.valueOf(yellowAlert.getText());
-        yellowAlert.setSummary(context.getResources().getQuantityString(R.plurals.plural_day, Math.abs(yellowValue), yellowValue));
-
-        // red alert
-        int redValue = Integer.valueOf(redAlert.getText());
-        redAlert.setSummary(context.getResources().getQuantityString(R.plurals.plural_day, Math.abs(redValue), redValue));
-
-        // update enable status visuals
-        yellowAlert.setEnabled(LoanAlertLevel.isAlertActive(context));
-        redAlert.setEnabled(LoanAlertLevel.isAlertActive(context));
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateViews();
-        // Set up a listener whenever a key changes
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        // Unregister the listener whenever a key changes
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        switch(key) {
-            case KEY_YELLOW_ALERT:
-                try {
-                    String value = sharedPreferences.getString(key, String.valueOf(getResources().getInteger(R.integer.yellow_alert_default_value)));
-                    int yellowValue = Integer.valueOf(value);
-                    int redValue = Integer.valueOf(redAlert.getText());
-                    if (yellowValue >= redValue) {
-                        yellowValue = redValue - 1;
-                        yellowAlert.setText(String.valueOf(yellowValue));
-                        Log.w(TAG, "yellow alert can't be greater than red alert");
-                        Toast.makeText(context, R.string.yellow_greater_than_red_warning, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (NumberFormatException e) {
-                    yellowAlert.setText(String.valueOf(LoanAlertLevel.getYellowLevel(context)));
-                    Log.e(TAG, "Format exception. Should not happen because of type numer on this preference.");
-                    Log.e(TAG, "Message : " + e.getMessage());
-                }
-                break;
-            case KEY_RED_ALERT:
-                try {
-                    int yellowValue = Integer.valueOf(yellowAlert.getText());
-                    int redValue = Integer.valueOf(sharedPreferences.getString(key, String.valueOf(getResources().getInteger(R.integer.red_alert_default_value))));
-                    if (yellowValue >= redValue) {
-                        redValue = yellowValue + 1;
-                        redAlert.setText(String.valueOf(redValue));
-                        Log.w(TAG, "red alert can't be lower than yellow alert");
-                        Toast.makeText(context, R.string.red_lower_than_yellow_warning, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (NumberFormatException e) {
-                    redAlert.setText(String.valueOf(LoanAlertLevel.getRedLevel(context)));
-                    Log.e(TAG, "Format exception. Should not happen because of type numer on this preference.");
-                    Log.e(TAG, "Message : " + e.getMessage());
-                }
-                break;
-        }
-        updateViews();
     }
 }

@@ -1,13 +1,16 @@
 package org.bbt.kiakoa.model;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
+
+import org.bbt.kiakoa.R;
+
+import java.text.DateFormat;
 
 /**
  * Class defining a loan
@@ -37,9 +40,15 @@ public class Loan implements Parcelable {
     private long loanDate = System.currentTimeMillis();
 
     /**
+     * date return
+     */
+    private long returnDate = -1;
+
+    /**
      * loan contact
      */
     private Contact contact;
+    private String result;
 
     @Override
     public int describeContents() {
@@ -53,6 +62,7 @@ public class Loan implements Parcelable {
         out.writeString(item);
         out.writeString(itemPicture);
         out.writeLong(loanDate);
+        out.writeLong(returnDate);
         out.writeParcelable(contact, flags);
     }
 
@@ -77,6 +87,7 @@ public class Loan implements Parcelable {
         item = in.readString();
         itemPicture = in.readString();
         loanDate = in.readLong();
+        returnDate = in.readLong();
         contact = in.readParcelable(Contact.class.getClassLoader());
     }
 
@@ -150,6 +161,24 @@ public class Loan implements Parcelable {
      */
     public void setLoanDate(long loanDate) {
         this.loanDate = loanDate;
+    }
+
+    /**
+     * return date getter
+     *
+     * @return return date
+     */
+    public long getReturnDate() {
+        return returnDate;
+    }
+
+    /**
+     * return date setter
+     *
+     * @param returnDate new return date
+     */
+    public void setReturnDate(long returnDate) {
+        this.returnDate = returnDate;
     }
 
     /**
@@ -247,28 +276,26 @@ public class Loan implements Parcelable {
     }
 
     /**
-     * Get alert level depending on loan date
-     *
-     * @param context context to access {@link SharedPreferences}
-     * @return alert level
+     * Get a String representing loan date
+     * if no return date set, "none" is returned
+     * @return formatted date
      */
-    public LoanAlertLevel getAlertLevel(Context context) {
+    public String getLoanDateString() {
+        return DateFormat.getDateInstance(DateFormat.SHORT).format(loanDate);
+    }
 
-        // check if Alert are active
-        if (!LoanAlertLevel.isAlertActive(context)) {
-            return LoanAlertLevel.NONE;
-        }
-
-        int yellow = LoanAlertLevel.getYellowLevel(context);
-        int red = LoanAlertLevel.getRedLevel(context);
-        int duration = getDatesDifferenceInDays();
-
-        if (duration >= red) {
-            return LoanAlertLevel.RED;
-        } else if (duration >= yellow) {
-            return LoanAlertLevel.YELLOW;
+    /**
+     * Get a String representing return date
+     * if no return date set, "none" is returned
+     * @return formatted date or none
+     */
+    public String getReturnDateString(Context context) {
+        String result;
+        if (returnDate == -1) {
+            result = context.getString(R.string.none);
         } else {
-            return LoanAlertLevel.NONE;
+            result = DateFormat.getDateInstance(DateFormat.SHORT).format(returnDate);
         }
+        return result;
     }
 }

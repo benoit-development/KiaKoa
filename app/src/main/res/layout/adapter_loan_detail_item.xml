@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_margin="5dp"
-        android:contentDescription="@string/alert"
+        android:contentDescription="@string/notification"
         android:src="@drawable/ic_warning_red_24dp" />
 
     <de.hdodenhof.circleimageview.CircleImageView

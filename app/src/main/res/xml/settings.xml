@@ -1,27 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/warnings_loan_duration">
+    <PreferenceCategory android:title="@string/notifications">
 
         <SwitchPreference
-            android:defaultValue="@bool/alert_enabled_default_value"
-            android:key="enable_alert"
-            android:summary="@string/enable_alerts_summary"
-            android:title="@string/enable_alerts" />
-
-        <EditTextPreference
-            android:defaultValue="@integer/yellow_alert_default_value"
-            android:icon="@drawable/ic_warning_yellow_24dp"
-            android:inputType="number"
-            android:key="yellow_alert"
-            android:title="@string/yellow_alert_level" />
-
-        <EditTextPreference
-            android:defaultValue="@integer/red_alert_default_value"
-            android:icon="@drawable/ic_warning_red_24dp"
-            android:inputType="number"
-            android:key="red_alert"
-            android:title="@string/red_alert_level" />
+            android:defaultValue="@bool/notifications_date_return_enabled_default_value"
+            android:key="enable_date_return_notification"
+            android:summary="@string/notification_date_return_summary"
+            android:title="@string/return_date" />
 
     </PreferenceCategory>
 

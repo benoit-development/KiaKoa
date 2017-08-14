@@ -11,7 +11,7 @@ import android.widget.DatePicker;
 import java.util.Calendar;
 
 /**
- * Dialog used to pick an item
+ * Dialog used to pick a loan date
  */
 public class LoanDateDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
@@ -48,13 +48,13 @@ public class LoanDateDialog extends DialogFragment implements DatePickerDialog.O
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        Log.i(TAG, "New date picked : " + year + " " + month + " " + day);
+        Log.i(TAG, "New loan date picked : " + year + " " + month + " " + day);
         if (onLoanDateSetListener != null) {
             final Calendar cal = Calendar.getInstance();
             cal.set(Calendar.YEAR, year);
             cal.set(Calendar.MONTH, month);
             cal.set(Calendar.DAY_OF_MONTH, day);
-            onLoanDateSetListener.onDateSet(cal.getTimeInMillis());
+            onLoanDateSetListener.onLoanDateSet(cal.getTimeInMillis());
         }
     }
 
@@ -75,6 +75,6 @@ public class LoanDateDialog extends DialogFragment implements DatePickerDialog.O
          *
          * @param loanDate new loan date
          */
-        void onDateSet(long loanDate);
+        void onLoanDateSet(long loanDate);
     }
 }

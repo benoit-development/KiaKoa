@@ -33,10 +33,11 @@ import android.widget.Toast;
 import org.bbt.kiakoa.LoanDetailsActivity;
 import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.dialog.LoanContactDialog;
 import org.bbt.kiakoa.dialog.LoanDateDialog;
+import org.bbt.kiakoa.dialog.LoanContactDialog;
 import org.bbt.kiakoa.dialog.LoanItemDialog;
 import org.bbt.kiakoa.dialog.LoanStatusDialog;
+import org.bbt.kiakoa.dialog.ReturnDateDialog;
 import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
@@ -50,7 +51,7 @@ import org.bbt.kiakoa.tools.SimpleDividerItemDecoration;
  *
  * @author Benoit Bousquet
  */
-public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLoanItemSetListener, LoanDateDialog.OnLoanDateSetListener, LoanContactDialog.OnLoanContactSetListener, ItemClickRecyclerAdapter.OnItemClickListener, LoanStatusDialog.OnLoanStatusSetListener {
+public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLoanItemSetListener, LoanDateDialog.OnLoanDateSetListener, LoanContactDialog.OnLoanContactSetListener, ItemClickRecyclerAdapter.OnItemClickListener, LoanStatusDialog.OnLoanStatusSetListener, ReturnDateDialog.OnReturnDateSetListener {
 
     /**
      * For log
@@ -304,6 +305,22 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
     }
 
     /**
+     * Display dialog to change the return date
+     */
+    private void showDateReturnDialog() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment returnDateDialog = getFragmentManager().findFragmentByTag("return_date");
+        if (returnDateDialog != null) {
+            ft.remove(returnDateDialog);
+        }
+
+        // Create and show the dialog
+        ReturnDateDialog newReturnDateDialog = ReturnDateDialog.newInstance(loan.getReturnDate());
+        newReturnDateDialog.setOnReturnDateSetListener(this);
+        newReturnDateDialog.show(ft, "return_date");
+    }
+
+    /**
      * Display dialog to enter a new item
      */
     private void showItemDialog() {
@@ -366,9 +383,16 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
     }
 
     @Override
-    public void onDateSet(long loanDate) {
+    public void onLoanDateSet(long loanDate) {
         Log.i(TAG, "New loan date : " + loanDate);
         loan.setLoanDate(loanDate);
+        updateLoan();
+    }
+
+    @Override
+    public void onReturnDateSet(long returnDate) {
+        Log.i(TAG, "New return date : " + returnDate);
+        loan.setReturnDate(returnDate);
         updateLoan();
     }
 
@@ -449,6 +473,11 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
 
                 break;
             case 4:
+                Log.i(TAG, "Loan date modification requested");
+                showDateReturnDialog();
+
+                break;
+            case 5:
                 Log.i(TAG, "Contact modification requested");
 
                 // check permission to read contacts
@@ -470,16 +499,12 @@ public class LoanDetailsFragment extends Fragment implements LoanItemDialog.OnLo
                 }
 
                 break;
-            case 5:
+            case 6:
                 Log.i(TAG, "Loan notification request");
-                int datesDifferenceInDays = loan.getDatesDifferenceInDays();
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(getContext())
                                 .setSmallIcon(R.drawable.ic_stat_kiakoa)
-                                .setContentTitle(
-                                        getString(R.string.loan_reached_alert_level, loan.getItem(),
-                                        getString(loan.getAlertLevel(getContext()).getLabelId()),
-                                        getResources().getQuantityString(R.plurals.plural_day, Math.abs(datesDifferenceInDays), datesDifferenceInDays)))
+                                .setContentTitle(getString(R.string.loan_reached_return_date, loan.getItem()))
                                 .setContentText(getString(R.string.click_see_loan_details))
                                 .setAutoCancel(true);
 // Creates an explicit intent for an Activity in your app
