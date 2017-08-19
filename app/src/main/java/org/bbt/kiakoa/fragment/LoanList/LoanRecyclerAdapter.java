@@ -94,7 +94,7 @@ class LoanRecyclerAdapter extends ListItemClickRecyclerAdapter<LoanRecyclerAdapt
         // delay is > 0
         holder.alertView.setVisibility(View.GONE);
         try {
-            if (loan.getDatesDifferenceInDays() > 0) {
+            if ((!loan.isReturned()) && (loan.getDatesDifferenceInDays() > 0)) {
                 holder.delayView.setTextColor(ContextCompat.getColor(context, R.color.alertRedText));
                 holder.alertView.setVisibility(View.VISIBLE);
             }
