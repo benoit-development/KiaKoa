@@ -1,17 +1,27 @@
 package org.bbt.kiakoa.model;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.ContextCompat;
 
 import com.google.gson.Gson;
 
+import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.broadcast.NotificationBroadcastReceiver;
 import org.bbt.kiakoa.exception.LoanException;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Calendar;
 
@@ -241,23 +251,23 @@ public class Loan implements Parcelable {
             // Calculate difference in milliseconds
             long diff = millis2 - millis1;
 
-            return (int)(diff / (24 * 60 * 60 * 1000));
+            return (int) (diff / (24 * 60 * 60 * 1000));
         }
     }
 
     /**
      * Create calendar instance from time with these values to zero :
      * <ul>
-     *     <li>hours</li>
-     *     <li>minutes</li>
-     *     <li>seconds</li>
-     *     <li>millis</li>
+     * <li>hours</li>
+     * <li>minutes</li>
+     * <li>seconds</li>
+     * <li>millis</li>
      * </ul>
+     *
      * @param timestamp time in millis
      * @return calendar instance
      */
-    private Calendar toCalendar(long timestamp)
-    {
+    private Calendar toCalendar(long timestamp) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(timestamp);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -270,9 +280,12 @@ public class Loan implements Parcelable {
     /**
      * getter on an {@link Uri} picture. It can return the photo of the item or the contact photo if any exists.
      * return null otherwise.
+     *
      * @return an Uri picture or null
      */
-    public @Nullable Uri getPicture() {
+    public
+    @Nullable
+    Uri getPicture() {
         Uri result = null;
         if (itemPicture != null) {
             result = Uri.parse(itemPicture);
@@ -317,6 +330,7 @@ public class Loan implements Parcelable {
     /**
      * Get a String representing loan date
      * if no return date set, "none" is returned
+     *
      * @return formatted date
      */
     public String getLoanDateString() {
@@ -326,6 +340,7 @@ public class Loan implements Parcelable {
     /**
      * Get a String representing return date
      * if no return date set, "none" is returned
+     *
      * @return formatted date or none
      */
     public String getReturnDateString(Context context) {
@@ -362,5 +377,68 @@ public class Loan implements Parcelable {
         }
 
         return context.getResources().getQuantityString(strId, delay, Math.abs(delay));
+    }
+
+    /**
+     * Create and return a notification for this loan
+     *
+     * @param context a context
+     * @return a notification instance
+     */
+    public Notification getNotification(Context context) {
+
+
+        // intent to set this loan as returned
+        Intent returnIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_RETURNED);
+        returnIntent.putExtra(NotificationBroadcastReceiver.EXTRA_NOTIFICATION_ID, getNotificationId());
+        returnIntent.putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_stat_kiakoa)
+                .setContentTitle(context.getString(R.string.loan_reached_return_date, getItem()))
+                .setContentText(context.getString(R.string.click_see_loan_details))
+                .setAutoCancel(true)
+                .setColor(ContextCompat.getColor(context, R.color.colorAccent))
+                .addAction(R.drawable.ic_return_24dp, context.getString(R.string.set_as_return), PendingIntent.getBroadcast(context, 0, returnIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+        // add picture if available
+        try {
+            Uri picture = getPicture();
+            if (picture != null) {
+                builder.setLargeIcon(MediaStore.Images.Media.getBitmap(context.getContentResolver(), picture));
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Call MainActivity to display loan details
+        Intent resultIntent = new Intent(context, MainActivity.class);
+        resultIntent.putExtra(MainActivity.EXTRA_NOTIFICATION_LOAN, this);
+
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MainActivity.class);
+
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(resultPendingIntent);
+
+        return builder.build();
+    }
+
+    /**
+     * A notification id according loan id
+     *
+     * @return an integer id
+     */
+    public int getNotificationId() {
+        return (int) id;
     }
 }

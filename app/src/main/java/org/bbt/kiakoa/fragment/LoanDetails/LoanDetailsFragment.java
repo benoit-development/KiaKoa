@@ -3,7 +3,6 @@ package org.bbt.kiakoa.fragment.LoanDetails;
 import android.Manifest;
 import android.app.Activity;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,8 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.LoanDetailsActivity;
-import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.LoanContactDialog;
 import org.bbt.kiakoa.dialog.LoanDateDialog;
@@ -452,39 +448,9 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                 break;
             case 6:
                 Log.i(TAG, "Loan notification request");
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getContext())
-                                .setSmallIcon(R.drawable.ic_stat_kiakoa)
-                                .setContentTitle(getString(R.string.loan_reached_return_date, loan.getItem()))
-                                .setContentText(getString(R.string.click_see_loan_details))
-                                .setAutoCancel(true);
-// Creates an explicit intent for an Activity in your app
-                Intent resultIntent = new Intent(getContext(), MainActivity.class);
-                resultIntent.putExtra(MainActivity.EXTRA_NOTIFICATION_LOAN, loan);
+                NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-// The stack builder object will contain an artificial back stack for the
-// started Activity.
-// This ensures that navigating backward from the Activity leads out of
-// your application to the Home screen.
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
-// Adds the back stack for the Intent (but not the Intent itself)
-                stackBuilder.addParentStack(MainActivity.class);
-// Adds the Intent that starts the Activity to the top of the stack
-                stackBuilder.addNextIntent(resultIntent);
-                PendingIntent resultPendingIntent =
-                        stackBuilder.getPendingIntent(
-                                0,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                        );
-                mBuilder.setContentIntent(resultPendingIntent);
-                NotificationManager mNotificationManager =
-                        (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
-
-// mNotificationId is a unique integer your app uses to identify the
-// notification. For example, to cancel the notification, you can pass its ID
-// number to NotificationManager.cancel().
-                mNotificationManager.notify((int) loan.getId(), mBuilder.build());
+                mNotificationManager.notify(loan.getNotificationId(), loan.getNotification(getContext()));
                 break;
         }
     }

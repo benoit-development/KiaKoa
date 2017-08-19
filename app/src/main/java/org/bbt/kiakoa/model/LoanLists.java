@@ -162,6 +162,7 @@ public class LoanLists {
         Log.i(TAG, "addLent: " + loan.toJson());
 
         // delete from other lists if necessary
+        lentList.remove(loan);
         borrowedList.remove(loan);
         returnedList.remove(loan);
 
@@ -196,6 +197,7 @@ public class LoanLists {
 
         // delete from other lists if necessary
         lentList.remove(loan);
+        borrowedList.remove(loan);
         returnedList.remove(loan);
 
         boolean result = borrowedList.add(loan);
@@ -230,6 +232,7 @@ public class LoanLists {
         // remove this loan from its previous lists
         lentList.remove(loan);
         borrowedList.remove(loan);
+        returnedList.remove(loan);
 
         // add to returned list
         boolean result = returnedList.add(loan);
