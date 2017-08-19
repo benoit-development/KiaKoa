@@ -14,35 +14,35 @@ import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.LoanLists;
 
 /**
- * Dialog used to clear archive list
+ * Dialog used to clear return list
  */
-public class ClearArchiveDialog extends DialogFragment {
+public class ClearReturnDialog extends DialogFragment {
 
     /**
      * For log
      */
-    private static final String TAG = "ClearArchiveDialog";
+    private static final String TAG = "ClearReturnDialog";
 
     /**
      * Create a new instance
      */
-    public static ClearArchiveDialog newInstance() {
-        return new ClearArchiveDialog();
+    public static ClearReturnDialog newInstance() {
+        return new ClearReturnDialog();
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.i(TAG, "Show dialog to clear archive list");
-        int loanCount = LoanLists.getInstance().getArchivedList().size();
+        Log.i(TAG, "Show dialog to clear returned list");
+        int loanCount = LoanLists.getInstance().getReturnedList().size();
         return new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_warning_24dp)
-                .setTitle(getString(R.string.clear_archive_list_question) + " (" + getResources().getQuantityString(R.plurals.plural_item, loanCount, loanCount) + ")")
+                .setTitle(getString(R.string.clear_return_list_question) + " (" + getResources().getQuantityString(R.plurals.plural_item, loanCount, loanCount) + ")")
                 .setPositiveButton(R.string.clear, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        LoanLists.getInstance().clearArchiveList(getContext());
-                        Toast.makeText(getContext(), R.string.archive_loan_list_cleared, Toast.LENGTH_SHORT).show();
+                        LoanLists.getInstance().clearReturnedList(getContext());
+                        Toast.makeText(getContext(), R.string.return_loan_list_cleared, Toast.LENGTH_SHORT).show();
                         ((MainActivity) getActivity()).displayLoanDetails(null);
                     }
                 })

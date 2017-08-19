@@ -298,20 +298,20 @@ public class Loan implements Parcelable {
             return LoanStatus.LENT;
         } else if (loanLists.getBorrowedList().contains(this)) {
             return LoanStatus.BORROWED;
-        } else if (loanLists.getArchivedList().contains(this)) {
-            return LoanStatus.ARCHIVED;
+        } else if (loanLists.getReturnedList().contains(this)) {
+            return LoanStatus.RETURNED;
         } else {
             return LoanStatus.NONE;
         }
     }
 
     /**
-     * Test if this {@link Loan} is archived
+     * Test if this {@link Loan} is returned
      *
-     * @return is archived or not
+     * @return is returned or not
      */
-    public boolean isArchived() {
-        return getStatus().equals(LoanStatus.ARCHIVED);
+    public boolean isReturned() {
+        return getStatus().equals(LoanStatus.RETURNED);
     }
 
     /**

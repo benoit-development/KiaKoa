@@ -12,9 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.fragment.LoanList.ArchivedListFragment;
-import org.bbt.kiakoa.fragment.LoanList.BorrowedListFragment;
-import org.bbt.kiakoa.fragment.LoanList.LoanToListFragment;
 
 /**
  * {@link android.app.Fragment} displaying a loan lists
@@ -105,8 +102,8 @@ public class LoanListsPagerFragment extends Fragment {
                 getActivity().setTitle(R.string.borrowed);
                 break;
             case 2:
-                // archive
-                getActivity().setTitle(R.string.archived);
+                // returned
+                getActivity().setTitle(R.string.returned);
                 break;
         }
     }
@@ -141,7 +138,7 @@ public class LoanListsPagerFragment extends Fragment {
                     fragment = new BorrowedListFragment();
                     break;
                 default:
-                    fragment = new ArchivedListFragment();
+                    fragment = new ReturnedListFragment();
                     break;
             }
 

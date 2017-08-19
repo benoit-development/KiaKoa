@@ -140,7 +140,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                 holder.circleView.setVisibility(View.GONE);
                 holder.image.setVisibility(View.GONE);
                 try {
-                    if (loan.getDatesDifferenceInDays() > 0) {
+                    if ((!loan.isReturned()) && (loan.getDatesDifferenceInDays() > 0)) {
                         holder.image.setVisibility(View.VISIBLE);
                         holder.image.setImageResource(R.drawable.ic_alert_red_24dp);
                     }

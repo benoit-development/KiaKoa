@@ -307,9 +307,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     loanCount = LoanLists.getInstance().getBorrowedList().size();
                     break;
                 case 3:
-                    iconId = R.drawable.ic_archived_24dp;
-                    textId = R.string.archived;
-                    loanCount = LoanLists.getInstance().getArchivedList().size();
+                    iconId = R.drawable.ic_return_24dp;
+                    textId = R.string.returned;
+                    loanCount = LoanLists.getInstance().getReturnedList().size();
                     break;
                 case 4:
                     textId = R.string.tools;

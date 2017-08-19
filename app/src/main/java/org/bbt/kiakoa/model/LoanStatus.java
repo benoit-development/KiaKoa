@@ -8,7 +8,7 @@ import org.bbt.kiakoa.R;
 public enum LoanStatus {
     LENT,
     BORROWED,
-    ARCHIVED,
+    RETURNED,
     NONE;
 
     /**
@@ -24,7 +24,7 @@ public enum LoanStatus {
             case BORROWED:
                 index = 1;
                 break;
-            case ARCHIVED:
+            case RETURNED:
                 index = 2;
                 break;
             default:
@@ -47,8 +47,8 @@ public enum LoanStatus {
             case BORROWED:
                 imageId = R.drawable.ic_borrowed_24dp;
                 break;
-            case ARCHIVED:
-                imageId = R.drawable.ic_archived_24dp;
+            case RETURNED:
+                imageId = R.drawable.ic_return_24dp;
                 break;
             default:
                 imageId = R.drawable.ic_list_24dp;
@@ -70,8 +70,8 @@ public enum LoanStatus {
             case BORROWED:
                 labelId = R.string.borrowed;
                 break;
-            case ARCHIVED:
-                labelId = R.string.archived;
+            case RETURNED:
+                labelId = R.string.returned;
                 break;
             default:
                 labelId = R.string.none;

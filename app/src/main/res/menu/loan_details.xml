@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- to archive a loan -->
+    <!-- to return a loan -->
     <item
-        android:id="@+id/action_archive"
-        android:icon="@drawable/ic_archive_white_24dp"
-        android:title="@string/archive_loan"
+        android:id="@+id/action_return"
+        android:icon="@drawable/ic_return_white_24dp"
+        android:title="@string/return_loan"
         app:showAsAction="ifRoom"/>
 
 </menu>

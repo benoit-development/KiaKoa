@@ -102,9 +102,9 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
     private TextView emptyTextView;
 
     /**
-     * {@link MenuItem} to archive the displayed loan
+     * {@link MenuItem} to return the displayed loan
      */
-    private MenuItem archiveMenuItem;
+    private MenuItem returnMenuItem;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -147,21 +147,21 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.loan_details, menu);
-        // retrieve instance of archive button
-        archiveMenuItem = menu.findItem(R.id.action_archive);
+        // retrieve instance of return button
+        returnMenuItem = menu.findItem(R.id.action_return);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_archive:
-                LoanLists.getInstance().addArchived(loan, getContext());
+            case R.id.action_return:
+                LoanLists.getInstance().addReturned(loan, getContext());
                 if (getActivity() instanceof LoanDetailsActivity) {
                     getActivity().finish();
                 } else {
                     updateView();
                 }
-                Toast.makeText(getContext(), R.string.loan_archived, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.loan_returned, Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -195,8 +195,8 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         }
 
         // update menu item depending on loan status
-        if (archiveMenuItem != null) {
-            archiveMenuItem.setVisible((loan != null) && (!loan.isArchived()));
+        if (returnMenuItem != null) {
+            returnMenuItem.setVisible((loan != null) && (!loan.isReturned()));
         }
     }
 

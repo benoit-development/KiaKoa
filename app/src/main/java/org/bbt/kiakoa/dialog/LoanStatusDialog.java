@@ -60,7 +60,7 @@ public class LoanStatusDialog extends DialogFragment {
                                 loanLists.addBorrowed(loan, getContext());
                                 break;
                             case 2:
-                                loanLists.addArchived(loan, getContext());
+                                loanLists.addReturned(loan, getContext());
                                 break;
                             default:
                                 Log.e(TAG, "None status found, should not happen");

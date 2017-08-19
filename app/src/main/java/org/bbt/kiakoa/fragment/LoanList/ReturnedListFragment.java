@@ -10,23 +10,23 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.dialog.ClearArchiveDialog;
+import org.bbt.kiakoa.dialog.ClearReturnDialog;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
 
 import java.util.ArrayList;
 
 /**
- * Loan archive fragment list
+ * Loan returned fragment list
  *
  * @author Benoît BOUSQUET
  */
-public class ArchivedListFragment extends AbstractLoanListFragment {
+public class ReturnedListFragment extends AbstractLoanListFragment {
 
     /**
      * Tag for logs
      */
-    private static final String TAG = "ArchivedListFragment";
+    private static final String TAG = "ReturnedListFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,23 +44,23 @@ public class ArchivedListFragment extends AbstractLoanListFragment {
             @Override
             public void onClick(View view) {
 
-                Log.i(TAG, "fabOnclickListener: clear archived list");
+                Log.i(TAG, "fabOnclickListener: clear returned list");
 
-                if (LoanLists.getInstance().getArchivedList().size() == 0) {
+                if (LoanLists.getInstance().getReturnedList().size() == 0) {
                     Log.i(TAG, "fabOnclickListener: list already cleared");
-                    Toast.makeText(getContext(), R.string.archive_loan_lists_already_empty, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.return_loan_lists_already_empty, Toast.LENGTH_SHORT).show();
                 } else {
-                    // show dialog to confirm archive clearing
+                    // show dialog to confirm returned list clearing
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    Fragment prev = getFragmentManager().findFragmentByTag("clear_archive");
+                    Fragment prev = getFragmentManager().findFragmentByTag("clear_returned");
                     if (prev != null) {
                         ft.remove(prev);
                     }
                     ft.addToBackStack(null);
 
                     // Create and show the dialog.
-                    ClearArchiveDialog newDialog = ClearArchiveDialog.newInstance();
-                    newDialog.show(ft, "clear_archive");
+                    ClearReturnDialog newDialog = ClearReturnDialog.newInstance();
+                    newDialog.show(ft, "clear_returned");
                 }
             }
         };
@@ -68,11 +68,11 @@ public class ArchivedListFragment extends AbstractLoanListFragment {
 
     @Override
     protected ArrayList<Loan> getLoanList() {
-        return LoanLists.getInstance().getArchivedList();
+        return LoanLists.getInstance().getReturnedList();
     }
 
     @Override
     protected String getLoanListId() {
-        return LoanLists.SHARED_PREFERENCES_ARCHIVED_ID;
+        return LoanLists.SHARED_PREFERENCES_RETURNED_ID;
     }
 }
