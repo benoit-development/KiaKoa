@@ -75,10 +75,4 @@ public class ArchivedListFragment extends AbstractLoanListFragment {
     protected String getLoanListId() {
         return LoanLists.SHARED_PREFERENCES_ARCHIVED_ID;
     }
-
-    @Override
-    protected void addLoan(Loan loan) {
-        // this class does not directly add Loan
-        // no action to do here
-    }
 }

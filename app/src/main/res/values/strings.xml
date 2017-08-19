@@ -44,11 +44,6 @@
     <string name="click_see_loan_details">Click here to see loan details</string>
     <string name="return_date">Return date</string>
     <string name="loan_reached_return_date">\"%1$s\" has reached its return date</string>
-    <plurals name="plural_day">
-        <item quantity="zero">%d day</item>
-        <item quantity="one">%d day</item>
-        <item quantity="other">%d days</item>
-    </plurals>
     <plurals name="plural_day_left">
         <item quantity="zero">%d day left</item>
         <item quantity="one">%d day left</item>

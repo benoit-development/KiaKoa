@@ -2,6 +2,7 @@ package org.bbt.kiakoa.fragment.LoanList;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.exception.LoanException;
 import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.tools.ListItemClickRecyclerAdapter;
@@ -34,6 +36,7 @@ class LoanRecyclerAdapter extends ListItemClickRecyclerAdapter<LoanRecyclerAdapt
         private final TextView itemView;
         private final TextView contactView;
         private final TextView durationView;
+        private final TextView delayView;
 
         /**
          * Constructor
@@ -46,6 +49,7 @@ class LoanRecyclerAdapter extends ListItemClickRecyclerAdapter<LoanRecyclerAdapt
             this.itemView = view.findViewById(R.id.item);
             this.contactView = view.findViewById(R.id.contact);
             this.durationView = view.findViewById(R.id.duration);
+            this.delayView = view.findViewById(R.id.delay);
         }
     }
 
@@ -82,8 +86,21 @@ class LoanRecyclerAdapter extends ListItemClickRecyclerAdapter<LoanRecyclerAdapt
             holder.contactView.setVisibility(View.GONE);
         }
         // duration
-        holder.durationView.setText(loan.getLoanDateString());
+        String loanDateString = loan.getLoanDateString();
+        holder.durationView.setText(loanDateString);
         holder.alertView.setVisibility(View.GONE);
+        // delay
+        holder.delayView.setText(loan.getReturnDateDelayString(context));
+        // delay is > 0
+        holder.alertView.setVisibility(View.GONE);
+        try {
+            if (loan.getDatesDifferenceInDays() > 0) {
+                holder.delayView.setTextColor(ContextCompat.getColor(context, R.color.alertRedText));
+                holder.alertView.setVisibility(View.VISIBLE);
+            }
+        } catch (LoanException e) {
+            // no return date
+        }
 
         // pictureView
         Uri picture = loan.getPicture();

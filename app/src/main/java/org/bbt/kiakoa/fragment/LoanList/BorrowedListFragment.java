@@ -21,9 +21,4 @@ public class BorrowedListFragment extends AbstractLoanListFragment {
     protected String getLoanListId() {
         return LoanLists.SHARED_PREFERENCES_BORROWED_ID;
     }
-
-    @Override
-    protected void addLoan(Loan loan) {
-        LoanLists.getInstance().addBorrowed(loan, getContext());
-    }
 }

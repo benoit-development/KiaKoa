@@ -21,9 +21,4 @@ public class LoanToListFragment extends AbstractLoanListFragment {
     protected String getLoanListId() {
         return LoanLists.SHARED_PREFERENCES_LENT_ID;
     }
-
-    @Override
-    protected void addLoan(Loan loan) {
-        LoanLists.getInstance().addLent(loan, getContext());
-    }
 }

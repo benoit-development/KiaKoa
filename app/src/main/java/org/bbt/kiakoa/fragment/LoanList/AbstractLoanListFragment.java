@@ -148,11 +148,6 @@ abstract public class AbstractLoanListFragment extends Fragment implements LoanL
      */
     abstract protected String getLoanListId();
 
-    /**
-     * Add a new created {@link Loan} to {@link LoanLists}
-     */
-    abstract protected void addLoan(Loan loan);
-
     @Override
     public void onLoanListsChanged() {
         loanAdapter.notifyDataSetChanged();

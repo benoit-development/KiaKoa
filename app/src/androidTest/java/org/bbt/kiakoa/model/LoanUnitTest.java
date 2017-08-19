@@ -5,9 +5,11 @@ import android.os.Parcel;
 
 import com.google.gson.Gson;
 
+import org.bbt.kiakoa.exception.LoanException;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -126,17 +128,31 @@ public class LoanUnitTest {
 
         // with no return date
         loanTest.setReturnDate(-1);
-        assertEquals(-1, loanTest.getDatesDifferenceInDays());
+        try {
+            assertEquals(-1, loanTest.getDatesDifferenceInDays());
+            assertTrue(false);
+        } catch (LoanException e) {
+            assertTrue(true);
+        }
 
-        // with a return date
-        loanTest.setReturnDate(System.currentTimeMillis());
-        assertEquals(0, loanTest.getDatesDifferenceInDays());
-        // minus 5 days
-        loanTest.setReturnDate(System.currentTimeMillis() - (86400000 * 5));
-        assertEquals(-5, loanTest.getDatesDifferenceInDays());
-        // plus 2 days
-        loanTest.setReturnDate(System.currentTimeMillis() + (86400000 * 2));
-        assertEquals(2, loanTest.getDatesDifferenceInDays());
+        // calendar instance
+        final Calendar cal = Calendar.getInstance();
+
+        try {
+            // with a return date
+            loanTest.setReturnDate(cal.getTimeInMillis());
+            assertEquals(0, loanTest.getDatesDifferenceInDays());
+            // minus 5 days
+            cal.add(Calendar.DAY_OF_MONTH, -5);
+            loanTest.setReturnDate(cal.getTimeInMillis());
+            assertEquals(5, loanTest.getDatesDifferenceInDays());
+            // plus 2 days
+            cal.add(Calendar.DAY_OF_MONTH, 7);
+            loanTest.setReturnDate(cal.getTimeInMillis());
+            assertEquals(-2, loanTest.getDatesDifferenceInDays());
+        } catch (LoanException e) {
+            assertTrue(false);
+        }
 
     }
 

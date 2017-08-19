@@ -81,6 +81,7 @@ public abstract class ItemClickRecyclerAdapter<VH extends ItemClickRecyclerAdapt
                 }
             }
         });
+        holder.itemView.setSelected(true);
     }
 
     /**

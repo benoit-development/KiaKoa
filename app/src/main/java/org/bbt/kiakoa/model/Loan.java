@@ -10,8 +10,10 @@ import android.support.annotation.Nullable;
 import com.google.gson.Gson;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.exception.LoanException;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 
 /**
  * Class defining a loan
@@ -222,16 +224,47 @@ public class Loan implements Parcelable {
      * Calculate duration of the loan in days
      * This method return -1 if returnDate is not set
      *
-     * @return day number or -1
+     * @return day number. can be negative
+     * @throws LoanException if there's no return date
      */
-    public int getDatesDifferenceInDays() {
+    public int getDatesDifferenceInDays() throws LoanException {
         if (returnDate == -1) {
-            return -1;
+            throw new LoanException();
         } else {
-            long different = returnDate - System.currentTimeMillis();
-            long dayInMillis = 1000 * 60 * 60 * 24;
-            return (int) (different / dayInMillis);
+            Calendar sDate = toCalendar(returnDate);
+            Calendar eDate = toCalendar(System.currentTimeMillis());
+
+            // Get the represented date in milliseconds
+            long millis1 = sDate.getTimeInMillis();
+            long millis2 = eDate.getTimeInMillis();
+
+            // Calculate difference in milliseconds
+            long diff = millis2 - millis1;
+
+            return (int)(diff / (24 * 60 * 60 * 1000));
         }
+    }
+
+    /**
+     * Create calendar instance from time with these values to zero :
+     * <ul>
+     *     <li>hours</li>
+     *     <li>minutes</li>
+     *     <li>seconds</li>
+     *     <li>millis</li>
+     * </ul>
+     * @param timestamp time in millis
+     * @return calendar instance
+     */
+    private Calendar toCalendar(long timestamp)
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timestamp);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar;
     }
 
     /**
@@ -303,5 +336,31 @@ public class Loan implements Parcelable {
             result = DateFormat.getDateInstance(DateFormat.SHORT).format(returnDate);
         }
         return result;
+    }
+
+    /**
+     * Get a string representing delay remaining
+     *
+     * @param context a context for translations
+     * @return a string representation of the delay
+     */
+    public String getReturnDateDelayString(Context context) {
+
+        int delay;
+        try {
+            delay = getDatesDifferenceInDays();
+        } catch (LoanException e) {
+            // no return date
+            return "";
+        }
+
+        int strId;
+        if (delay <= 0) {
+            strId = R.plurals.plural_day_left;
+        } else {
+            strId = R.plurals.plural_day_late;
+        }
+
+        return context.getResources().getQuantityString(strId, delay, Math.abs(delay));
     }
 }
