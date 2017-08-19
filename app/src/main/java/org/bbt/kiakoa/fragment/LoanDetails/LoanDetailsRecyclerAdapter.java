@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.exception.LoanException;
 import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.tools.ItemClickRecyclerAdapter;
@@ -138,6 +139,14 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                 holder.value.setText(loan.getReturnDateString(context));
                 holder.circleView.setVisibility(View.GONE);
                 holder.image.setVisibility(View.GONE);
+                try {
+                    if (loan.getDatesDifferenceInDays() > 0) {
+                        holder.image.setVisibility(View.VISIBLE);
+                        holder.image.setImageResource(R.drawable.ic_alert_red_24dp);
+                    }
+                } catch (LoanException e) {
+                    // nothing to do visibility already gone
+                }
                 break;
             case 5:
                 // loan contact
