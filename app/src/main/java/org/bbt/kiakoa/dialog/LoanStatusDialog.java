@@ -54,13 +54,13 @@ public class LoanStatusDialog extends DialogFragment {
                         LoanLists loanLists = LoanLists.getInstance();
                         switch (i) {
                             case 0:
-                                loanLists.addLent(loan, getContext());
+                                loanLists.saveLent(loan, getContext());
                                 break;
                             case 1:
-                                loanLists.addBorrowed(loan, getContext());
+                                loanLists.saveBorrowed(loan, getContext());
                                 break;
                             case 2:
-                                loanLists.addReturned(loan, getContext());
+                                loanLists.saveReturned(loan, getContext());
                                 break;
                             default:
                                 Log.e(TAG, "None status found, should not happen");

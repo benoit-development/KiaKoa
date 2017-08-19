@@ -45,6 +45,8 @@
     <string name="return_date">Return date</string>
     <string name="loan_reached_return_date">\"%1$s\" has reached its return date</string>
     <string name="set_as_return">Set as returned</string>
+    <string name="loan_return_date_updated">Loan return date updated</string>
+    <string name="add_a_week">Add a week</string>
     <plurals name="plural_day_left">
         <item quantity="zero">%d day left</item>
         <item quantity="one">%d day left</item>

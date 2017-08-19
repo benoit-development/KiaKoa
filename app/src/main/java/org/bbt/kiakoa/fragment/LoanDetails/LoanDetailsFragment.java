@@ -151,7 +151,7 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_return:
-                LoanLists.getInstance().addReturned(loan, getContext());
+                LoanLists.getInstance().saveReturned(loan, getContext());
                 if (getActivity() instanceof LoanDetailsActivity) {
                     getActivity().finish();
                 } else {
@@ -457,6 +457,14 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
 
     @Override
     public void onLoanListsChanged() {
+        loan = LoanLists.getInstance().findLoanById(loan.getId());
+        if (loan == null) {
+            Log.e(TAG, "Cannot find loan when lists updated.");
+            Activity activity = getActivity();
+            if (activity instanceof LoanDetailsActivity) {
+                getActivity().finish();
+            }
+        }
         updateView();
     }
 }

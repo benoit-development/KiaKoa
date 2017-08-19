@@ -55,6 +55,7 @@
         <receiver android:name=".broadcast.NotificationBroadcastReceiver"  android:exported="false">
             <intent-filter>
                 <action android:name="org.bbt.kiakoa.ACTION_RETURN_LOAN"/>
+                <action android:name="org.bbt.kiakoa.ACTION_ADD_WEEK"/>
             </intent-filter>
         </receiver>
     </application>

@@ -152,14 +152,14 @@ public class LoanLists {
     }
 
     /**
-     * add a {@link Loan} to the Lent list
+     * save a {@link Loan} to the Lent list
      *
      * @param loan loan to add
      * @param context a {@link Context}
      * @return if add is success or not
      */
-    public boolean addLent(Loan loan, Context context) {
-        Log.i(TAG, "addLent: " + loan.toJson());
+    public boolean saveLent(Loan loan, Context context) {
+        Log.i(TAG, "saveLent: " + loan.toJson());
 
         // delete from other lists if necessary
         lentList.remove(loan);
@@ -169,12 +169,7 @@ public class LoanLists {
         boolean result = lentList.add(loan);
 
         // if there is a context, then save list
-        if (context != null) {
-            SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(SHARED_PREFERENCES_LENT_ID, new Gson().toJson(lentList));
-            editor.apply();
-        }
+        saveInSharedPreferences(context);
 
         if (result) {
             sortList(lentList);
@@ -186,14 +181,14 @@ public class LoanLists {
 
 
     /**
-     * add a {@link Loan} from the Borrowed list
+     * save a {@link Loan} from the Borrowed list
      *
      * @param loan loan from add
      * @param context a {@link Context}
      * @return if add is success or not
      */
-    public boolean addBorrowed(Loan loan, Context context) {
-        Log.i(TAG, "addBorrowed: " + loan.toJson());
+    public boolean saveBorrowed(Loan loan, Context context) {
+        Log.i(TAG, "saveBorrowed: " + loan.toJson());
 
         // delete from other lists if necessary
         lentList.remove(loan);
@@ -203,12 +198,7 @@ public class LoanLists {
         boolean result = borrowedList.add(loan);
 
         // if there is a context, then save list
-        if (context != null) {
-            SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(SHARED_PREFERENCES_BORROWED_ID, new Gson().toJson(borrowedList));
-            editor.apply();
-        }
+        saveInSharedPreferences(context);
 
         if (result) {
             sortList(borrowedList);
@@ -220,14 +210,14 @@ public class LoanLists {
 
 
     /**
-     * add a {@link Loan} from the Returned list
+     * save a {@link Loan} from the Returned list
      *
      * @param loan    loan from add
      * @param context a {@link Context}
      * @return if add is success or not
      */
-    public boolean addReturned(Loan loan, Context context) {
-        Log.i(TAG, "addReturned: " + loan.toJson());
+    public boolean saveReturned(Loan loan, Context context) {
+        Log.i(TAG, "saveReturned: " + loan.toJson());
 
         // remove this loan from its previous lists
         lentList.remove(loan);
@@ -238,12 +228,7 @@ public class LoanLists {
         boolean result = returnedList.add(loan);
 
         // if there is a context, then save list
-        if (context != null) {
-            SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(SHARED_PREFERENCES_RETURNED_ID, new Gson().toJson(returnedList));
-            editor.apply();
-        }
+        saveInSharedPreferences(context);
 
         if (result) {
             sortList(returnedList);
@@ -264,19 +249,19 @@ public class LoanLists {
         boolean result = false;
 
         // remove this loan from lists (based on its ID)
-        if (lentList.remove(loan)) {
+        if (lentList.contains(loan)) {
             // loan removed from loan to list
-            result = addLent(loan, context);
+            result = saveLent(loan, context);
             sortList(lentList);
         }
-        if (borrowedList.remove(loan)) {
+        if (borrowedList.contains(loan)) {
             // loan removed from loan from list
-            result |= addBorrowed(loan, context);
+            result |= saveBorrowed(loan, context);
             sortList(borrowedList);
         }
-        if (returnedList.remove(loan)) {
+        if (returnedList.contains(loan)) {
             // loan removed from loan returned list
-            result |= addReturned(loan, context);
+            result |= saveReturned(loan, context);
             sortList(returnedList);
         }
 
@@ -322,15 +307,7 @@ public class LoanLists {
     public void clearLists(Context context) {
         Log.i(TAG, "clearLists");
 
-        if (context != null) {
-            // remove data from shared preferences
-            SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.remove(SHARED_PREFERENCES_LENT_ID);
-            editor.remove(SHARED_PREFERENCES_BORROWED_ID);
-            editor.remove(SHARED_PREFERENCES_RETURNED_ID);
-            editor.apply();
-        }
+        saveInSharedPreferences(context);
 
         // empty lists
         lentList.clear();
@@ -342,6 +319,22 @@ public class LoanLists {
     }
 
     /**
+     * Save asynchronously loan lists in {@link SharedPreferences}
+     * @param context a context
+     */
+    private void saveInSharedPreferences(Context context) {
+        if (context != null) {
+            // remove data from shared preferences
+            SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.remove(SHARED_PREFERENCES_LENT_ID);
+            editor.remove(SHARED_PREFERENCES_BORROWED_ID);
+            editor.remove(SHARED_PREFERENCES_RETURNED_ID);
+            editor.apply();
+        }
+    }
+
+    /**
      * empty return loan list
      *
      * @param context a {@link Context}
@@ -349,16 +342,9 @@ public class LoanLists {
     public void clearReturnedList(Context context) {
         Log.i(TAG, "clearReturnedList");
 
-        if (context != null) {
-            // remove data from shared preferences
-            SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.remove(SHARED_PREFERENCES_RETURNED_ID);
-            editor.apply();
-        }
-
         // empty list
         returnedList.clear();
+        saveInSharedPreferences(context);
 
         // notify changes
         notifyLoanListsChanged();
@@ -414,4 +400,34 @@ public class LoanLists {
         return lentList.size() + borrowedList.size() + returnedList.size();
     }
 
+    /**
+     * Search a Loan in lists from its id
+     *
+     * @param id loan id
+     * @return found loan or null
+     */
+    public Loan findLoanById(long id) {
+        Loan result = null;
+
+        // in lent
+        for(Loan loan : lentList) {
+            if (loan.getId() == id) {
+                result = loan;
+            }
+        }
+        // in borrowed
+        for(Loan loan : borrowedList) {
+            if (loan.getId() == id) {
+                result = loan;
+            }
+        }
+        // in returned
+        for(Loan loan : returnedList) {
+            if (loan.getId() == id) {
+                result = loan;
+            }
+        }
+
+        return result;
+    }
 }

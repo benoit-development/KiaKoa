@@ -33,6 +33,11 @@ import java.util.Calendar;
 public class Loan implements Parcelable {
 
     /**
+     * Constante representing a day in millis
+     */
+    public static final int DAYS_IN_MILLIS = 24 * 60 * 60 * 1000;
+
+    /**
      * id of the {@link Loan} instance
      */
     private long id = System.currentTimeMillis();
@@ -251,7 +256,7 @@ public class Loan implements Parcelable {
             // Calculate difference in milliseconds
             long diff = millis2 - millis1;
 
-            return (int) (diff / (24 * 60 * 60 * 1000));
+            return (int) (diff / DAYS_IN_MILLIS);
         }
     }
 
@@ -387,19 +392,26 @@ public class Loan implements Parcelable {
      */
     public Notification getNotification(Context context) {
 
-
         // intent to set this loan as returned
-        Intent returnIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_RETURNED);
+        Intent returnIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_RETURN_LOAN);
         returnIntent.putExtra(NotificationBroadcastReceiver.EXTRA_NOTIFICATION_ID, getNotificationId());
         returnIntent.putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
 
+        // intent to add a week to return date
+        Intent addWeekIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_ADD_WEEK);
+        addWeekIntent.putExtra(NotificationBroadcastReceiver.EXTRA_NOTIFICATION_ID, getNotificationId());
+        addWeekIntent.putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
+        addWeekIntent.putExtra(NotificationBroadcastReceiver.EXTRA_NOTIFICATION_TIME, System.currentTimeMillis());
+
+        // build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_kiakoa)
                 .setContentTitle(context.getString(R.string.loan_reached_return_date, getItem()))
                 .setContentText(context.getString(R.string.click_see_loan_details))
                 .setAutoCancel(true)
                 .setColor(ContextCompat.getColor(context, R.color.colorAccent))
-                .addAction(R.drawable.ic_return_24dp, context.getString(R.string.set_as_return), PendingIntent.getBroadcast(context, 0, returnIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+                .addAction(R.drawable.ic_return_24dp, context.getString(R.string.set_as_return), PendingIntent.getBroadcast(context, 0, returnIntent, PendingIntent.FLAG_UPDATE_CURRENT))
+                .addAction(R.drawable.ic_add_24dp, context.getString(R.string.add_a_week), PendingIntent.getBroadcast(context, 0, addWeekIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
         // add picture if available
         try {

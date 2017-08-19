@@ -134,9 +134,9 @@ public class LoanItemDialog extends DialogFragment {
                                 Log.i(TAG, "new item : " + item);
                                 Loan newLoan = new Loan(item);
                                 if (LoanLists.SHARED_PREFERENCES_BORROWED_ID.equals(finalList)) {
-                                    LoanLists.getInstance().addBorrowed(newLoan, getContext());
+                                    LoanLists.getInstance().saveBorrowed(newLoan, getContext());
                                 } else {
-                                    LoanLists.getInstance().addLent(newLoan, getContext());
+                                    LoanLists.getInstance().saveLent(newLoan, getContext());
                                 }
                             }
                             dismiss();
