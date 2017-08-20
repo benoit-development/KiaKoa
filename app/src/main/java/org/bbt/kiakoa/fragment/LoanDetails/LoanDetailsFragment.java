@@ -104,6 +104,11 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
     private MenuItem returnMenuItem;
 
     /**
+     * {@link MenuItem} to display contact card of the displayed loan
+     */
+    private MenuItem contactCardMenuItem;
+
+    /**
      * {@link MenuItem} to delete the displayed loan
      */
     private MenuItem deleteMenuItem;
@@ -151,6 +156,8 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         inflater.inflate(R.menu.loan_details, menu);
         // retrieve instance of return menu item
         returnMenuItem = menu.findItem(R.id.action_return);
+        // retrieve instance of contact card menu item
+        contactCardMenuItem = menu.findItem(R.id.action_contact_card);
         // retrieve instance of delete menu item
         deleteMenuItem = menu.findItem(R.id.action_delete);
         // update menu item visibility
@@ -168,6 +175,9 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                     updateView();
                 }
                 Toast.makeText(getContext(), R.string.loan_returned, Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_contact_card:
+                loan.displayContactCard(getContext());
                 return true;
             case R.id.action_delete:
                 showDeleteLoanDialog();
@@ -206,6 +216,9 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         // update menu item visibility depending on loan status
         if (returnMenuItem != null) {
             returnMenuItem.setVisible((loan != null) && (!loan.isReturned()));
+        }
+        if (contactCardMenuItem != null) {
+            contactCardMenuItem.setVisible((loan != null) && (loan.hasContactId()));
         }
         if (deleteMenuItem != null) {
             deleteMenuItem.setVisible(loan != null);

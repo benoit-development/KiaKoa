@@ -1,18 +1,21 @@
 package org.bbt.kiakoa.model;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -31,6 +34,11 @@ import java.util.Calendar;
  * @author Benoit Bousquet
  */
 public class Loan implements Parcelable {
+
+    /**
+     * For log
+     */
+    private static final String TAG = "Loan";
 
     /**
      * Constant representing a day in millis
@@ -447,12 +455,10 @@ public class Loan implements Parcelable {
 
         // intent to set this loan as returned
         Intent returnIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_RETURN_LOAN)
-                .putExtra(NotificationBroadcastReceiver.EXTRA_NOTIFICATION_ID, getNotificationId())
                 .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
 
         // intent to add a week to return date
         Intent addWeekIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_ADD_WEEK)
-                .putExtra(NotificationBroadcastReceiver.EXTRA_NOTIFICATION_ID, getNotificationId())
                 .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
 
         // build notification
@@ -464,6 +470,14 @@ public class Loan implements Parcelable {
                 .setColor(ContextCompat.getColor(context, R.color.colorAccent))
                 .addAction(R.drawable.ic_return_24dp, context.getString(R.string.set_as_return), PendingIntent.getBroadcast(context, 0, returnIntent, PendingIntent.FLAG_UPDATE_CURRENT))
                 .addAction(R.drawable.ic_add_24dp, context.getString(R.string.add_a_week), PendingIntent.getBroadcast(context, 0, addWeekIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+        // loan contact
+        if (hasContactId()) {
+            // intent to display contact
+            Intent contactIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_LOAN_CONTACT)
+                    .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
+            builder.addAction(R.drawable.ic_contact_24dp, context.getString(R.string.show_contact), PendingIntent.getBroadcast(context, 0,contactIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        }
 
         // add picture if available
         try {
@@ -513,5 +527,20 @@ public class Loan implements Parcelable {
      */
     public boolean hasContactId() {
         return ((contact != null) && (contact.getId() != -1));
+    }
+
+    public void displayContactCard(Context context) {
+
+        if (!hasContactId()) {
+            // error while retrieving data
+            Log.e(TAG, "Loan does not have a contact in contact list");
+        } else {
+            Intent contactIntent = new Intent(Intent.ACTION_VIEW);
+            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(getContact().getId()));
+            contactIntent.setData(uri);
+            context.startActivity(contactIntent);
+            ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(getNotificationId());
+            Log.i(TAG, "Display contact card : " + getContact().getId());
+        }
     }
 }

@@ -16,11 +16,11 @@ import org.bbt.kiakoa.model.LoanLists;
  */
 public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
-
+    // constants to be used
     public static final String INTENT_ACTION_RETURN_LOAN = "org.bbt.kiakoa.ACTION_RETURN_LOAN";
     public static final String INTENT_ACTION_ADD_WEEK = "org.bbt.kiakoa.ACTION_ADD_WEEK";
+    public static final String INTENT_ACTION_LOAN_CONTACT = "org.bbt.kiakoa.ACTION_LOAN_CONTACT";
     public static final String EXTRA_LOAN = "extra_loan";
-    public static final String EXTRA_NOTIFICATION_ID = "notification_id";
 
     /**
      * For log
@@ -30,8 +30,6 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        // get notification id
-        int notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, 0);
         // getting loan
         Loan loan = intent.getParcelableExtra(EXTRA_LOAN);
         // loan lists manager instance
@@ -41,34 +39,42 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             case INTENT_ACTION_RETURN_LOAN:
                 Log.i(TAG, "Request to put a loan in returned list");
 
-                if ((notificationId == 0) || (loan == null)) {
+                if (loan == null) {
                     // error while retrieving data
                     Log.e(TAG, "Failed getting data");
                 } else {
                     // data successfully got
                     loanLists.saveReturned(loan, context);
-                    ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(notificationId);
+                    ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(loan.getNotificationId());
                     Toast.makeText(context, R.string.loan_returned, Toast.LENGTH_SHORT).show();
                 }
 
                 break;
 
-
             case INTENT_ACTION_ADD_WEEK:
                 Log.i(TAG, "Request to add a week to this loan");
 
-                    if ((notificationId == 0) || (loan == null)) {
-                        // error while retrieving data
-                        Log.e(TAG, "Failed getting data");
-                    } else {
-                        // data successfully got
-                        loan.setReturnDate(System.currentTimeMillis() + (Loan.DAYS_IN_MILLIS * 7));
-                        loanLists.updateLoan(loan, context);
-                        ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(notificationId);
-                        Toast.makeText(context, R.string.loan_return_date_updated, Toast.LENGTH_SHORT).show();
-                    }
+                if (loan == null) {
+                    // error while retrieving data
+                    Log.e(TAG, "Failed getting data");
+                } else {
+                    // data successfully got
+                    loan.setReturnDate(System.currentTimeMillis() + (Loan.DAYS_IN_MILLIS * 7));
+                    loanLists.updateLoan(loan, context);
+                    ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(loan.getNotificationId());
+                    Toast.makeText(context, R.string.return_date_updated, Toast.LENGTH_SHORT).show();
+                }
 
                 break;
+
+            case INTENT_ACTION_LOAN_CONTACT:
+                Log.i(TAG, "Request to display contact card");
+                loan.displayContactCard(context);
+                break;
+
         }
+
+        Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        context.sendBroadcast(it);
     }
 }
