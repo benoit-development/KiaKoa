@@ -118,6 +118,17 @@ public class Loan implements Parcelable {
     }
 
     /**
+     * Constructor for unit tests only
+     *
+     * @param id loan id
+     * @param item loan item
+     */
+    Loan(long id, String item) {
+        this.id = id;
+        this.item = item;
+    }
+
+    /**
      * item Getter
      *
      * @return item label
@@ -236,8 +247,7 @@ public class Loan implements Parcelable {
     }
 
     /**
-     * Calculate duration of the loan in days
-     * This method return -1 if returnDate is not set
+     * Calculate delay remaining for the loan in days
      *
      * @return day number. can be negative
      * @throws LoanException if there's no return date
@@ -248,6 +258,30 @@ public class Loan implements Parcelable {
         } else {
             Calendar sDate = toCalendar(returnDate);
             Calendar eDate = toCalendar(System.currentTimeMillis());
+
+            // Get the represented date in milliseconds
+            long millis1 = sDate.getTimeInMillis();
+            long millis2 = eDate.getTimeInMillis();
+
+            // Calculate difference in milliseconds
+            long diff = millis2 - millis1;
+
+            return (int) (diff / DAYS_IN_MILLIS);
+        }
+    }
+
+    /**
+     * Calculate duration between loan date and return date in days
+     *
+     * @return day number
+     * @throws LoanException if there's no return date
+     */
+    int getDurationInDays() throws LoanException {
+        if (returnDate == -1) {
+            throw new LoanException();
+        } else {
+            Calendar sDate = toCalendar(loanDate);
+            Calendar eDate = toCalendar(returnDate);
 
             // Get the represented date in milliseconds
             long millis1 = sDate.getTimeInMillis();
@@ -359,7 +393,26 @@ public class Loan implements Parcelable {
     }
 
     /**
-     * Get a string representing delay remaining
+     * Get a string representing loan duration. For returned loans.
+     *
+     * @param context a context
+     * @return a string representation of the duration
+     */
+    public String getDurationString(Context context) {
+
+        int duration;
+        try {
+            duration = getDurationInDays();
+        } catch (LoanException e) {
+            // no return date
+            return "";
+        }
+
+        return context.getResources().getQuantityString(R.plurals.plural_day, duration, duration);
+    }
+
+    /**
+     * Get a string representing delay remaining. For not returned loans.
      *
      * @param context a context for translations
      * @return a string representation of the delay
@@ -451,5 +504,14 @@ public class Loan implements Parcelable {
      */
     public int getNotificationId() {
         return (int) id;
+    }
+
+    /**
+     * Test if contact is from contact list
+     *
+     * @return is contact from contact list
+     */
+    public boolean hasContactId() {
+        return ((contact != null) && (contact.getId() != -1));
     }
 }

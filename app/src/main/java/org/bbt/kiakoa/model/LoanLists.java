@@ -319,6 +319,31 @@ public class LoanLists {
     }
 
     /**
+     * Delete a loan that may be present in lists
+     *
+     * @param loan loan to delete
+     * @param context a context
+     * @return delete result
+     */
+    public boolean deleteLoan(Loan loan, Context context) {
+
+        // remove this loan from lists (based on its ID)
+        boolean result = lentList.remove(loan);
+        result |= borrowedList.remove(loan);
+        result |= returnedList.remove(loan);
+
+        if (result) {
+            Log.i(TAG, "deleteLoan : " + loan.getItem() + " deleted.");
+            notifyLoanListsChanged();
+            saveInSharedPreferences(context);
+        } else {
+            Log.i(TAG, "deleteLoan : " + loan.getItem() + " not found, not deleted.");
+        }
+
+        return result;
+    }
+
+    /**
      * Save asynchronously loan lists in {@link SharedPreferences}
      * @param context a context
      */

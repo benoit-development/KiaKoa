@@ -95,6 +95,7 @@ public class LoanItemDialog extends DialogFragment {
         });
 
         final AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                .setIcon(R.drawable.ic_item_24dp)
                 .setTitle((ACTION_CREATE == action) ? R.string.new_loan : R.string.item)
                 .setView(view)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

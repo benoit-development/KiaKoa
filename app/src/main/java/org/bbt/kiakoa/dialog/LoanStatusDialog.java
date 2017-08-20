@@ -47,6 +47,7 @@ public class LoanStatusDialog extends DialogFragment {
 
         //noinspection ConstantConditions
         return new AlertDialog.Builder(getActivity())
+                .setIcon(R.drawable.ic_status_24dp)
                 .setTitle(R.string.status)
                 .setSingleChoiceItems(R.array.status_list, loan.getStatus().getIndex(), new DialogInterface.OnClickListener() {
                     @Override

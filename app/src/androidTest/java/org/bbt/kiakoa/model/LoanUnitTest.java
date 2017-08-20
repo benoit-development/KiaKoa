@@ -156,4 +156,51 @@ public class LoanUnitTest {
 
     }
 
+    @Test
+    public void date_duration() {
+
+        // with no return date
+        loanTest.setReturnDate(-1);
+        try {
+            assertEquals(-1, loanTest.getDurationInDays());
+            assertTrue(false);
+        } catch (LoanException e) {
+            assertTrue(true);
+        }
+
+        // calendar instance
+        final Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, -3);
+
+        try {
+            // with a return date
+            loanTest.setLoanDate(cal.getTimeInMillis());
+            loanTest.setReturnDate(cal.getTimeInMillis());
+            assertEquals(0, loanTest.getDurationInDays());
+            // minus 5 days
+            cal.add(Calendar.DAY_OF_MONTH, -5);
+            loanTest.setReturnDate(cal.getTimeInMillis());
+            assertEquals(-5, loanTest.getDurationInDays());
+            // plus 2 days
+            cal.add(Calendar.DAY_OF_MONTH, 7);
+            loanTest.setReturnDate(cal.getTimeInMillis());
+            assertEquals(2, loanTest.getDurationInDays());
+        } catch (LoanException e) {
+            assertTrue(false);
+        }
+
+    }
+
+    @Test
+    public void has_contact_id() {
+        loanTest.setContact(null);
+        assertFalse(loanTest.hasContactId());
+
+        loanTest.setContact(new Contact("Pouet"));
+        assertFalse(loanTest.hasContactId());
+
+        loanTest.setContact(new Contact(34, "Pouet", null));
+        assertTrue(loanTest.hasContactId());
+    }
+
 }

@@ -184,4 +184,26 @@ public class LoanListUnitTest {
         assertTrue(loan.isReturned());
     }
 
+    @Test
+    public void delete() {
+        loanLists.clearLists(context);
+        Loan loan1 = new Loan(1, "pouet");
+        Loan loan2 = new Loan(2, "prout");
+
+        assertFalse(loanLists.deleteLoan(loan1, context));
+
+        loanLists.saveLent(loan1, context);
+        loanLists.saveBorrowed(loan2, context);
+        assertTrue(loanLists.deleteLoan(loan1, context));
+        assertEquals(1, loanLists.getLoanCount());
+
+        loanLists.saveBorrowed(loan1, context);
+        assertTrue(loanLists.deleteLoan(loan1, context));
+        assertEquals(1, loanLists.getLoanCount());
+
+        loanLists.saveReturned(loan1, context);
+        assertTrue(loanLists.deleteLoan(loan1, context));
+        assertEquals(1, loanLists.getLoanCount());
+    }
+
 }

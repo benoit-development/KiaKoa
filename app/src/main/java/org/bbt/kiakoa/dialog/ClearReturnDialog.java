@@ -36,8 +36,9 @@ public class ClearReturnDialog extends DialogFragment {
         Log.i(TAG, "Show dialog to clear returned list");
         int loanCount = LoanLists.getInstance().getReturnedList().size();
         return new AlertDialog.Builder(getActivity())
-                .setIcon(R.drawable.ic_warning_24dp)
-                .setTitle(getString(R.string.clear_return_list_question) + " (" + getResources().getQuantityString(R.plurals.plural_item, loanCount, loanCount) + ")")
+                .setIcon(R.drawable.ic_return_24dp)
+                .setTitle(R.string.returned)
+                .setMessage(getString(R.string.clear_return_list_question) + " (" + getResources().getQuantityString(R.plurals.plural_item, loanCount, loanCount) + ")")
                 .setPositiveButton(R.string.clear, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

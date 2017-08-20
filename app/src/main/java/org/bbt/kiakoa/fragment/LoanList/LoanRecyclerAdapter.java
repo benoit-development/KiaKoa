@@ -90,7 +90,11 @@ class LoanRecyclerAdapter extends ListItemClickRecyclerAdapter<LoanRecyclerAdapt
         holder.durationView.setText(loanDateString);
         holder.alertView.setVisibility(View.GONE);
         // delay
-        holder.delayView.setText(loan.getReturnDateDelayString(context));
+        if (loan.isReturned()) {
+            holder.delayView.setText(loan.getDurationString(context));
+        } else {
+            holder.delayView.setText(loan.getReturnDateDelayString(context));
+        }
         // delay is > 0
         holder.alertView.setVisibility(View.GONE);
         holder.delayView.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));

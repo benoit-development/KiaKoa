@@ -10,9 +10,9 @@ import android.support.annotation.NonNull;
 public class Contact implements Parcelable {
 
     /**
-     * if from Contacts._ID
+     * id from Contacts._ID
      */
-    private long id;
+    private long id = -1;
 
     /**
      * name from Contacts.DISPLAY_NAME or not (depending on used constructor)
@@ -83,6 +83,8 @@ public class Contact implements Parcelable {
 
     /**
      * id getter
+     * id is set to -1 if there's no contact from contact list
+     *
      * @return id
      */
     public long getId() {

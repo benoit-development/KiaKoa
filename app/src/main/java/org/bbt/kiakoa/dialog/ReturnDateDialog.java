@@ -59,13 +59,18 @@ public class ReturnDateDialog extends DialogFragment implements DatePickerDialog
         }
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.setButton(DatePickerDialog.BUTTON_NEUTRAL, getString(R.string.delete), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Log.i(TAG, "Delete return date");
-                setReturnDate(-1);
-            }
-        });
+
+        // can't delete return date if loan is returned
+        if (!loan.isReturned()) {
+            datePickerDialog.setButton(DatePickerDialog.BUTTON_NEUTRAL, getString(R.string.delete), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Log.i(TAG, "Delete return date");
+                    setReturnDate(-1);
+                }
+            });
+        }
+
         return datePickerDialog;
     }
 

@@ -36,8 +36,9 @@ public class ClearAllDialog extends DialogFragment {
         Log.i(TAG, "Show dialog to clear all lists");
         int loanCount = LoanLists.getInstance().getLoanCount();
         return new AlertDialog.Builder(getActivity())
-                .setIcon(R.drawable.ic_warning_24dp)
-                .setTitle(getString(R.string.clear_all_lists_question) + " (" + getResources().getQuantityString(R.plurals.plural_item, loanCount, loanCount) + ")")
+                .setIcon(R.drawable.ic_delete_forever_24dp)
+                .setTitle(R.string.loan_lists)
+                .setMessage(getString(R.string.clear_all_lists_question) + " (" + getResources().getQuantityString(R.plurals.plural_item, loanCount, loanCount) + ")")
                 .setPositiveButton(R.string.clear, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

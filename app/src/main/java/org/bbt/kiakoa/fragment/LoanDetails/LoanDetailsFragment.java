@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import org.bbt.kiakoa.LoanDetailsActivity;
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.dialog.DeleteLoanDialog;
 import org.bbt.kiakoa.dialog.LoanContactDialog;
 import org.bbt.kiakoa.dialog.LoanDateDialog;
 import org.bbt.kiakoa.dialog.LoanItemDialog;
@@ -102,6 +103,11 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
      */
     private MenuItem returnMenuItem;
 
+    /**
+     * {@link MenuItem} to delete the displayed loan
+     */
+    private MenuItem deleteMenuItem;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,8 +149,12 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.loan_details, menu);
-        // retrieve instance of return button
+        // retrieve instance of return menu item
         returnMenuItem = menu.findItem(R.id.action_return);
+        // retrieve instance of delete menu item
+        deleteMenuItem = menu.findItem(R.id.action_delete);
+        // update menu item visibility
+        updateView();
     }
 
     @Override
@@ -158,6 +168,9 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                     updateView();
                 }
                 Toast.makeText(getContext(), R.string.loan_returned, Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_delete:
+                showDeleteLoanDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -190,9 +203,12 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
             emptyTextView.setVisibility(View.GONE);
         }
 
-        // update menu item depending on loan status
+        // update menu item visibility depending on loan status
         if (returnMenuItem != null) {
             returnMenuItem.setVisible((loan != null) && (!loan.isReturned()));
+        }
+        if (deleteMenuItem != null) {
+            deleteMenuItem.setVisible(loan != null);
         }
     }
 
@@ -316,6 +332,22 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         // Create and show the dialog
         ReturnDateDialog newReturnDateDialog = ReturnDateDialog.newInstance(loan);
         newReturnDateDialog.show(ft, "return_date");
+    }
+
+    /**
+     * Display dialog to delete this loan
+     */
+    private void showDeleteLoanDialog() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment dialog = getFragmentManager().findFragmentByTag("delete");
+        if (dialog != null) {
+            ft.remove(dialog);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DeleteLoanDialog newDialog = DeleteLoanDialog.newInstance(loan);
+        newDialog.show(ft, "delete");
     }
 
     /**

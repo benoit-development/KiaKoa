@@ -188,6 +188,7 @@ public class LoanContactDialog extends DialogFragment {
 
 
         return new AlertDialog.Builder(getActivity())
+                .setIcon(R.drawable.ic_contact_24dp)
                 .setTitle(R.string.contact)
                 .setView(view)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
