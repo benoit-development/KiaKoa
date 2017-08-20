@@ -327,9 +327,9 @@ public class LoanLists {
             // remove data from shared preferences
             SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.remove(SHARED_PREFERENCES_LENT_ID);
-            editor.remove(SHARED_PREFERENCES_BORROWED_ID);
-            editor.remove(SHARED_PREFERENCES_RETURNED_ID);
+            editor.putString(SHARED_PREFERENCES_LENT_ID, new Gson().toJson(lentList));
+            editor.putString(SHARED_PREFERENCES_BORROWED_ID, new Gson().toJson(borrowedList));
+            editor.putString(SHARED_PREFERENCES_RETURNED_ID, new Gson().toJson(returnedList));
             editor.apply();
         }
     }

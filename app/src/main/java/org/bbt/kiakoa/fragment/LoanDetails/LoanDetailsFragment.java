@@ -457,12 +457,14 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
 
     @Override
     public void onLoanListsChanged() {
-        loan = LoanLists.getInstance().findLoanById(loan.getId());
-        if (loan == null) {
-            Log.e(TAG, "Cannot find loan when lists updated.");
-            Activity activity = getActivity();
-            if (activity instanceof LoanDetailsActivity) {
-                getActivity().finish();
+        if (loan != null) {
+            loan = LoanLists.getInstance().findLoanById(loan.getId());
+            if (loan == null) {
+                Log.e(TAG, "Cannot find loan when lists updated.");
+                Activity activity = getActivity();
+                if (activity instanceof LoanDetailsActivity) {
+                    getActivity().finish();
+                }
             }
         }
         updateView();

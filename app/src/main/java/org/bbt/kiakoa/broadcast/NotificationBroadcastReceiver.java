@@ -12,7 +12,7 @@ import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
 
 /**
- * {@link BroadcastReceiver} receving action from application notifications
+ * {@link BroadcastReceiver} receiving action from application notifications
  */
 public class NotificationBroadcastReceiver extends BroadcastReceiver {
 

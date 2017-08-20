@@ -33,7 +33,7 @@ import java.util.Calendar;
 public class Loan implements Parcelable {
 
     /**
-     * Constante representing a day in millis
+     * Constant representing a day in millis
      */
     public static final int DAYS_IN_MILLIS = 24 * 60 * 60 * 1000;
 
