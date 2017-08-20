@@ -11,6 +11,8 @@ import org.bbt.kiakoa.R;
  */
 public class SettingsFragment extends PreferenceFragment {
 
+    public static final String KEY_NOTIFICATION = "enable_date_return_notification";
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

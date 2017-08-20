@@ -20,7 +20,8 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
     public static final String INTENT_ACTION_RETURN_LOAN = "org.bbt.kiakoa.ACTION_RETURN_LOAN";
     public static final String INTENT_ACTION_ADD_WEEK = "org.bbt.kiakoa.ACTION_ADD_WEEK";
     public static final String INTENT_ACTION_LOAN_CONTACT = "org.bbt.kiakoa.ACTION_LOAN_CONTACT";
-    public static final String EXTRA_LOAN = "extra_loan";
+    public static final String INTENT_ACTION_LOAN_NOTIFICATION = "org.bbt.kiakoa.ACTION_LOAN_NOTIFICATION";
+    public static final String EXTRA_LOAN_ID = "extra_loan";
 
     /**
      * For log
@@ -30,10 +31,10 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        // getting loan
-        Loan loan = intent.getParcelableExtra(EXTRA_LOAN);
         // loan lists manager instance
         LoanLists loanLists = LoanLists.getInstance();
+        // getting loan
+        Loan loan = loanLists.findLoanById(intent.getLongExtra(EXTRA_LOAN_ID, 0));
 
         switch (intent.getAction()) {
             case INTENT_ACTION_RETURN_LOAN:
@@ -56,10 +57,10 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
                 if (loan == null) {
                     // error while retrieving data
-                    Log.e(TAG, "Failed getting data");
+                    Log.e(TAG, "Week : Failed getting data");
                 } else {
                     // data successfully got
-                    loan.setReturnDate(System.currentTimeMillis() + (Loan.DAYS_IN_MILLIS * 7));
+                    loan.setReturnDate(System.currentTimeMillis() + (Loan.DAYS_IN_MILLIS * 7), context);
                     loanLists.updateLoan(loan, context);
                     ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(loan.getNotificationId());
                     Toast.makeText(context, R.string.return_date_updated, Toast.LENGTH_SHORT).show();
@@ -68,8 +69,27 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 break;
 
             case INTENT_ACTION_LOAN_CONTACT:
-                Log.i(TAG, "Request to display contact card");
-                loan.displayContactCard(context);
+                Log.i(TAG, "Request to display card contact");
+
+                if (loan == null) {
+                    // error while retrieving data
+                    Log.e(TAG, "Contact : Failed getting data");
+                } else {
+                    Log.i(TAG, "Request to display contact card");
+                    loan.displayContactCard(context);
+                }
+                break;
+
+            case INTENT_ACTION_LOAN_NOTIFICATION:
+                Log.i(TAG, "Request to show notification for this loan");
+
+                if (loan == null) {
+                    // error while retrieving data
+                    Log.e(TAG, "Notification : Failed getting data");
+                } else {
+                    Log.i(TAG, "Request to display loan notification");
+                    loan.notify(context);
+                }
                 break;
 
         }

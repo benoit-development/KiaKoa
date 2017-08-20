@@ -57,6 +57,7 @@
                 <action android:name="org.bbt.kiakoa.ACTION_RETURN_LOAN"/>
                 <action android:name="org.bbt.kiakoa.ACTION_ADD_WEEK"/>
                 <action android:name="org.bbt.kiakoa.ACTION_LOAN_CONTACT"/>
+                <action android:name="org.bbt.kiakoa.ACTION_LOAN_NOTIFICATION"/>
             </intent-filter>
         </receiver>
     </application>

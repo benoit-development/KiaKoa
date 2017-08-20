@@ -1,13 +1,15 @@
 package org.bbt.kiakoa.model;
 
-import android.app.Notification;
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -23,6 +25,7 @@ import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.broadcast.NotificationBroadcastReceiver;
 import org.bbt.kiakoa.exception.LoanException;
+import org.bbt.kiakoa.fragment.SettingsFragment;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -214,8 +217,9 @@ public class Loan implements Parcelable {
      *
      * @param returnDate new return date
      */
-    public void setReturnDate(long returnDate) {
+    public void setReturnDate(long returnDate, Context context) {
         this.returnDate = returnDate;
+        scheduleNotification(context);
     }
 
     /**
@@ -454,11 +458,11 @@ public class Loan implements Parcelable {
 
         // intent to set this loan as returned
         Intent returnIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_RETURN_LOAN)
-                .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
+                .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN_ID, this.getId());
 
         // intent to add a week to return date
         Intent addWeekIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_ADD_WEEK)
-                .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
+                .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN_ID, this.getId());
 
         // build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
@@ -474,7 +478,7 @@ public class Loan implements Parcelable {
         if (hasContactId()) {
             // intent to display contact
             Intent contactIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_LOAN_CONTACT)
-                    .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
+                    .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN_ID, this.getId());
             builder.addAction(R.drawable.ic_contact_24dp, context.getString(R.string.show_contact), PendingIntent.getBroadcast(context, 0,contactIntent, PendingIntent.FLAG_UPDATE_CURRENT));
         }
 
@@ -512,12 +516,34 @@ public class Loan implements Parcelable {
     }
 
     /**
+     * Schedule notification according to returnDate
+     * @param context a context
+     */
+    public void scheduleNotification(Context context) {
+        // schedule alarm for notification if necessary
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean notificationEnabled = prefs.getBoolean(SettingsFragment.KEY_NOTIFICATION, context.getResources().getBoolean(R.bool.notifications_date_return_enabled_default_value));
+        if ((returnDate != -1) && (notificationEnabled) && (!isReturned())) {
+
+            Log.i(TAG, "Scheduling notification for loan " + getItem() + " / " + getReturnDateString(context));
+
+            Intent intentAlarm = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_LOAN_NOTIFICATION)
+                    .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN_ID, this.getId());
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, returnDate, PendingIntent.getBroadcast(context, getNotificationId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+
+        } else {
+            Log.i(TAG, "No need to schedule notification for loan " + getItem());
+        }
+    }
+
+    /**
      * A notification id according loan id
      *
      * @return an integer id
      */
     public int getNotificationId() {
-        return (int) id;
+        return Math.abs((int) id);
     }
 
     /**
@@ -529,6 +555,11 @@ public class Loan implements Parcelable {
         return ((contact != null) && (contact.getId() != -1));
     }
 
+    /**
+     * Launch activity to display contact card
+     *
+     * @param context a context
+     */
     public void displayContactCard(Context context) {
 
         if (!hasContactId()) {

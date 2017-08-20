@@ -89,7 +89,7 @@ public class ReturnDateDialog extends DialogFragment implements DatePickerDialog
      * @param returnDate return date
      */
     private void setReturnDate(long returnDate) {
-        loan.setReturnDate(returnDate);
+        loan.setReturnDate(returnDate, getContext());
         LoanLists.getInstance().updateLoan(loan, getContext());
     }
 }
