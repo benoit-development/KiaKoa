@@ -446,12 +446,11 @@ public class Loan implements Parcelable {
     }
 
     /**
-     * Create and return a notification for this loan
+     * Notify this loan
      *
      * @param context a context
-     * @return a notification instance
      */
-    public Notification getNotification(Context context) {
+    public void notify(Context context) {
 
         // intent to set this loan as returned
         Intent returnIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_RETURN_LOAN)
@@ -508,7 +507,8 @@ public class Loan implements Parcelable {
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(resultPendingIntent);
 
-        return builder.build();
+        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(getNotificationId(), builder.build());
     }
 
     /**

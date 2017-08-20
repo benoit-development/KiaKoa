@@ -2,8 +2,6 @@ package org.bbt.kiakoa.fragment.LoanDetails;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -493,9 +491,7 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                 break;
             case 6:
                 Log.i(TAG, "Loan notification request");
-                NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
-                mNotificationManager.notify(loan.getNotificationId(), loan.getNotification(getContext()));
+                loan.notify(getContext());
                 break;
         }
     }
