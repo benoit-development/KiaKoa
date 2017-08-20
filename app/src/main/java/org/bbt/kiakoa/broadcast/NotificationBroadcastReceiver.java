@@ -21,7 +21,6 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
     public static final String INTENT_ACTION_ADD_WEEK = "org.bbt.kiakoa.ACTION_ADD_WEEK";
     public static final String EXTRA_LOAN = "extra_loan";
     public static final String EXTRA_NOTIFICATION_ID = "notification_id";
-    public static final String EXTRA_NOTIFICATION_TIME = "notification_time";
 
     /**
      * For log
@@ -35,8 +34,6 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         int notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, 0);
         // getting loan
         Loan loan = intent.getParcelableExtra(EXTRA_LOAN);
-        // getting loan
-        long notificationTime = intent.getLongExtra(EXTRA_NOTIFICATION_TIME, 0);
         // loan lists manager instance
         LoanLists loanLists = LoanLists.getInstance();
 
@@ -60,12 +57,12 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             case INTENT_ACTION_ADD_WEEK:
                 Log.i(TAG, "Request to add a week to this loan");
 
-                    if ((notificationId == 0) || (loan == null) || (notificationTime == 0)) {
+                    if ((notificationId == 0) || (loan == null)) {
                         // error while retrieving data
                         Log.e(TAG, "Failed getting data");
                     } else {
                         // data successfully got
-                        loan.setReturnDate(notificationTime + (Loan.DAYS_IN_MILLIS * 7));
+                        loan.setReturnDate(System.currentTimeMillis() + (Loan.DAYS_IN_MILLIS * 7));
                         loanLists.updateLoan(loan, context);
                         ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(notificationId);
                         Toast.makeText(context, R.string.loan_return_date_updated, Toast.LENGTH_SHORT).show();

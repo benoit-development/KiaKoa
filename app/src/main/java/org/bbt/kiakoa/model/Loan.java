@@ -393,15 +393,14 @@ public class Loan implements Parcelable {
     public Notification getNotification(Context context) {
 
         // intent to set this loan as returned
-        Intent returnIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_RETURN_LOAN);
-        returnIntent.putExtra(NotificationBroadcastReceiver.EXTRA_NOTIFICATION_ID, getNotificationId());
-        returnIntent.putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
+        Intent returnIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_RETURN_LOAN)
+                .putExtra(NotificationBroadcastReceiver.EXTRA_NOTIFICATION_ID, getNotificationId())
+                .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
 
         // intent to add a week to return date
-        Intent addWeekIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_ADD_WEEK);
-        addWeekIntent.putExtra(NotificationBroadcastReceiver.EXTRA_NOTIFICATION_ID, getNotificationId());
-        addWeekIntent.putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
-        addWeekIntent.putExtra(NotificationBroadcastReceiver.EXTRA_NOTIFICATION_TIME, System.currentTimeMillis());
+        Intent addWeekIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_ADD_WEEK)
+                .putExtra(NotificationBroadcastReceiver.EXTRA_NOTIFICATION_ID, getNotificationId())
+                .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN, this);
 
         // build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
