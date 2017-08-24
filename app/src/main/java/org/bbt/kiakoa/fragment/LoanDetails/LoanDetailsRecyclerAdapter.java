@@ -75,7 +75,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
     @Override
     public int getItemCount() {
         if (loan != null) {
-            return 7;
+            return 6;
         } else {
             return 0;
         }
@@ -168,14 +168,6 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                 } else {
                     holder.value.setText(R.string.no_contact);
                 }
-                break;
-            case 6:
-                // enable notification for this loan
-                holder.description.setText(R.string.notification);
-                holder.value.setText(R.string.loan_notification_summary);
-                holder.circleView.setVisibility(View.GONE);
-                holder.icon.setImageResource(R.drawable.ic_notification_24dp);
-                holder.image.setVisibility(View.GONE);
                 break;
         }
     }

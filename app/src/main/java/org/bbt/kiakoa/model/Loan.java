@@ -5,11 +5,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -25,7 +23,7 @@ import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.broadcast.NotificationBroadcastReceiver;
 import org.bbt.kiakoa.exception.LoanException;
-import org.bbt.kiakoa.fragment.SettingsFragment;
+import org.bbt.kiakoa.tools.Settings;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -131,7 +129,7 @@ public class Loan implements Parcelable {
     /**
      * Constructor for unit tests only
      *
-     * @param id loan id
+     * @param id   loan id
      * @param item loan item
      */
     Loan(long id, String item) {
@@ -456,9 +454,6 @@ public class Loan implements Parcelable {
      */
     public void notify(Context context) {
 
-        // intent to set this loan as returned
-        Intent returnIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_RETURN_LOAN)
-                .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN_ID, this.getId());
 
         // intent to add a week to return date
         Intent addWeekIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_ADD_WEEK)
@@ -470,16 +465,25 @@ public class Loan implements Parcelable {
                 .setContentTitle(context.getString(R.string.loan_reached_return_date, getItem()))
                 .setContentText(context.getString(R.string.click_see_loan_details))
                 .setAutoCancel(true)
-                .setColor(ContextCompat.getColor(context, R.color.colorAccent))
-                .addAction(R.drawable.ic_return_24dp, context.getString(R.string.set_as_return), PendingIntent.getBroadcast(context, 0, returnIntent, PendingIntent.FLAG_UPDATE_CURRENT))
-                .addAction(R.drawable.ic_add_24dp, context.getString(R.string.add_a_week), PendingIntent.getBroadcast(context, 0, addWeekIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+                .setColor(ContextCompat.getColor(context, R.color.colorAccent));
+
+        // test if loan is already returned
+        if (!isReturned()) {
+            // intent to set this loan as returned
+            Intent returnIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_RETURN_LOAN)
+                    .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN_ID, this.getId());
+            builder.addAction(R.drawable.ic_return_24dp, context.getString(R.string.set_as_return), PendingIntent.getBroadcast(context, 0, returnIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        }
+
+        // add a week to this loan
+        builder.addAction(R.drawable.ic_add_24dp, context.getString(R.string.add_a_week), PendingIntent.getBroadcast(context, 0, addWeekIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
         // loan contact
         if (hasContactId()) {
             // intent to display contact
             Intent contactIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_LOAN_CONTACT)
                     .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN_ID, this.getId());
-            builder.addAction(R.drawable.ic_contact_24dp, context.getString(R.string.show_contact), PendingIntent.getBroadcast(context, 0,contactIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+            builder.addAction(R.drawable.ic_contact_24dp, context.getString(R.string.show_contact), PendingIntent.getBroadcast(context, 0, contactIntent, PendingIntent.FLAG_UPDATE_CURRENT));
         }
 
         // add picture if available
@@ -517,12 +521,12 @@ public class Loan implements Parcelable {
 
     /**
      * Schedule notification according to returnDate
+     *
      * @param context a context
      */
-    public void scheduleNotification(Context context) {
+    void scheduleNotification(Context context) {
         // schedule alarm for notification if necessary
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean notificationEnabled = prefs.getBoolean(SettingsFragment.KEY_NOTIFICATION, context.getResources().getBoolean(R.bool.notifications_date_return_enabled_default_value));
+        boolean notificationEnabled = Settings.isReturnDateNotificationEnabled(context);
         if ((returnDate != -1) && (notificationEnabled) && (!isReturned())) {
 
             Log.i(TAG, "Scheduling notification for loan " + getItem() + " / " + getReturnDateString(context));
@@ -535,6 +539,19 @@ public class Loan implements Parcelable {
         } else {
             Log.i(TAG, "No need to schedule notification for loan " + getItem());
         }
+    }
+
+    /**
+     * Cancel notification schedule if any
+     *
+     * @param context a context
+     */
+    void cancelNotificationSchedule(Context context) {
+        Log.i(TAG, "Cancelling loan notification : " + getItem());
+        Intent intentAlarm = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_LOAN_NOTIFICATION)
+                .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN_ID, this.getId());
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(PendingIntent.getBroadcast(context, getNotificationId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
     /**

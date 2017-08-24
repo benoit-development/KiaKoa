@@ -35,12 +35,11 @@
     <string name="all_loan_lists_cleared">All loan lists cleared</string>
     <string name="return_loan_list_cleared">Return loan list cleared</string>
     <string name="notifications">Notification</string>
-    <string name="notification_date_return_summary">You\'ll be notified when loans date return are reached</string>
+    <string name="notification_date_return_summary">You will be notified when return date is reached</string>
     <string name="return_loan">Return this loan</string>
     <string name="status">Status</string>
     <string name="loan_returned">Loan has been returned</string>
     <string name="notification">Notification</string>
-    <string name="loan_notification_summary">You will be notified when the alert dates are reached</string>
     <string name="click_see_loan_details">Click here to see loan details</string>
     <string name="return_date">Return date</string>
     <string name="loan_reached_return_date">\"%1$s\" has reached its return date</string>

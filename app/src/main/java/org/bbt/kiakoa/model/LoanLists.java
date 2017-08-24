@@ -118,6 +118,7 @@ public class LoanLists {
             returnedList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_RETURNED_ID, "[]"), new TypeToken<ArrayList<Loan>>() {
             }.getType());
 
+            scheduleAllLoanNotification(context);
             sortLists();
 
         } else {
@@ -138,13 +139,27 @@ public class LoanLists {
      * Sort all the lists
      */
     private void sortLists() {
-        sortList(lentList);
-        sortList(borrowedList);
-        sortList(returnedList);
+        for (ArrayList<Loan> list : getAllLists()) {
+            sortList(list);
+        }
+    }
+
+    /**
+     * Get all lists of the {@link LoanLists} instance
+     *
+     * @return all lists
+     */
+    private ArrayList<ArrayList<Loan>> getAllLists() {
+        ArrayList<ArrayList<Loan>> result = new ArrayList<>();
+        result.add(lentList);
+        result.add(borrowedList);
+        result.add(returnedList);
+        return result;
     }
 
     /**
      * Sort a list depending on the chosen sort
+     *
      * @param loanList list to be sorted
      */
     private void sortList(ArrayList<Loan> loanList) {
@@ -162,9 +177,9 @@ public class LoanLists {
         Log.i(TAG, "saveLent: " + loan.toJson());
 
         // delete from other lists if necessary
-        lentList.remove(loan);
-        borrowedList.remove(loan);
-        returnedList.remove(loan);
+        for (ArrayList<Loan> list : getAllLists()) {
+            list.remove(loan);
+        }
 
         boolean result = lentList.add(loan);
 
@@ -172,6 +187,7 @@ public class LoanLists {
         saveInSharedPreferences(context);
 
         if (result) {
+            loan.scheduleNotification(context);
             sortList(lentList);
             notifyLoanListsChanged();
         }
@@ -183,7 +199,7 @@ public class LoanLists {
     /**
      * save a {@link Loan} from the Borrowed list
      *
-     * @param loan loan from add
+     * @param loan    loan from add
      * @param context a {@link Context}
      * @return if add is success or not
      */
@@ -191,9 +207,9 @@ public class LoanLists {
         Log.i(TAG, "saveBorrowed: " + loan.toJson());
 
         // delete from other lists if necessary
-        lentList.remove(loan);
-        borrowedList.remove(loan);
-        returnedList.remove(loan);
+        for (ArrayList<Loan> list : getAllLists()) {
+            list.remove(loan);
+        }
 
         boolean result = borrowedList.add(loan);
 
@@ -201,6 +217,7 @@ public class LoanLists {
         saveInSharedPreferences(context);
 
         if (result) {
+            loan.scheduleNotification(context);
             sortList(borrowedList);
             notifyLoanListsChanged();
         }
@@ -220,9 +237,9 @@ public class LoanLists {
         Log.i(TAG, "saveReturned: " + loan.toJson());
 
         // remove this loan from its previous lists
-        lentList.remove(loan);
-        borrowedList.remove(loan);
-        returnedList.remove(loan);
+        for (ArrayList<Loan> list : getAllLists()) {
+            list.remove(loan);
+        }
 
         // add to returned list
         boolean result = returnedList.add(loan);
@@ -231,6 +248,7 @@ public class LoanLists {
         saveInSharedPreferences(context);
 
         if (result) {
+            loan.cancelNotificationSchedule(context);
             sortList(returnedList);
             notifyLoanListsChanged();
         }
@@ -249,23 +267,28 @@ public class LoanLists {
         boolean result = false;
 
         // remove this loan from lists (based on its ID)
-        if (lentList.contains(loan)) {
+        if (lentList.remove(loan)) {
             // loan removed from loan to list
             result = saveLent(loan, context);
             sortList(lentList);
         }
-        if (borrowedList.contains(loan)) {
+        if (borrowedList.remove(loan)) {
             // loan removed from loan from list
             result |= saveBorrowed(loan, context);
             sortList(borrowedList);
         }
-        if (returnedList.contains(loan)) {
+        if (returnedList.remove(loan)) {
             // loan removed from loan returned list
             result |= saveReturned(loan, context);
             sortList(returnedList);
         }
 
         if (result) {
+            if (loan.isReturned()) {
+                loan.cancelNotificationSchedule(context);
+            } else {
+                loan.scheduleNotification(context);
+            }
             notifyLoanListsChanged();
         }
 
@@ -307,12 +330,12 @@ public class LoanLists {
     public void clearLists(Context context) {
         Log.i(TAG, "clearLists");
 
-        saveInSharedPreferences(context);
-
         // empty lists
-        lentList.clear();
-        borrowedList.clear();
-        returnedList.clear();
+        cancelAllLoanNotificationSchedule(context);
+        for (ArrayList<Loan> list : getAllLists()) {
+            list.clear();
+        }
+        saveInSharedPreferences(context);
 
         // notify changes
         notifyLoanListsChanged();
@@ -321,19 +344,21 @@ public class LoanLists {
     /**
      * Delete a loan that may be present in lists
      *
-     * @param loan loan to delete
+     * @param loan    loan to delete
      * @param context a context
      * @return delete result
      */
     public boolean deleteLoan(Loan loan, Context context) {
 
         // remove this loan from lists (based on its ID)
-        boolean result = lentList.remove(loan);
-        result |= borrowedList.remove(loan);
-        result |= returnedList.remove(loan);
+        boolean result = false;
+        for (ArrayList<Loan> list : getAllLists()) {
+            result |= list.remove(loan);
+        }
 
         if (result) {
             Log.i(TAG, "deleteLoan : " + loan.getItem() + " deleted.");
+            loan.cancelNotificationSchedule(context);
             notifyLoanListsChanged();
             saveInSharedPreferences(context);
         } else {
@@ -345,6 +370,7 @@ public class LoanLists {
 
     /**
      * Save asynchronously loan lists in {@link SharedPreferences}
+     *
      * @param context a context
      */
     private void saveInSharedPreferences(Context context) {
@@ -379,7 +405,7 @@ public class LoanLists {
      * Method called to notify changes
      */
     public void notifyLoanListsChanged() {
-        for(OnLoanListsChangedListener listener : onLoanListsChangedListeners) {
+        for (OnLoanListsChangedListener listener : onLoanListsChangedListeners) {
             if (listener != null) {
                 listener.onLoanListsChanged();
             }
@@ -388,8 +414,9 @@ public class LoanLists {
 
     /**
      * Register a listener for changes in this {@link LoanLists}
+     *
      * @param listener listener to be registered
-     * @param id id for log
+     * @param id       id for log
      */
     public void registerOnLoanListsChangedListener(OnLoanListsChangedListener listener, String id) {
         Log.i(TAG, "Adding OnLoanListsChangedListener : " + id);
@@ -398,8 +425,9 @@ public class LoanLists {
 
     /**
      * Unregister a listener for changes in this {@link LoanLists}
+     *
      * @param listener listener to be unregistered
-     * @param id id for log
+     * @param id       id for log
      */
     public void unregisterOnLoanListsChangedListener(OnLoanListsChangedListener listener, String id) {
         Log.i(TAG, "Removing OnLoanListsChangedListener : " + id);
@@ -435,24 +463,52 @@ public class LoanLists {
         Loan result = null;
 
         // in lent
-        for(Loan loan : lentList) {
+        for (Loan loan : lentList) {
             if (loan.getId() == id) {
                 result = loan;
             }
         }
         // in borrowed
-        for(Loan loan : borrowedList) {
+        for (Loan loan : borrowedList) {
             if (loan.getId() == id) {
                 result = loan;
             }
         }
         // in returned
-        for(Loan loan : returnedList) {
+        for (Loan loan : returnedList) {
             if (loan.getId() == id) {
                 result = loan;
             }
         }
 
         return result;
+    }
+
+    /**
+     * refresh scheduled notification of all loans
+     *
+     * @param context a context
+     */
+    public void scheduleAllLoanNotification(Context context) {
+        Log.i(TAG, "Scheduling all notifications");
+        for (ArrayList<Loan> list : getAllLists()) {
+            for (Loan loan : list) {
+                loan.scheduleNotification(context);
+            }
+        }
+    }
+
+    /**
+     * cancel scheduled notification of all loans
+     *
+     * @param context a context
+     */
+    public void cancelAllLoanNotificationSchedule(Context context) {
+        Log.i(TAG, "Cancelling all notifications");
+        for (ArrayList<Loan> list : getAllLists()) {
+            for (Loan loan : list) {
+                loan.cancelNotificationSchedule(context);
+            }
+        }
     }
 }

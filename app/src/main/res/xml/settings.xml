@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/notifications">
+    <PreferenceCategory
+        android:icon="@drawable/ic_notification_24dp"
+        android:title="@string/notifications">
 
         <SwitchPreference
             android:defaultValue="@bool/notifications_date_return_enabled_default_value"
+            android:icon="@drawable/ic_return_24dp"
             android:key="enable_date_return_notification"
             android:summary="@string/notification_date_return_summary"
             android:title="@string/return_date" />

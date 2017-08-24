@@ -489,10 +489,6 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                 }
 
                 break;
-            case 6:
-                Log.i(TAG, "Loan notification request");
-                loan.notify(getContext());
-                break;
         }
     }
 
