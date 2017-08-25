@@ -75,4 +75,11 @@ public class ReturnedListFragment extends AbstractLoanListFragment {
     protected String getLoanListId() {
         return LoanLists.SHARED_PREFERENCES_RETURNED_ID;
     }
+
+    @Override
+    void updateView() {
+        super.updateView();
+        // display fab button only if there are loans to delete
+        fab.setVisibility((getLoanList().size() > 0)?View.VISIBLE:View.GONE);
+    }
 }

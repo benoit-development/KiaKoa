@@ -101,7 +101,7 @@ abstract public class AbstractLoanListFragment extends Fragment implements LoanL
     /**
      * Method to update view visibility
      */
-    private void updateView() {
+    void updateView() {
         if (loanAdapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyTextView.setVisibility(View.VISIBLE);

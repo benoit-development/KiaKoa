@@ -269,17 +269,17 @@ public class LoanLists {
         // remove this loan from lists (based on its ID)
         if (lentList.remove(loan)) {
             // loan removed from loan to list
-            result = saveLent(loan, context);
+            result = lentList.add(loan);
             sortList(lentList);
         }
         if (borrowedList.remove(loan)) {
             // loan removed from loan from list
-            result |= saveBorrowed(loan, context);
+            result |= borrowedList.add(loan);
             sortList(borrowedList);
         }
         if (returnedList.remove(loan)) {
             // loan removed from loan returned list
-            result |= saveReturned(loan, context);
+            result |= returnedList.add(loan);
             sortList(returnedList);
         }
 

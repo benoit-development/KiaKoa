@@ -226,7 +226,6 @@ public class Loan implements Parcelable {
             Log.i(TAG, "return date should not be lower than loan date");
             setLoanDate(returnDate, context);
         }
-        scheduleNotification(context);
     }
 
     /**

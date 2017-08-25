@@ -117,7 +117,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                 if (pictureUri != null) {
                     holder.circleView.setImageURI(Uri.parse(pictureUri));
                     holder.circleView.setVisibility(View.VISIBLE);
-                    holder.value.setVisibility(View.INVISIBLE);
+                    holder.value.setText("");
                 } else {
                     holder.circleView.setVisibility(View.GONE);
                     holder.value.setVisibility(View.VISIBLE);
