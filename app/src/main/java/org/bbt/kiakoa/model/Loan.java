@@ -196,9 +196,14 @@ public class Loan implements Parcelable {
      * loan date setter
      *
      * @param loanDate new loan date
+     * @param context a context
      */
-    public void setLoanDate(long loanDate) {
+    public void setLoanDate(long loanDate, Context context) {
         this.loanDate = loanDate;
+        if ((loanDate > returnDate) && (returnDate != -1)) {
+            Log.i(TAG, "loan date should not be greater than return date");
+            setReturnDate(loanDate, context);
+        }
     }
 
     /**
@@ -217,6 +222,10 @@ public class Loan implements Parcelable {
      */
     public void setReturnDate(long returnDate, Context context) {
         this.returnDate = returnDate;
+        if ((returnDate < loanDate) && (returnDate != -1)) {
+            Log.i(TAG, "return date should not be lower than loan date");
+            setLoanDate(returnDate, context);
+        }
         scheduleNotification(context);
     }
 
