@@ -1,7 +1,9 @@
 package org.bbt.kiakoa.model;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Parcel;
+import android.support.test.InstrumentationRegistry;
 
 import com.google.gson.Gson;
 
@@ -23,6 +25,11 @@ import static org.junit.Assert.assertTrue;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class LoanUnitTest {
+
+    /**
+     * a {@link Context}
+     */
+    private final Context context = InstrumentationRegistry.getContext();
 
     private static final String LOAN_ITEM = "a label";
     private static final String LOAN_ANOTHER_ITEM = "a another label";
@@ -127,7 +134,7 @@ public class LoanUnitTest {
     public void date_difference() {
 
         // with no return date
-        loanTest.setReturnDate(-1);
+        loanTest.setReturnDate(-1, context);
         try {
             assertEquals(-1, loanTest.getDatesDifferenceInDays());
             assertTrue(false);
@@ -140,15 +147,15 @@ public class LoanUnitTest {
 
         try {
             // with a return date
-            loanTest.setReturnDate(cal.getTimeInMillis());
+            loanTest.setReturnDate(cal.getTimeInMillis(), context);
             assertEquals(0, loanTest.getDatesDifferenceInDays());
             // minus 5 days
             cal.add(Calendar.DAY_OF_MONTH, -5);
-            loanTest.setReturnDate(cal.getTimeInMillis());
+            loanTest.setReturnDate(cal.getTimeInMillis(), context);
             assertEquals(5, loanTest.getDatesDifferenceInDays());
             // plus 2 days
             cal.add(Calendar.DAY_OF_MONTH, 7);
-            loanTest.setReturnDate(cal.getTimeInMillis());
+            loanTest.setReturnDate(cal.getTimeInMillis(), context);
             assertEquals(-2, loanTest.getDatesDifferenceInDays());
         } catch (LoanException e) {
             assertTrue(false);
@@ -160,7 +167,7 @@ public class LoanUnitTest {
     public void date_duration() {
 
         // with no return date
-        loanTest.setReturnDate(-1);
+        loanTest.setReturnDate(-1, context);
         try {
             assertEquals(-1, loanTest.getDurationInDays());
             assertTrue(false);
@@ -174,16 +181,16 @@ public class LoanUnitTest {
 
         try {
             // with a return date
-            loanTest.setLoanDate(cal.getTimeInMillis());
-            loanTest.setReturnDate(cal.getTimeInMillis());
+            loanTest.setLoanDate(cal.getTimeInMillis(), context);
+            loanTest.setReturnDate(cal.getTimeInMillis(), context);
             assertEquals(0, loanTest.getDurationInDays());
             // minus 5 days
             cal.add(Calendar.DAY_OF_MONTH, -5);
-            loanTest.setReturnDate(cal.getTimeInMillis());
+            loanTest.setReturnDate(cal.getTimeInMillis(), context);
             assertEquals(-5, loanTest.getDurationInDays());
             // plus 2 days
             cal.add(Calendar.DAY_OF_MONTH, 7);
-            loanTest.setReturnDate(cal.getTimeInMillis());
+            loanTest.setReturnDate(cal.getTimeInMillis(), context);
             assertEquals(2, loanTest.getDurationInDays());
         } catch (LoanException e) {
             assertTrue(false);
