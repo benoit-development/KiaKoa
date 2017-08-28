@@ -29,7 +29,7 @@ public class LoanUnitTest {
     /**
      * a {@link Context}
      */
-    private final Context context = InstrumentationRegistry.getContext();
+    private final Context context = InstrumentationRegistry.getTargetContext();
 
     private static final String LOAN_ITEM = "a label";
     private static final String LOAN_ANOTHER_ITEM = "a another label";
@@ -187,11 +187,11 @@ public class LoanUnitTest {
             // minus 5 days
             cal.add(Calendar.DAY_OF_MONTH, -5);
             loanTest.setReturnDate(cal.getTimeInMillis(), context);
-            assertEquals(-5, loanTest.getDurationInDays());
+            assertEquals(0, loanTest.getDurationInDays()); // because date return was lower then loan date
             // plus 2 days
             cal.add(Calendar.DAY_OF_MONTH, 7);
             loanTest.setReturnDate(cal.getTimeInMillis(), context);
-            assertEquals(2, loanTest.getDurationInDays());
+            assertEquals(7, loanTest.getDurationInDays());
         } catch (LoanException e) {
             assertTrue(false);
         }

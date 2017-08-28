@@ -22,7 +22,7 @@ public class LoanListUnitTest {
     /**
      * a {@link Context}
      */
-    private final Context context = InstrumentationRegistry.getContext();
+    private final Context context = InstrumentationRegistry.getTargetContext();
 
     final private LoanLists loanLists = LoanLists.getInstance();
 
@@ -39,6 +39,7 @@ public class LoanListUnitTest {
 
         // init lists
         loanLists.initLists(context);
+        loanLists.clearLists(context);
 
         // add some lent
         Loan loan1 = new Loan("1");
