@@ -18,12 +18,13 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 
 import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.broadcast.NotificationBroadcastReceiver;
 import org.bbt.kiakoa.exception.LoanException;
-import org.bbt.kiakoa.tools.Settings;
+import org.bbt.kiakoa.tools.Preferences;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -49,31 +50,37 @@ public class Loan implements Parcelable {
     /**
      * id of the {@link Loan} instance
      */
+    @Expose
     private long id = System.currentTimeMillis();
 
     /**
      * Label to identify the loaned item
      */
+    @Expose
     private String item;
 
     /**
      * an {@link Uri} path for the item picture
      */
+    @Expose
     private String itemPicture;
 
     /**
      * Loan date
      */
+    @Expose
     private long loanDate = System.currentTimeMillis();
 
     /**
      * date return
      */
+    @Expose
     private long returnDate = -1;
 
     /**
      * loan contact
      */
+    @Expose
     private Contact contact;
 
     @Override
@@ -534,7 +541,7 @@ public class Loan implements Parcelable {
      */
     void scheduleNotification(Context context) {
         // schedule alarm for notification if necessary
-        boolean notificationEnabled = Settings.isReturnDateNotificationEnabled(context);
+        boolean notificationEnabled = Preferences.isReturnDateNotificationEnabled(context);
         if ((returnDate != -1) && (notificationEnabled) && (!isReturned())) {
 
             Log.i(TAG, "Scheduling notification for loan " + getItem() + " / " + getReturnDateString(context));
@@ -598,5 +605,19 @@ public class Loan implements Parcelable {
             ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(getNotificationId());
             Log.i(TAG, "Display contact card : " + getContact().getId());
         }
+    }
+
+    /**
+     * Check if loan data are valid
+     * @return loan validity
+     */
+    boolean isValid() {
+        boolean result = (item != null) && (item.length() > 0);
+
+        if (!result) {
+            Log.e(TAG, "Loan is invalid. No item.");
+        }
+
+        return result;
     }
 }

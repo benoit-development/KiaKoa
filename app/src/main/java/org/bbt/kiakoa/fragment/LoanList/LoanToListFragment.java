@@ -19,6 +19,6 @@ public class LoanToListFragment extends AbstractLoanListFragment {
 
     @Override
     protected String getLoanListId() {
-        return LoanLists.SHARED_PREFERENCES_LENT_ID;
+        return LoanLists.SHARED_PREFERENCES_LENT_KEY;
     }
 }

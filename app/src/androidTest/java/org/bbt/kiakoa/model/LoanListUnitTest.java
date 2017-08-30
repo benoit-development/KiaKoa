@@ -24,7 +24,7 @@ public class LoanListUnitTest {
      */
     private final Context context = InstrumentationRegistry.getTargetContext();
 
-    final private LoanLists loanLists = LoanLists.getInstance();
+    private LoanLists loanLists = LoanLists.getInstance();
 
     @Test
     public void test_instance() throws Exception {
@@ -207,4 +207,36 @@ public class LoanListUnitTest {
         assertEquals(1, loanLists.getLoanCount());
     }
 
+    @Test
+    public void export_import_to_json() {
+
+        // loans to be exported and imported
+        Loan lentLoan = new Loan(1, "lent");
+        lentLoan.setContact(new Contact(1, "name", "uri"));
+        Loan borrowedLoan = new Loan(2, "borrowed");
+        Loan returnedLoan = new Loan(3, "returned");
+
+        // add to LoanLists
+        loanLists.clearLists(context);
+        loanLists.saveLent(lentLoan, context);
+        loanLists.saveBorrowed(borrowedLoan, context);
+        loanLists.saveReturned(returnedLoan, context);
+        String jsonExport = loanLists.toJson();
+
+        // clear lists
+        loanLists.clearLists(context);
+        assertEquals(0, loanLists.getLoanCount());
+
+        // import json
+        assertTrue(LoanLists.fromJson(jsonExport, context));
+        loanLists = LoanLists.getInstance();
+        assertEquals(3, loanLists.getLoanCount());
+        assertEquals(lentLoan, loanLists.getLentList().get(0));
+        assertEquals(lentLoan.getContact().getId(), loanLists.getLentList().get(0).getContact().getId());
+        assertEquals(lentLoan.getContact().getName(), loanLists.getLentList().get(0).getContact().getName());
+        assertEquals(lentLoan.getContact().getPhotoUri(), loanLists.getLentList().get(0).getContact().getPhotoUri());
+        assertEquals(borrowedLoan, loanLists.getBorrowedList().get(0));
+        assertEquals(returnedLoan, loanLists.getReturnedList().get(0));
+
+    }
 }

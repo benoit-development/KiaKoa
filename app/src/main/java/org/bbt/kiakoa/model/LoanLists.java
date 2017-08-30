@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -24,17 +26,22 @@ public class LoanLists {
     /**
      * Lent list identifier for shared preferences
      */
-    public static final String SHARED_PREFERENCES_LENT_ID = "lent";
+    public static final String SHARED_PREFERENCES_LENT_KEY = "lent";
 
     /**
      * Borrowed list identifier for shared preferences
      */
-    public static final String SHARED_PREFERENCES_BORROWED_ID = "borrowed";
+    public static final String SHARED_PREFERENCES_BORROWED_KEY = "borrowed";
 
     /**
      * Loan returned list identifier for shared preferences
      */
-    public static final String SHARED_PREFERENCES_RETURNED_ID = "returned";
+    public static final String SHARED_PREFERENCES_RETURNED_KEY = "returned";
+
+    /**
+     * time of last saved loans in preferences
+     */
+    private static final String SHARED_PREFERENCES_TIME_KEY = "time";
 
     /**
      * Tag for logs
@@ -44,16 +51,19 @@ public class LoanLists {
     /**
      * list of loaned items
      */
+    @Expose
     private ArrayList<Loan> lentList;
 
     /**
      * borrowed loaned items
      */
+    @Expose
     private ArrayList<Loan> borrowedList;
 
     /**
      * returned loan items
      */
+    @Expose
     private ArrayList<Loan> returnedList;
 
     /**
@@ -86,10 +96,19 @@ public class LoanLists {
         if (instance == null) {
             // Create the instance
             Log.i(TAG, "getInstance: Creating instance");
-            instance = new LoanLists();
+            setInstance(new LoanLists());
         }
 
         return instance;
+    }
+
+    /**
+     * instance setter. Only private.
+     *
+     * @param instance new {@link LoanLists} singleton instance
+     */
+    private static void setInstance(LoanLists instance) {
+        LoanLists.instance = instance;
     }
 
     /**
@@ -111,11 +130,11 @@ public class LoanLists {
             Log.i(TAG, "initLists: init lists from shared preferences");
 
             SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
-            lentList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_LENT_ID, "[]"), new TypeToken<ArrayList<Loan>>() {
+            lentList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_LENT_KEY, "[]"), new TypeToken<ArrayList<Loan>>() {
             }.getType());
-            borrowedList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_BORROWED_ID, "[]"), new TypeToken<ArrayList<Loan>>() {
+            borrowedList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_BORROWED_KEY, "[]"), new TypeToken<ArrayList<Loan>>() {
             }.getType());
-            returnedList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_RETURNED_ID, "[]"), new TypeToken<ArrayList<Loan>>() {
+            returnedList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_RETURNED_KEY, "[]"), new TypeToken<ArrayList<Loan>>() {
             }.getType());
 
             scheduleAllLoanNotification(context);
@@ -169,7 +188,7 @@ public class LoanLists {
     /**
      * save a {@link Loan} to the Lent list
      *
-     * @param loan loan to add
+     * @param loan    loan to add
      * @param context a {@link Context}
      * @return if add is success or not
      */
@@ -378,9 +397,10 @@ public class LoanLists {
             // remove data from shared preferences
             SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(SHARED_PREFERENCES_LENT_ID, new Gson().toJson(lentList));
-            editor.putString(SHARED_PREFERENCES_BORROWED_ID, new Gson().toJson(borrowedList));
-            editor.putString(SHARED_PREFERENCES_RETURNED_ID, new Gson().toJson(returnedList));
+            editor.putString(SHARED_PREFERENCES_LENT_KEY, new Gson().toJson(lentList));
+            editor.putString(SHARED_PREFERENCES_BORROWED_KEY, new Gson().toJson(borrowedList));
+            editor.putString(SHARED_PREFERENCES_RETURNED_KEY, new Gson().toJson(returnedList));
+            editor.putLong(SHARED_PREFERENCES_TIME_KEY, System.currentTimeMillis());
             editor.apply();
         }
     }
@@ -511,4 +531,64 @@ public class LoanLists {
             }
         }
     }
+
+    /**
+     * export lists in json format
+     *
+     * @return json string
+     */
+    public String toJson() {
+        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(this);
+    }
+
+    /**
+     * import lists from a json string
+     *  @param json    json string
+     * @param context a context
+     */
+    public static boolean fromJson(String json, Context context) {
+        Log.i(TAG, "json import requested");
+        Log.d(TAG, "json : " + json);
+        LoanLists loanLists = new Gson().fromJson(json, LoanLists.class);
+        if (loanLists != null) {
+            if (loanLists.isValid()) {
+                Log.i(TAG, "LoanLists instance seems valid. Replacing the current one.");
+                setInstance(loanLists);
+                getInstance().saveInSharedPreferences(context);
+                getInstance().notifyLoanListsChanged();
+                return true;
+            } else {
+                Log.e(TAG, "New LoanLists not valid. Import cancelled.");
+            }
+        } else {
+            Log.e(TAG, "New LoanLists is null ! Import cancelled.");
+        }
+        return false;
+    }
+
+    /**
+     * Check if this instance is valid
+     * @return instance validity
+     */
+    private boolean isValid() {
+        boolean result = true;
+
+        for (ArrayList<Loan> list : getAllLists()) {
+            // check if list exists
+            if (lentList == null) {
+                Log.e(TAG, "lent list null");
+                result &= false;
+                // break this loop
+                break;
+            }
+            // the list exists, check if loans are valid too
+            for(Loan loan : list) {
+                result &= loan.isValid();
+            }
+        }
+
+        return result;
+    }
+
+
 }

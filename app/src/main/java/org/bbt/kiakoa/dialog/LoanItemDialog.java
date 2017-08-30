@@ -83,7 +83,7 @@ public class LoanItemDialog extends DialogFragment {
             }
         } else {
             // get list to add new loan
-            list = getArguments().getString("list", LoanLists.SHARED_PREFERENCES_LENT_ID);
+            list = getArguments().getString("list", LoanLists.SHARED_PREFERENCES_LENT_KEY);
         }
 
         // clear button
@@ -134,7 +134,7 @@ public class LoanItemDialog extends DialogFragment {
                                 // new item to add
                                 Log.i(TAG, "new item : " + item);
                                 Loan newLoan = new Loan(item);
-                                if (LoanLists.SHARED_PREFERENCES_BORROWED_ID.equals(finalList)) {
+                                if (LoanLists.SHARED_PREFERENCES_BORROWED_KEY.equals(finalList)) {
                                     LoanLists.getInstance().saveBorrowed(newLoan, getContext());
                                 } else {
                                     LoanLists.getInstance().saveLent(newLoan, getContext());

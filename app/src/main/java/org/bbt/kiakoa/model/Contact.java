@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Class of a contact for a loan
  */
@@ -12,16 +14,19 @@ public class Contact implements Parcelable {
     /**
      * id from Contacts._ID
      */
+    @Expose
     private long id = -1;
 
     /**
      * name from Contacts.DISPLAY_NAME or not (depending on used constructor)
      */
+    @Expose
     private final String name;
 
     /**
      * photo from Contacts.PHOTO_URI
      */
+    @Expose
     private String photoUri;
 
     /**

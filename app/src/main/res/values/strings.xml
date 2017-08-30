@@ -54,8 +54,6 @@
     <string name="sync">Sync</string>
     <string name="google_drive">Google Drive</string>
     <string name="google_drive_summary">Your loans will be saved automatically on your Google Drive account</string>
-    <string name="connection_google_drive_succeed">Connection to Google Drive succeeded</string>
-    <string name="connection_google_drive_suspended">Connection to Google Drive is suspended</string>
     <string name="connection_google_drive_failed">Connection to Google Drive failed</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
