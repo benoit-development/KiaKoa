@@ -12,7 +12,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.drive.Drive;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -38,10 +37,7 @@ abstract class ApiClientAsyncTask<Params, Progress, Result>
      * @param context a context
      */
     ApiClientAsyncTask(Context context) {
-        GoogleApiClient.Builder builder = new GoogleApiClient.Builder(context)
-                .addApi(Drive.API)
-//                .addScope(Drive.SCOPE_FILE)
-                .addScope(Drive.SCOPE_APPFOLDER);
+        GoogleApiClient.Builder builder = GoogleApiClientTools.getGoogleApiClient(context);
         mClient = builder.build();
     }
 

@@ -10,7 +10,12 @@ import java.util.ArrayList;
  *
  * @author Benoît BOUSQUET
  */
-public class LoanToListFragment extends AbstractLoanListFragment {
+public class LentListFragment extends AbstractLoanListFragment {
+
+    @Override
+    protected String getLogTag() {
+        return "LentListFragment";
+    }
 
     @Override
     protected ArrayList<Loan> getLoanList() {

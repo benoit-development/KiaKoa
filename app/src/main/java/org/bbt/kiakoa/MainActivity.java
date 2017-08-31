@@ -30,7 +30,6 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.Drive;
 
 import org.bbt.kiakoa.dialog.ClearAllDialog;
 import org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment;
@@ -39,6 +38,7 @@ import org.bbt.kiakoa.fragment.LoanList.LoanListsPagerFragment;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
 import org.bbt.kiakoa.tools.Preferences;
+import org.bbt.kiakoa.tools.drive.GoogleApiClientTools;
 import org.bbt.kiakoa.tools.drive.LoanListsDriveFile;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LoanLists.OnLoanListsChangedListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -164,15 +164,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private void syncLoansOnGoogleDrive() {
         if (Preferences.isGoogleDriveSyncEnabled(this)) {
-            Log.i(TAG, "Start GoogleDrive sync process");
-            googleApiClient = new GoogleApiClient.Builder(this)
-                    .addApi(Drive.API)
-//                    .addScope(Drive.SCOPE_FILE)
-                    .addScope(Drive.SCOPE_APPFOLDER)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .build();
-            googleApiClient.connect();
+            if (Preferences.isSyncNeeded(this)) {
+                Log.i(TAG, "Start GoogleDrive sync process");
+                googleApiClient = GoogleApiClientTools.getGoogleApiClient(this)
+                        .addConnectionCallbacks(this)
+                        .addOnConnectionFailedListener(this)
+                        .build();
+                googleApiClient.connect();
+            } else {
+                Log.i(TAG, "GoogleDrive sync process not needed");
+            }
         } else {
             Log.i(TAG, "GoogleDrive sync process disabled");
         }

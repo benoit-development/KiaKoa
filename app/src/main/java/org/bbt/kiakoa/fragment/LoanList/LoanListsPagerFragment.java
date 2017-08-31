@@ -132,7 +132,7 @@ public class LoanListsPagerFragment extends Fragment {
             Fragment fragment;
             switch (position) {
                 case 0:
-                    fragment = new LoanToListFragment();
+                    fragment = new LentListFragment();
                     break;
                 case 1:
                     fragment = new BorrowedListFragment();

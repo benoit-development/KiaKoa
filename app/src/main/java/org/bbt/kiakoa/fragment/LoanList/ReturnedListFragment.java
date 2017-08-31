@@ -23,10 +23,6 @@ import java.util.ArrayList;
  */
 public class ReturnedListFragment extends AbstractLoanListFragment {
 
-    /**
-     * Tag for logs
-     */
-    private static final String TAG = "ReturnedListFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,15 +35,20 @@ public class ReturnedListFragment extends AbstractLoanListFragment {
     }
 
     @Override
+    protected String getLogTag() {
+        return "ReturnedListFragment";
+    }
+
+    @Override
     public View.OnClickListener getFABOnClickListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Log.i(TAG, "fabOnclickListener: clear returned list");
+                Log.i(getLogTag(), "fabOnclickListener: clear returned list");
 
                 if (LoanLists.getInstance().getReturnedList().size() == 0) {
-                    Log.i(TAG, "fabOnclickListener: list already cleared");
+                    Log.i(getLogTag(), "fabOnclickListener: list already cleared");
                     Toast.makeText(getContext(), R.string.return_loan_lists_already_empty, Toast.LENGTH_SHORT).show();
                 } else {
                     // show dialog to confirm returned list clearing

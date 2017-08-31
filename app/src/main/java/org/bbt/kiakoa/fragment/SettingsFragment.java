@@ -46,6 +46,12 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                     LoanLists.getInstance().cancelAllLoanNotificationSchedule(getContext());
                 }
                 break;
+            case Preferences.KEY_GOOGLE_DRIVE_SYNC:
+                if (Preferences.isGoogleDriveSyncEnabled(getContext())) {
+                    Log.i(TAG, "Google Sync has been enabled. Set sync as needed.");
+                    Preferences.setSyncNeeded(true, getContext());
+                }
+                break;
         }
     }
 }

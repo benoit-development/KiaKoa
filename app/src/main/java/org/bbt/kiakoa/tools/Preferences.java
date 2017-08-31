@@ -13,9 +13,9 @@ import org.bbt.kiakoa.R;
 public class Preferences {
 
     public static final String KEY_NOTIFICATION = "enable_date_return_notification";
-    private static final String KEY_GOOGLE_DRIVE_SYNC = "enable_google_drive_sync";
+    public static final String KEY_GOOGLE_DRIVE_SYNC = "enable_google_drive_sync";
     private static final String KEY_LAST_LOAN_LISTS_UPDATE = "last_loan_lists_update";
-
+    private static final String KEY_SYNC_NEEDED = "sync_needed";
 
     /**
      * Check if return date notifications are enabled
@@ -61,5 +61,27 @@ public class Preferences {
         editor.putLong(KEY_LAST_LOAN_LISTS_UPDATE, lastDate);
         editor.apply();
 
+    }
+
+    /**
+     * Check if a modification has been made and we need to sync with google drive
+     * @param context a context
+     * @return check if a sync is needed
+     */
+    public static boolean isSyncNeeded(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean(KEY_SYNC_NEEDED, false);
+    }
+
+    /**
+     * setter on sync needed
+     *
+     * @param syncNeeded date to set
+     * @param context a context
+     */
+    public static void setSyncNeeded(boolean syncNeeded, Context context) {
+        Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putBoolean(KEY_SYNC_NEEDED, syncNeeded);
+        editor.apply();
     }
 }

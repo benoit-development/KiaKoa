@@ -57,7 +57,7 @@ public abstract class ListItemClickRecyclerAdapter<VH extends ListItemClickRecyc
      *
      * @param itemList item list
      */
-    protected void setItemList(@NonNull ArrayList<T> itemList) {
+    public void setItemList(@NonNull ArrayList<T> itemList) {
         this.itemList = itemList;
         notifyDataSetChanged();
     }
@@ -89,4 +89,6 @@ public abstract class ListItemClickRecyclerAdapter<VH extends ListItemClickRecyc
             }
         });
     }
+
+
 }

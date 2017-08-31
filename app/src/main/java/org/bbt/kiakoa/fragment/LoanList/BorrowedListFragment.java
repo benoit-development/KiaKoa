@@ -13,6 +13,11 @@ import java.util.ArrayList;
 public class BorrowedListFragment extends AbstractLoanListFragment {
 
     @Override
+    protected String getLogTag() {
+        return "BorrowedListFragment";
+    }
+
+    @Override
     protected ArrayList<Loan> getLoanList() {
         return LoanLists.getInstance().getBorrowedList();
     }

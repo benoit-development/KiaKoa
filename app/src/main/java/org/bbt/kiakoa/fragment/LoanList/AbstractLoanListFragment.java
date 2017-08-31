@@ -29,11 +29,6 @@ import java.util.ArrayList;
 abstract public class AbstractLoanListFragment extends Fragment implements LoanLists.OnLoanListsChangedListener {
 
     /**
-     * Tag for logs
-     */
-    private static final String TAG = "AbsLoanListFragment";
-
-    /**
      * Floating button used for various actions (add, empty, ...) depending on the list to display
      */
     FloatingActionButton fab;
@@ -71,7 +66,7 @@ abstract public class AbstractLoanListFragment extends Fragment implements LoanL
 
             @Override
             public void onListItemClick(Loan item) {
-                Log.i(TAG, "Item clicked: " + item.getItem());
+                Log.i(getLogTag(), "Item clicked: " + item.getItem());
                 ((MainActivity) getActivity()).displayLoanDetails(item);
             }
 
@@ -89,14 +84,20 @@ abstract public class AbstractLoanListFragment extends Fragment implements LoanL
         super.onResume();
         loanAdapter.notifyDataSetChanged();
         updateView();
-        LoanLists.getInstance().registerOnLoanListsChangedListener(this, TAG);
+        LoanLists.getInstance().registerOnLoanListsChangedListener(this, getLogTag());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LoanLists.getInstance().unregisterOnLoanListsChangedListener(this, TAG);
+        LoanLists.getInstance().unregisterOnLoanListsChangedListener(this, getLogTag());
     }
+
+    /**
+     * Abstract class to define tag for logs
+     * @return tag
+     */
+    protected abstract String getLogTag();
 
     /**
      * Method to update view visibility
@@ -150,6 +151,8 @@ abstract public class AbstractLoanListFragment extends Fragment implements LoanL
 
     @Override
     public void onLoanListsChanged() {
+        Log.i(getLogTag(), "Notified that loan lists changed");
+        loanAdapter.setItemList(getLoanList());
         loanAdapter.notifyDataSetChanged();
         updateView();
     }

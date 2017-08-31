@@ -9,6 +9,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 
+import org.bbt.kiakoa.tools.Preferences;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -402,6 +404,8 @@ public class LoanLists {
             editor.putString(SHARED_PREFERENCES_RETURNED_KEY, new Gson().toJson(returnedList));
             editor.putLong(SHARED_PREFERENCES_TIME_KEY, System.currentTimeMillis());
             editor.apply();
+            // update the preference that we need to sync with google drive
+            Preferences.setSyncNeeded(true, context);
         }
     }
 
@@ -425,6 +429,7 @@ public class LoanLists {
      * Method called to notify changes
      */
     public void notifyLoanListsChanged() {
+        Log.i(TAG, "Notifying Loan Lists changed");
         for (OnLoanListsChangedListener listener : onLoanListsChangedListeners) {
             if (listener != null) {
                 listener.onLoanListsChanged();
