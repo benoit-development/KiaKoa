@@ -228,7 +228,7 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
             returnMenuItem.setVisible((loan != null) && (!loan.isReturned()));
         }
         if (createCalendarMenuItem != null) {
-            createCalendarMenuItem.setVisible((loan.getReturnDate() != -1) && (!loan.isReturned()));
+            createCalendarMenuItem.setVisible((loan != null) && (loan.getReturnDate() != -1) && (!loan.isReturned()));
         }
         if (contactCardMenuItem != null) {
             contactCardMenuItem.setVisible((loan != null) && (loan.hasContactId()));

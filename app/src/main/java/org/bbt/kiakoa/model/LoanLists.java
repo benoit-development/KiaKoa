@@ -534,7 +534,11 @@ public class LoanLists {
      * @return json string
      */
     public String toJson() {
-        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(this);
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .excludeFieldsWithoutExposeAnnotation()
+                .create()
+                .toJson(this);
     }
 
     /**

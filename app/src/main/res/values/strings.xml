@@ -56,6 +56,10 @@
     <string name="google_drive_summary">Your loans will be saved automatically on your Google Drive account</string>
     <string name="connection_google_drive_failed">Connection to Google Drive failed</string>
     <string name="create_calendar_event">Create a calendar event</string>
+    <string name="share">Share</string>
+    <string name="export_loan_lists">Export loan lists</string>
+    <string name="export_loan_lists_text">Loan lists exported in JSON format</string>
+    <string name="loans_lists_export_failed">Loan lists export failed</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
