@@ -134,7 +134,7 @@ public class LoanListsDriveFile {
                                 }
                             }.execute(driveId);
                         } else {
-                            Log.i(TAG, "File on Google Drive older than last import. No need to sync.");
+                            Log.i(TAG, "File on Google Drive older than last import");
                             new UpdateLoansJsonFileContentAsyncTask(context).execute(driveId.asDriveFile());
                         }
 
