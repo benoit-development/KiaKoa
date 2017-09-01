@@ -60,7 +60,6 @@ public class Preferences {
         Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putLong(KEY_LAST_LOAN_LISTS_UPDATE, lastDate);
         editor.apply();
-
     }
 
     /**

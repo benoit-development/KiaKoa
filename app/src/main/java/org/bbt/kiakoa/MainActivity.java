@@ -366,6 +366,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     view.setOnClickListener(null);
                     // Creates a ViewHolderHeader
                     holder.text = view.findViewById(R.id.text);
+                    // no icon by default
+                    holder.text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
                 } else {
 
@@ -389,6 +391,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             switch (position) {
                 case 0:
                     textId = R.string.loan_lists;
+                    // check google drive icon status
+                    int gDriveIcon = R.drawable.ic_drive_gray_16dp;
+                    if (Preferences.isGoogleDriveSyncEnabled(MainActivity.this)) {
+                        gDriveIcon = (Preferences.isSyncNeeded(MainActivity.this))?R.drawable.ic_drive_red_16dp:R.drawable.ic_drive_green_16dp;
+                    }
+                    holder.text.setCompoundDrawablesWithIntrinsicBounds(0, 0, gDriveIcon, 0);
                     break;
                 case 1:
                     iconId = R.drawable.ic_lent_24dp;

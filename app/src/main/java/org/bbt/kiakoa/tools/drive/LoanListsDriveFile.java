@@ -242,6 +242,7 @@ public class LoanListsDriveFile {
             } else {
                 Log.i(TAG, "Successfully edited contents");
                 Preferences.setSyncNeeded(false, context);
+                LoanLists.getInstance().notifyLoanListsChanged();
             }
         }
 

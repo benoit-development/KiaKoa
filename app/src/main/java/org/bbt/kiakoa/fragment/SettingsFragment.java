@@ -38,18 +38,18 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         Log.i(TAG, "A SharedPreference changed : " + key);
         switch (key) {
             case Preferences.KEY_NOTIFICATION:
-                boolean notificationEnabled = Preferences.isReturnDateNotificationEnabled(getContext());
+                boolean notificationEnabled = Preferences.isReturnDateNotificationEnabled(getActivity());
                 Log.i(TAG, "notification enabled parameter changed : " + notificationEnabled);
                 if (notificationEnabled) {
-                    LoanLists.getInstance().scheduleAllLoanNotification(getContext());
+                    LoanLists.getInstance().scheduleAllLoanNotification(getActivity());
                 } else {
-                    LoanLists.getInstance().cancelAllLoanNotificationSchedule(getContext());
+                    LoanLists.getInstance().cancelAllLoanNotificationSchedule(getActivity());
                 }
                 break;
             case Preferences.KEY_GOOGLE_DRIVE_SYNC:
-                if (Preferences.isGoogleDriveSyncEnabled(getContext())) {
+                if (Preferences.isGoogleDriveSyncEnabled(getActivity())) {
                     Log.i(TAG, "Google Sync has been enabled. Set sync as needed.");
-                    Preferences.setSyncNeeded(true, getContext());
+                    Preferences.setSyncNeeded(true, getActivity());
                 }
                 break;
         }
