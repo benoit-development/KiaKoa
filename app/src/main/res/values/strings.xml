@@ -55,6 +55,7 @@
     <string name="google_drive">Google Drive</string>
     <string name="google_drive_summary">Your loans will be saved automatically on your Google Drive account</string>
     <string name="connection_google_drive_failed">Connection to Google Drive failed</string>
+    <string name="create_calendar_event">Create a calendar event</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>

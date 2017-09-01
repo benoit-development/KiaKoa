@@ -16,6 +16,13 @@
         android:title="@string/display_contact_card"
         app:showAsAction="ifRoom"/>
 
+    <!-- to add calendar event -->
+    <item
+        android:id="@+id/action_calendar_event"
+        android:icon="@drawable/ic_event_white_24dp"
+        android:title="@string/create_calendar_event"
+        app:showAsAction="ifRoom"/>
+
     <!-- delete this loan -->
     <item
         android:id="@+id/action_delete"

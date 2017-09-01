@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -111,6 +113,11 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
      */
     private MenuItem deleteMenuItem;
 
+    /**
+     * {@link MenuItem} to create a calendar event
+     */
+    private MenuItem createCalendarMenuItem;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,6 +161,8 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         inflater.inflate(R.menu.loan_details, menu);
         // retrieve instance of return menu item
         returnMenuItem = menu.findItem(R.id.action_return);
+        // retrieve instance of create calendar event menu item
+        createCalendarMenuItem = menu.findItem(R.id.action_calendar_event);
         // retrieve instance of contact card menu item
         contactCardMenuItem = menu.findItem(R.id.action_contact_card);
         // retrieve instance of delete menu item
@@ -173,6 +182,9 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                     updateView();
                 }
                 Toast.makeText(getContext(), R.string.loan_returned, Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_calendar_event:
+                createCalendarEvent();
                 return true;
             case R.id.action_contact_card:
                 loan.displayContactCard(getContext());
@@ -214,6 +226,9 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         // update menu item visibility depending on loan status
         if (returnMenuItem != null) {
             returnMenuItem.setVisible((loan != null) && (!loan.isReturned()));
+        }
+        if (createCalendarMenuItem != null) {
+            createCalendarMenuItem.setVisible((loan.getReturnDate() != -1) && (!loan.isReturned()));
         }
         if (contactCardMenuItem != null) {
             contactCardMenuItem.setVisible((loan != null) && (loan.hasContactId()));
@@ -296,6 +311,23 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                     Log.w(TAG, "No picture returned from camera");
                 }
                 break;
+        }
+    }
+
+    /**
+     * Launch intent action to create a calendar event according to the return date of the loan
+     */
+    private void createCalendarEvent() {
+        Log.i(TAG, "Calendar event creation requested");
+        if (loan.getReturnDate() != -1) {
+            Intent intent = new Intent(Intent.ACTION_INSERT)
+                    .setData(Events.CONTENT_URI)
+                    .putExtra(Events.TITLE, loan.getItem())
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, loan.getReturnDate())
+                    .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
+            startActivity(intent);
+        } else {
+            Log.e(TAG, "loan does not have a return date. Should not happen.");
         }
     }
 
