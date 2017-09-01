@@ -392,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 case 0:
                     textId = R.string.loan_lists;
                     // check google drive icon status
-                    int gDriveIcon = R.drawable.ic_drive_gray_16dp;
+                    int gDriveIcon = 0;
                     if (Preferences.isGoogleDriveSyncEnabled(MainActivity.this)) {
                         gDriveIcon = (Preferences.isSyncNeeded(MainActivity.this))?R.drawable.ic_drive_red_16dp:R.drawable.ic_drive_green_16dp;
                     }
