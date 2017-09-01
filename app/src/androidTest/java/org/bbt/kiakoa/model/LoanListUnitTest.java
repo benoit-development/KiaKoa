@@ -24,7 +24,10 @@ public class LoanListUnitTest {
      */
     private final Context context = InstrumentationRegistry.getTargetContext();
 
-    private LoanLists loanLists = LoanLists.getInstance();
+    /**
+     * Test instance
+     */
+    private final LoanLists loanLists = LoanLists.getInstance();
 
     @Test
     public void test_instance() throws Exception {
@@ -228,8 +231,7 @@ public class LoanListUnitTest {
         assertEquals(0, loanLists.getLoanCount());
 
         // import json
-        assertTrue(LoanLists.fromJson(jsonExport, context));
-        loanLists = LoanLists.getInstance();
+        assertTrue(LoanLists.getInstance().fromJson(jsonExport, context));
         assertEquals(3, loanLists.getLoanCount());
         assertEquals(lentLoan, loanLists.getLentList().get(0));
         assertEquals(lentLoan.getContact().getId(), loanLists.getLentList().get(0).getContact().getId());

@@ -126,7 +126,7 @@ public class LoanListsDriveFile {
                                         Log.e(TAG, "Error while reading from the file");
                                     }
                                     Log.i(TAG, "File contents: " + result);
-                                    if (LoanLists.fromJson(result, context)) {
+                                    if (LoanLists.getInstance().fromJson(result, context)) {
                                         Preferences.setLastLoanListsUpdate(System.currentTimeMillis(), context);
                                     } else {
                                         new UpdateLoansJsonFileContentAsyncTask(context).execute(driveId.asDriveFile());

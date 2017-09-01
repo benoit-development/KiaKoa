@@ -57,7 +57,7 @@ public abstract class ListItemClickRecyclerAdapter<VH extends ListItemClickRecyc
      *
      * @param itemList item list
      */
-    public void setItemList(@NonNull ArrayList<T> itemList) {
+    protected void setItemList(@NonNull ArrayList<T> itemList) {
         this.itemList = itemList;
         notifyDataSetChanged();
     }

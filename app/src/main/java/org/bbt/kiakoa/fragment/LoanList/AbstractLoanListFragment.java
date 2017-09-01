@@ -152,7 +152,6 @@ abstract public class AbstractLoanListFragment extends Fragment implements LoanL
     @Override
     public void onLoanListsChanged() {
         Log.i(getLogTag(), "Notified that loan lists changed");
-        loanAdapter.setItemList(getLoanList());
         loanAdapter.notifyDataSetChanged();
         updateView();
     }

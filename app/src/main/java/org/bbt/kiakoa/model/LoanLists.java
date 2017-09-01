@@ -98,19 +98,10 @@ public class LoanLists {
         if (instance == null) {
             // Create the instance
             Log.i(TAG, "getInstance: Creating instance");
-            setInstance(new LoanLists());
+            instance = new LoanLists();
         }
 
         return instance;
-    }
-
-    /**
-     * instance setter. Only private.
-     *
-     * @param instance new {@link LoanLists} singleton instance
-     */
-    private static void setInstance(LoanLists instance) {
-        LoanLists.instance = instance;
     }
 
     /**
@@ -551,14 +542,28 @@ public class LoanLists {
      *  @param json    json string
      * @param context a context
      */
-    public static boolean fromJson(String json, Context context) {
+    public boolean fromJson(String json, Context context) {
         Log.i(TAG, "json import requested");
         Log.d(TAG, "json : " + json);
         LoanLists loanLists = new Gson().fromJson(json, LoanLists.class);
         if (loanLists != null) {
             if (loanLists.isValid()) {
-                Log.i(TAG, "LoanLists instance seems valid. Replacing the current one.");
-                setInstance(loanLists);
+                Log.i(TAG, "LoanLists instance seems valid. Replacing the lists.");
+                // clear all lists
+                clearLists(context);
+                // lent list
+                if (loanLists.lentList != null) {
+                    lentList.addAll(loanLists.lentList);
+                }
+                // borrowed list
+                if (loanLists.borrowedList != null) {
+                    borrowedList.addAll(loanLists.borrowedList);
+                }
+                // returned list
+                if (loanLists.returnedList != null) {
+                    returnedList.addAll(loanLists.returnedList);
+                }
+
                 getInstance().saveInSharedPreferences(context);
                 getInstance().notifyLoanListsChanged();
                 return true;
