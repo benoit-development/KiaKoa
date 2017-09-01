@@ -181,7 +181,6 @@ public class LoanListsDriveFile {
             }
         });
 
-
     }
 
     /**
@@ -191,6 +190,7 @@ public class LoanListsDriveFile {
 
         /**
          * Constructor
+         *
          * @param context a context
          */
         private UpdateLoansJsonFileContentAsyncTask(Context context) {
