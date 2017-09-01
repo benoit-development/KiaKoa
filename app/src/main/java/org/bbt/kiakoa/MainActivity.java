@@ -250,6 +250,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onLoanListsChanged() {
         mDrawerLayoutAdapter.notifyDataSetChanged();
+        // try saving change
+        syncLoansOnGoogleDrive();
     }
 
     @Override
