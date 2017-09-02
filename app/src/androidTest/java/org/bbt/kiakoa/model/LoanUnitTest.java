@@ -210,4 +210,15 @@ public class LoanUnitTest {
         assertTrue(loanTest.hasContactId());
     }
 
+    @Test
+    public void has_contact() {
+        loanTest.setContact(null);
+        assertFalse(loanTest.hasContact());
+
+        loanTest.setContact(new Contact(""));
+        assertFalse(loanTest.hasContact());
+
+        loanTest.setContact(new Contact("coucou"));
+        assertTrue(loanTest.hasContact());
+    }
 }

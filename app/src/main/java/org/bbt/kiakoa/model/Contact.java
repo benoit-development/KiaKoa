@@ -21,6 +21,7 @@ public class Contact implements Parcelable {
      * name from Contacts.DISPLAY_NAME or not (depending on used constructor)
      */
     @Expose
+    @NonNull
     private final String name;
 
     /**
@@ -36,7 +37,7 @@ public class Contact implements Parcelable {
      * @param name contact name from Contacts.DISPLAY_NAME
      * @param photoUri photo from Contacts.PHOTO_URI
      */
-    public Contact(long id, String name, String photoUri) {
+    public Contact(long id, @NonNull String name, String photoUri) {
         this.id = id;
         this.name = name;
         this.photoUri = photoUri;
@@ -48,7 +49,7 @@ public class Contact implements Parcelable {
      *
      * @param name contact name
      */
-    public Contact(String name) {
+    public Contact(@NonNull String name) {
         this.name = name;
     }
 

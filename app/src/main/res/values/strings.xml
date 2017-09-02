@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">KiaKoa</string>
     <string name="settings">Settings</string>
     <string name="lent">Lent</string>
@@ -57,9 +57,17 @@
     <string name="connection_google_drive_failed">Connection to Google Drive failed</string>
     <string name="create_calendar_event">Create a calendar event</string>
     <string name="share">Share</string>
-    <string name="export_loan_lists">Export loan lists</string>
-    <string name="export_loan_lists_text">Loan lists exported in JSON format</string>
-    <string name="loans_lists_export_failed">Loan lists export failed</string>
+    <string name="export_loan_lists" tools:ignore="UnusedResources">Export loan lists</string>
+    <string name="export_loan_lists_text" tools:ignore="UnusedResources">Loan lists exported in JSON format</string>
+    <string name="loans_lists_export_failed" tools:ignore="UnusedResources">Loan lists export failed</string>
+    <string name="nothing_lent">Nothing was lent</string>
+    <string name="lent_list_count" tools:ignore="UnusedResources">Lent lists [%d]</string>
+    <string name="item_lent_sentence_with_contact">%1$s lent to %2$s on %3$s</string>
+    <string name="item_lent_sentence">%1$s lent on %2$s</string>
+    <string name="item_borrowed_sentence_with_contact">%1$s borrowed from %2$s on %3$s</string>
+    <string name="item_borrowed_sentence">%1$s borrowed on %2$s</string>
+    <string name="item_returned_sentence">%1$s returned on %2$s</string>
+    <string name="my_loan_lists">My loan lists</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>

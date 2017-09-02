@@ -9,6 +9,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 
+import org.bbt.kiakoa.MainActivity;
+import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.tools.Preferences;
 
 import java.util.ArrayList;
@@ -448,6 +450,55 @@ public class LoanLists {
     public void unregisterOnLoanListsChangedListener(OnLoanListsChangedListener listener, String id) {
         Log.i(TAG, "Removing OnLoanListsChangedListener : " + id);
         onLoanListsChangedListeners.remove(listener);
+    }
+
+    /**
+     * Transforms loans in a readable text to be shared
+     *
+     * @param context a context for translations
+     * @return a readable text
+     */
+    public String toShareText(MainActivity context) {
+        String result = "";
+
+        // check if there are items in LoanLists instance
+        if (getLoanCount() == 0) {
+            result += context.getString(R.string.nothing_lent);
+        } else {
+            // lent
+            if (lentList.size() > 0) {
+                result += context.getString(R.string.lent) + " [" + lentList.size() + "] : \n";
+                for (Loan loan : lentList) {
+                    if (loan.hasContact()) {
+                        result += "- " + context.getString(R.string.item_lent_sentence_with_contact, loan.getItem(), loan.getContact().getName(), loan.getLoanDateString()) + "\n";
+                    } else {
+                        result += "- " + context.getString(R.string.item_lent_sentence, loan.getItem(), loan.getLoanDateString()) + "\n";
+                    }
+                }
+                result += "\n";
+            }
+            // borrowed
+            if (borrowedList.size() > 0) {
+                result += context.getString(R.string.borrowed) + " [" + borrowedList.size() + "] : \n";
+                for (Loan loan : borrowedList) {
+                    if (loan.hasContact()) {
+                        result += "- " + context.getString(R.string.item_borrowed_sentence_with_contact, loan.getItem(), loan.getContact().getName(), loan.getLoanDateString()) + "\n";
+                    } else {
+                        result += "- " + context.getString(R.string.item_borrowed_sentence, loan.getItem(), loan.getLoanDateString()) + "\n";
+                    }
+                }
+                result += "\n";
+            }
+            // returned
+            if (returnedList.size() > 0) {
+                result += context.getString(R.string.returned) + " [" + returnedList.size() + "] : \n";
+                for (Loan loan : returnedList) {
+                    result += "- " + context.getString(R.string.item_returned_sentence, loan.getItem(), loan.getLoanDateString()) + "\n";
+                }
+            }
+        }
+
+        return result;
     }
 
     /**

@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -43,9 +41,6 @@ import org.bbt.kiakoa.tools.Preferences;
 import org.bbt.kiakoa.tools.drive.GoogleApiClientTools;
 import org.bbt.kiakoa.tools.drive.LoanListsDriveFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LoanLists.OnLoanListsChangedListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     /**
@@ -62,11 +57,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * Used for google drive loans sync
      */
     private static final int RESOLVE_GOOGLE_DRIVE_CONNECTION_REQUEST_CODE = 1234;
-
-    /**
-     * loans json filename
-     */
-    private static final String LOANS_JSON_FILENAME = "loans.json";
 
     /**
      * For navigation
@@ -236,27 +226,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 startActivity(intent);
                 break;
             case 6:
-                if (isExternalStorageWritable()) {
-                    Log.i(TAG, "Loans export requested");
-                    try {
-                        File file = new File(Environment.getExternalStorageDirectory(), LOANS_JSON_FILENAME);
-                        FileOutputStream outputStream = new FileOutputStream(file);
-                        outputStream.write(LoanLists.getInstance().toJson().getBytes());
-                        outputStream.close();
-                        Intent sharingIntent = new Intent(Intent.ACTION_SEND)
-                                .setType("application/json")
-                                .putExtra(Intent.EXTRA_SUBJECT, LOANS_JSON_FILENAME)
-                                .putExtra(Intent.EXTRA_TEXT, getString(R.string.export_loan_lists_text))
-                                .putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                        startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.export_loan_lists)));
-                    } catch (Exception e) {
-                        Log.e(TAG, "Export failed : " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                } else {
-                    Log.e(TAG, "External storage not available. Cancelling export.");
-                    Toast.makeText(this, R.string.loans_lists_export_failed, Toast.LENGTH_SHORT).show();
-                }
+                Log.i(TAG, "Loans share requested");
+                String title = getString(R.string.my_loan_lists);
+                Intent sendIntent = new Intent()
+                        .setAction(Intent.ACTION_SEND)
+                        .putExtra(Intent.EXTRA_SUBJECT, title)
+                        .putExtra(Intent.EXTRA_TEXT, LoanLists.getInstance().toShareText(this))
+                        .setType("text/plain");
+                startActivity(Intent.createChooser(sendIntent, title));
                 break;
             case 7:
                 // check if there are loan lists to be clear
@@ -278,14 +255,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
         }
         mDrawerLayout.closeDrawer(mDrawerLeft);
-    }
-
-    /**
-     * Checks if external storage is available for read and write
-     */
-    private boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
 

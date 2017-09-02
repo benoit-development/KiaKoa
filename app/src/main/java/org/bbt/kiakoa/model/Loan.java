@@ -620,4 +620,13 @@ public class Loan implements Parcelable {
 
         return result;
     }
+
+    /**
+     * Check if this loan has a contact that can be displayed
+     *
+     * @return if loan has a contact or not
+     */
+    boolean hasContact() {
+        return (contact != null) && (contact.getName().length() > 0);
+    }
 }
