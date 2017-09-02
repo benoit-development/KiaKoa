@@ -67,6 +67,7 @@
     <string name="item_borrowed_sentence_with_contact">%1$s borrowed from %2$s on %3$s</string>
     <string name="item_borrowed_sentence">%1$s borrowed on %2$s</string>
     <string name="item_returned_sentence">%1$s returned on %2$s</string>
+    <string name="background">Background</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>

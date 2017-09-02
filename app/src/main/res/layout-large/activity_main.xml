@@ -12,7 +12,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:fitsSystemWindows="true">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -61,17 +62,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="start"
-        android:background="@android:color/white">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="@color/colorPrimary"
-            android:gravity="center"
-            android:text="@string/app_name"
-            android:textColor="@color/colorTextTitle"
-            android:textSize="30sp"
-            android:textStyle="bold"/>
+        android:background="@color/activityBackground">
 
         <ListView
             android:id="@+id/left_drawer_list"

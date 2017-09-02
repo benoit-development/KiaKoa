@@ -4,20 +4,12 @@
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/colorText</item>
-        <item name="android:colorBackground">@android:color/white</item>
-    </style>
-
-    <!-- Base application theme with action bar. -->
-    <style name="AppTheme.ActionBar" parent="Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@color/colorText</item>
-        <item name="android:colorBackground">@android:color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:colorBackground">@color/colorPrimary</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
     <style name="ToolBarTheme" parent="AppTheme.NoActionBar">

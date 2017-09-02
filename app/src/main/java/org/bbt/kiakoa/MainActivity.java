@@ -21,8 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * For navigation
      */
     private DrawerLayout mDrawerLayout;
-    private LinearLayout mDrawerLeft;
+    private FrameLayout mDrawerLeft;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayoutAdapter mDrawerLayoutAdapter;
 
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLeft = (LinearLayout) findViewById(R.id.left_drawer);
+        mDrawerLeft = (FrameLayout) findViewById(R.id.left_drawer);
         ListView mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
 
         // Set the adapter for the list view
@@ -214,18 +214,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // change the displayed Loan list
         // first position of loan lists is 1 (0 is the first header)
         switch (position) {
-            case 1:
             case 2:
             case 3:
+            case 4:
                 // change displayed page in viewpager
-                loanListsPager.showPage(position - 1);
+                loanListsPager.showPage(position - 2);
                 break;
-            case 5:
+            case 6:
                 // launch setting activity
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
-            case 6:
+            case 7:
                 Log.i(TAG, "Loans share requested");
                 String title = getString(R.string.app_name);
                 Intent sendIntent = new Intent()
@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         .setType("text/plain");
                 startActivity(Intent.createChooser(sendIntent, title));
                 break;
-            case 7:
+            case 8:
                 // check if there are loan lists to be clear
                 if (LoanLists.getInstance().getLoanCount() == 0) {
                     Toast.makeText(this, R.string.all_loan_lists_already_empty, Toast.LENGTH_SHORT).show();
@@ -319,8 +319,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private class DrawerLayoutAdapter extends BaseAdapter {
 
-        private static final int TYPE_ITEM = 0;
+        private static final int TYPE_TITLE = 0;
         private static final int TYPE_HEADER = 1;
+        private static final int TYPE_ITEM = 2;
 
         private final LayoutInflater inflater;
 
@@ -330,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public int getCount() {
-            return 8;
+            return 9;
         }
 
         @Override
@@ -344,13 +345,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         /**
-         * 2 types possibles TYPE_ITEM and TYPE_HEADER
+         * 2 types possibles TYPE_TITLE, TYPE_ITEM and TYPE_HEADER
          *
          * @return type count
          */
         @Override
         public int getViewTypeCount() {
-            return 2;
+            return 3;
         }
 
         /**
@@ -358,7 +359,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
          */
         @Override
         public int getItemViewType(int position) {
-            if ((position == 0) || (position == 4)) {
+            if (position == 0) {
+                return TYPE_TITLE;
+            } else if ((position == 1) || (position == 5)) {
                 return TYPE_HEADER;
             } else {
                 return TYPE_ITEM;
@@ -372,7 +375,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             if (view == null) {
                 holder = new ViewHolder();
-                if (itemViewType == TYPE_HEADER) {
+                if (itemViewType == TYPE_TITLE) {
+                    view = inflater.inflate(R.layout.adapter_drawer_layout_title, viewGroup, false);
+                    view.setEnabled(false);
+                    view.setOnClickListener(null);
+
+                } else if (itemViewType == TYPE_HEADER) {
 
                     view = inflater.inflate(R.layout.adapter_drawer_layout_header, viewGroup, false);
                     view.setEnabled(false);
@@ -402,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             int textId = 0;
             int loanCount = 0;
             switch (position) {
-                case 0:
+                case 1:
                     textId = R.string.loan_lists;
                     // check google drive icon status
                     int gDriveIcon = 0;
@@ -411,33 +419,33 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                     holder.text.setCompoundDrawablesWithIntrinsicBounds(0, 0, gDriveIcon, 0);
                     break;
-                case 1:
+                case 2:
                     iconId = R.drawable.ic_lent_24dp;
                     textId = R.string.lent;
                     loanCount = LoanLists.getInstance().getLentList().size();
                     break;
-                case 2:
+                case 3:
                     iconId = R.drawable.ic_borrowed_24dp;
                     textId = R.string.borrowed;
                     loanCount = LoanLists.getInstance().getBorrowedList().size();
                     break;
-                case 3:
+                case 4:
                     iconId = R.drawable.ic_return_24dp;
                     textId = R.string.returned;
                     loanCount = LoanLists.getInstance().getReturnedList().size();
                     break;
-                case 4:
+                case 5:
                     textId = R.string.tools;
                     break;
-                case 5:
+                case 6:
                     iconId = R.drawable.ic_settings_24dp;
                     textId = R.string.settings;
                     break;
-                case 6:
+                case 7:
                     iconId = R.drawable.ic_share_24dp;
                     textId = R.string.share;
                     break;
-                case 7:
+                case 8:
                     iconId = R.drawable.ic_delete_forever_24dp;
                     textId = R.string.clear_all_loan_lists;
                     break;
