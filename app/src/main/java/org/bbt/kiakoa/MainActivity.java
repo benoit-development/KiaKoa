@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
             case 6:
                 Log.i(TAG, "Loans share requested");
-                String title = getString(R.string.my_loan_lists);
+                String title = getString(R.string.app_name);
                 Intent sendIntent = new Intent()
                         .setAction(Intent.ACTION_SEND)
                         .putExtra(Intent.EXTRA_SUBJECT, title)

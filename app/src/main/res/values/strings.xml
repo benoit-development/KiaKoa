@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">KiaKoa</string>
+    <string name="app_name">My Loan Lists</string>
     <string name="settings">Settings</string>
     <string name="lent">Lent</string>
     <string name="borrowed">Borrowed</string>
@@ -67,7 +67,6 @@
     <string name="item_borrowed_sentence_with_contact">%1$s borrowed from %2$s on %3$s</string>
     <string name="item_borrowed_sentence">%1$s borrowed on %2$s</string>
     <string name="item_returned_sentence">%1$s returned on %2$s</string>
-    <string name="my_loan_lists">My loan lists</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
