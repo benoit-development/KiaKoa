@@ -56,6 +56,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
         final TextView value;
         final ImageView image;
         final ImageView circleView;
+        final ImageView deleteView;
 
         /**
          * Constructor
@@ -69,6 +70,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
             value = view.findViewById(R.id.value);
             image = view.findViewById(R.id.image);
             circleView = view.findViewById(R.id.circle_view);
+            deleteView = view.findViewById(R.id.delete_view);
         }
     }
 
@@ -91,6 +93,7 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
     public void onBindViewHolder(ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
 
+        holder.deleteView.setVisibility(View.GONE);
         switch (position) {
             case 0:
                 // item
@@ -118,6 +121,14 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                     holder.circleView.setImageURI(Uri.parse(pictureUri));
                     holder.circleView.setVisibility(View.VISIBLE);
                     holder.value.setText("");
+                    holder.deleteView.setVisibility(View.VISIBLE);
+                    holder.deleteView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            loan.setItemPicture(null);
+                            notifyDataSetChanged();
+                        }
+                    });
                 } else {
                     holder.circleView.setVisibility(View.GONE);
                     holder.value.setVisibility(View.VISIBLE);
