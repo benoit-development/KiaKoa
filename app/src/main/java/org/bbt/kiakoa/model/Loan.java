@@ -48,6 +48,11 @@ public class Loan implements Parcelable {
     public static final int DAYS_IN_MILLIS = 24 * 60 * 60 * 1000;
 
     /**
+     * Channel id for notifications
+     */
+    private static final String KIAKOA_CHANNEL_ID = "org.bbt.kiakoa.channelId";
+
+    /**
      * id of the {@link Loan} instance
      */
     @Expose
@@ -203,7 +208,7 @@ public class Loan implements Parcelable {
      * loan date setter
      *
      * @param loanDate new loan date
-     * @param context a context
+     * @param context  a context
      */
     public void setLoanDate(long loanDate, Context context) {
         this.loanDate = loanDate;
@@ -475,7 +480,7 @@ public class Loan implements Parcelable {
                 .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN_ID, this.getId());
 
         // build notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, KIAKOA_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_kiakoa)
                 .setContentTitle(context.getString(R.string.loan_reached_return_date, getItem()))
                 .setContentText(context.getString(R.string.click_see_loan_details))
@@ -531,7 +536,11 @@ public class Loan implements Parcelable {
         builder.setContentIntent(resultPendingIntent);
 
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(getNotificationId(), builder.build());
+        if (mNotificationManager != null) {
+            mNotificationManager.notify(getNotificationId(), builder.build());
+        } else {
+            Log.e(TAG, "Failed notifying this loan : " + getItem() + ". Should not happen because no notification manager found.");
+        }
     }
 
     /**
@@ -549,11 +558,18 @@ public class Loan implements Parcelable {
             Intent intentAlarm = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_LOAN_NOTIFICATION)
                     .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN_ID, this.getId());
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, returnDate, PendingIntent.getBroadcast(context, getNotificationId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+            if (alarmManager != null) {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, returnDate, PendingIntent.getBroadcast(context, getNotificationId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+            } else {
+                Log.e(TAG, "Failed set alarmManager for this loan : " + getItem() + ". Should not happen because no alarm manager found.");
+            }
 
-        } else {
+        } else
+
+        {
             Log.i(TAG, "No need to schedule notification for loan " + getItem());
         }
+
     }
 
     /**
@@ -566,7 +582,11 @@ public class Loan implements Parcelable {
         Intent intentAlarm = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_LOAN_NOTIFICATION)
                 .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN_ID, this.getId());
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(PendingIntent.getBroadcast(context, getNotificationId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+        if (alarmManager != null) {
+            alarmManager.cancel(PendingIntent.getBroadcast(context, getNotificationId(), intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+        } else {
+            Log.e(TAG, "Failed setting alarmManager this loan : " + getItem() + ". Should not happen because no alarm manager found.");
+        }
     }
 
     /**
@@ -602,13 +622,19 @@ public class Loan implements Parcelable {
             Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(getContact().getId()));
             contactIntent.setData(uri);
             context.startActivity(contactIntent);
-            ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(getNotificationId());
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                notificationManager.cancel(getNotificationId());
+            } else {
+                Log.e(TAG, "Failed setting notificationManager this loan : " + getItem() + ". Should not happen because no notification manager found.");
+            }
             Log.i(TAG, "Display contact card : " + getContact().getId());
         }
     }
 
     /**
      * Check if loan data are valid
+     *
      * @return loan validity
      */
     boolean isValid() {

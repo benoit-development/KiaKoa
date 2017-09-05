@@ -289,8 +289,10 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         switch (requestCode) {
             case REQUEST_CODE_GET_PICTURE_GALLERY:
                 if (resultCode == Activity.RESULT_OK) {
-                    loan.setItemPicture(data.getData().toString());
-                    updateLoan();
+                    if (data.getData() != null) {
+                        loan.setItemPicture(data.getData().toString());
+                        updateLoan();
+                    }
                 } else {
                     Log.i(TAG, "No picture returned from gallery");
                 }
@@ -299,13 +301,22 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                 if (resultCode == Activity.RESULT_OK) {
                     Log.i(TAG, "Picture returned from camera");
                     Bundle extras = data.getExtras();
-                    String uri = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), (Bitmap) extras.get("data"), loan.getItem(), "");
-                    if (uri != null) {
-                        Log.i(TAG, "Image added to media store");
-                        loan.setItemPicture(uri);
-                        updateLoan();
+                    if (extras != null) {
+                        Bitmap bitmap = (Bitmap) extras.get("data");
+                        if (bitmap != null) {
+                            String uri = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), bitmap, loan.getItem(), "");
+                            if (uri != null) {
+                                Log.i(TAG, "Image added to media store");
+                                loan.setItemPicture(uri);
+                                updateLoan();
+                            } else {
+                                Log.e(TAG, "Image not added to media store :-(");
+                            }
+                        } else {
+                            Log.e(TAG, "Image not found :-(");
+                        }
                     } else {
-                        Log.e(TAG, "Image not added to media store :-(");
+                        Log.e(TAG, "No extra found :-(");
                     }
                 } else {
                     Log.w(TAG, "No picture returned from camera");

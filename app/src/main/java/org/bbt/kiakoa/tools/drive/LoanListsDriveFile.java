@@ -118,21 +118,7 @@ public class LoanListsDriveFile {
                         // compare last import an file on google drive
                         if (lastModifiedDate > Preferences.getLastLoanListsUpdate(context)) {
                             Log.i(TAG, "File on Google Drive newer than last import");
-                            new RetrieveDriveFileContentsAsyncTask(context) {
-                                @Override
-                                protected void onPostExecute(String result) {
-                                    super.onPostExecute(result);
-                                    if (result == null) {
-                                        Log.e(TAG, "Error while reading from the file");
-                                    }
-                                    Log.i(TAG, "File contents: " + result);
-                                    if (LoanLists.getInstance().fromJson(result, context)) {
-                                        Preferences.setLastLoanListsUpdate(System.currentTimeMillis(), context);
-                                    } else {
-                                        new UpdateLoansJsonFileContentAsyncTask(context).execute(driveId.asDriveFile());
-                                    }
-                                }
-                            }.execute(driveId);
+                            new ReadLoanJsonFile(context, driveId).execute(driveId);
                         } else {
                             Log.i(TAG, "File on Google Drive older than last import");
                             new UpdateLoansJsonFileContentAsyncTask(context).execute(driveId.asDriveFile());
@@ -183,17 +169,55 @@ public class LoanListsDriveFile {
 
     }
 
+
+    /**
+     * Task reading loans json file
+     */
+    private static class ReadLoanJsonFile extends RetrieveDriveFileContentsAsyncTask {
+
+        /**
+         * driveId of the read file
+         */
+        private final DriveId driveId;
+
+        /**
+         * Constructor
+         *
+         * @param context         a context
+         * @param driveId         driveId of the file that should be updated if necessary
+         */
+        ReadLoanJsonFile(Context context, DriveId driveId) {
+            super(context);
+            this.driveId = driveId;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (result == null) {
+                Log.e(TAG, "Error while reading from the file");
+            }
+            Log.i(TAG, "File contents: " + result);
+            if (LoanLists.getInstance().fromJson(result, getGoogleApiClient().getContext())) {
+                Preferences.setLastLoanListsUpdate(System.currentTimeMillis(), getGoogleApiClient().getContext());
+            } else {
+                new UpdateLoansJsonFileContentAsyncTask(getGoogleApiClient().getContext()).execute(driveId.asDriveFile());
+            }
+        }
+    }
+
+
     /**
      * {@link android.os.AsyncTask} updating loans.json file with current loans
      */
-    private class UpdateLoansJsonFileContentAsyncTask extends ApiClientAsyncTask<DriveFile, Void, Boolean> {
+    private static class UpdateLoansJsonFileContentAsyncTask extends ApiClientAsyncTask<DriveFile, Void, Boolean> {
 
         /**
          * Constructor
          *
          * @param context a context
          */
-        private UpdateLoansJsonFileContentAsyncTask(Context context) {
+        UpdateLoansJsonFileContentAsyncTask(Context context) {
             super(context);
         }
 
@@ -201,7 +225,7 @@ public class LoanListsDriveFile {
         protected Boolean doInBackgroundConnected(DriveFile... args) {
             DriveFile file = args[0];
             Log.i(TAG, LOANS_JSON_FILENAME + " file update requested");
-            DriveApi.DriveContentsResult driveContentsResult = file.open(googleApiClient, DriveFile.MODE_WRITE_ONLY, null).await();
+            DriveApi.DriveContentsResult driveContentsResult = file.open(getGoogleApiClient(), DriveFile.MODE_WRITE_ONLY, null).await();
 
             if (!driveContentsResult.getStatus().isSuccess()) {
                 Log.e(TAG, "Failed opening " + LOANS_JSON_FILENAME + " file : " + driveContentsResult.getStatus());
@@ -218,13 +242,13 @@ public class LoanListsDriveFile {
                 PrintStream printStream = new PrintStream(os);
                 printStream.write(json.getBytes());
                 printStream.close();
-                if (driveContents.commit(googleApiClient, null).await().isSuccess()) {
+                if (driveContents.commit(getGoogleApiClient(), null).await().isSuccess()) {
                     Log.i(TAG, LOANS_JSON_FILENAME + " content updated");
                 } else {
                     Log.e(TAG, "Failed updating " + LOANS_JSON_FILENAME + " content");
                 }
 
-                Preferences.setLastLoanListsUpdate(System.currentTimeMillis(), context);
+                Preferences.setLastLoanListsUpdate(System.currentTimeMillis(), getGoogleApiClient().getContext());
                 return true;
 
             } catch (IOException e) {
@@ -241,7 +265,7 @@ public class LoanListsDriveFile {
                 Log.e(TAG, "Error while editing contents");
             } else {
                 Log.i(TAG, "Successfully edited contents");
-                Preferences.setSyncNeeded(false, context);
+                Preferences.setSyncNeeded(false, getGoogleApiClient().getContext());
                 LoanLists.getInstance().notifyLoanListsChanged();
             }
         }

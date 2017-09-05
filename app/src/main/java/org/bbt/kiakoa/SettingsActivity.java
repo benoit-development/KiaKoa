@@ -38,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         settingFragment = (SettingsFragment) getFragmentManager().findFragmentById(R.id.settings_fragment);
 
         // toolbar
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
         ActionBar supportActionBar = getSupportActionBar();

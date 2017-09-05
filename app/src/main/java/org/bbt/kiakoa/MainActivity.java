@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         loanDetailsFragment = (LoanDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.loan_details_frag);
 
         // toolbar
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
         ActionBar supportActionBar = getSupportActionBar();
@@ -101,9 +101,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             supportActionBar.setHomeButtonEnabled(true);
         }
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLeft = (FrameLayout) findViewById(R.id.left_drawer);
-        ListView mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerLeft = findViewById(R.id.left_drawer);
+        ListView mDrawerList = findViewById(R.id.left_drawer_list);
 
         // Set the adapter for the list view
         mDrawerLayoutAdapter = new DrawerLayoutAdapter();
@@ -222,8 +222,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
             case 6:
                 // launch setting activity
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                mDrawerLayout.addDrawerListener(new ActionBarDrawerToggle(this, mDrawerLayout, null, 0, 0) {
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+                        Log.i(TAG, "DrawerLayout closed, launching setting activity");
+                        super.onDrawerClosed(drawerView);
+                        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivity(intent);
+                        mDrawerLayout.removeDrawerListener(this);
+                    }
+                });
                 break;
             case 7:
                 Log.i(TAG, "Loans share requested");
@@ -231,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Intent sendIntent = new Intent()
                         .setAction(Intent.ACTION_SEND)
                         .putExtra(Intent.EXTRA_SUBJECT, title)
-                        .putExtra(Intent.EXTRA_TEXT, LoanLists.getInstance().toShareText(this))
+                        .putExtra(Intent.EXTRA_TEXT, LoanLists.getInstance().toShareText(MainActivity.this))
                         .setType("text/plain");
                 startActivity(Intent.createChooser(sendIntent, title));
                 break;

@@ -27,7 +27,7 @@ public class LoanDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_loan_details);
 
         // toolbar
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
         // Get a support ActionBar corresponding to this toolbar
