@@ -303,6 +303,7 @@ public class LoanLists {
             } else {
                 loan.scheduleNotification(context);
             }
+            saveInSharedPreferences(context);
             notifyLoanListsChanged();
         }
 

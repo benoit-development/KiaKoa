@@ -221,4 +221,28 @@ public class LoanUnitTest {
         loanTest.setContact(new Contact("coucou"));
         assertTrue(loanTest.hasContact());
     }
+
+    @Test
+    public void is_valid() {
+
+        loanTest.setItem(null);
+        loanTest.setContact(null);
+
+        // no item
+        assertFalse(loanTest.isValid());
+        //empty item
+        loanTest.setItem("");
+        assertFalse(loanTest.isValid());
+        // with item
+        loanTest.setItem("item");
+        assertTrue(loanTest.isValid());
+
+        // with invalid contact
+        loanTest.setContact(new Contact(""));
+        assertFalse(loanTest.isValid());
+        // with valid contact
+        loanTest.setContact(new Contact("contact"));
+        assertTrue(loanTest.isValid());
+
+    }
 }

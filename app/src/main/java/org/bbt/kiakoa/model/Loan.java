@@ -640,8 +640,13 @@ public class Loan implements Parcelable {
     boolean isValid() {
         boolean result = (item != null) && (item.length() > 0);
 
+        // check contact if there's any
+        if (contact != null) {
+            result &= contact.isValid();
+        }
+
         if (!result) {
-            Log.e(TAG, "Loan is invalid. No item.");
+            Log.e(TAG, "Loan is invalid.");
         }
 
         return result;

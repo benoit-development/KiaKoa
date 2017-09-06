@@ -118,4 +118,12 @@ public class Contact implements Parcelable {
     public String toString() {
         return name;
     }
+
+    /**
+     * Check if contact seems valid
+     * @return contact validity
+     */
+    public boolean isValid() {
+        return name.length() > 0;
+    }
 }
