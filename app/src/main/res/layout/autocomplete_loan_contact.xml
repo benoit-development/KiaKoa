@@ -3,23 +3,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:orientation="horizontal"
+    android:background="@color/activityBackground"
     android:gravity="center_vertical"
-    tools:ignore="UseCompoundDrawables"
-    android:background="@color/activityBackground">
+    android:orientation="horizontal"
+    tools:ignore="Overdraw,UseCompoundDrawables">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/contact_icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="5dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_contact_24dp"
+        android:layout_marginTop="5dp"
         android:contentDescription="@string/contact"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_picture_24dp"/>
+
+    <TextView
+        android:id="@+id/contact_letter"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="0"
+        android:padding="0dp"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        android:background="@drawable/circle_shape" />
 
     <TextView
         android:id="@+id/contact_name"
@@ -34,6 +52,6 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_alignParentBottom="true"
-        android:background="@color/lightGray"/>
+        android:background="@color/lightGray" />
 
 </RelativeLayout>

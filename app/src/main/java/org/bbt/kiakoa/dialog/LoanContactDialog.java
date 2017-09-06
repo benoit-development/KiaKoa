@@ -4,9 +4,16 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract.Contacts;
 import android.support.annotation.NonNull;
@@ -16,14 +23,17 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.widget.CursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.Contact;
@@ -141,7 +151,7 @@ public class LoanContactDialog extends DialogFragment {
         contactEditText.setText(currentContact.getName());
 
         // Init adapter
-        contactAdapter = new ContactAdapter();
+        contactAdapter = new ContactAdapter(getContext());
         contactEditText.setAdapter(contactAdapter);
 
         // setup autocomplete adapter
@@ -246,17 +256,60 @@ public class LoanContactDialog extends DialogFragment {
     /**
      * Adapter class for contact list
      */
-    private class ContactAdapter extends SimpleCursorAdapter {
+    private class ContactAdapter extends CursorAdapter {
 
-        private ContactAdapter() {
-            super(
-                    getContext(),
-                    R.layout.autocomplete_loan_contact,
-                    null,
-                    new String[]{Contacts.DISPLAY_NAME, Contacts.PHOTO_URI},
-                    new int[]{R.id.contact_name, R.id.contact_icon},
-                    0);
-            setViewBinder(getViewBinder());
+        /**
+         * Colors to use as icon when no image is available
+         */
+        private final TypedArray colors;
+
+        /**
+         * Constructor
+         *
+         * @param context a context
+         */
+        ContactAdapter(Context context) {
+            super(context, null, 0);
+            colors = context.getResources().obtainTypedArray(R.array.letter_tile_colors);
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent) {
+            return LayoutInflater.from(context).inflate(R.layout.autocomplete_loan_contact, parent, false);
+        }
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+            ViewHolder holder = (ViewHolder) view.getTag();
+            if (holder == null) {
+                holder = new ViewHolder();
+                holder.contactIconView = view.findViewById(R.id.contact_icon);
+                holder.contactLetterView = view.findViewById(R.id.contact_letter);
+                holder.contactNameView = view.findViewById(R.id.contact_name);
+                view.setTag(holder);
+            }
+
+            String contactName = cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME));
+            holder.contactNameView.setText(contactName);
+            String uriString = cursor.getString(cursor.getColumnIndex(Contacts.PHOTO_URI));
+            if ((uriString != null)) {
+                holder.contactIconView.setImageURI(Uri.parse(uriString));
+                holder.contactIconView.setVisibility(View.VISIBLE);
+                holder.contactLetterView.setVisibility(View.INVISIBLE);
+            } else {
+                holder.contactIconView.setVisibility(View.INVISIBLE);
+                holder.contactLetterView.setText(contactName.substring(0, 1));
+                holder.contactLetterView.setVisibility(View.VISIBLE);
+                Drawable background = holder.contactLetterView.getBackground();
+                int backgroundColor = getContactColor(contactName);
+                if (background instanceof ShapeDrawable) {
+                    ((ShapeDrawable) background).getPaint().setColor(backgroundColor);
+                } else if (background instanceof GradientDrawable) {
+                    ((GradientDrawable) background).setColor(backgroundColor);
+                } else if (background instanceof ColorDrawable) {
+                    ((ColorDrawable) background).setColor(backgroundColor);
+                }
+            }
         }
 
         /**
@@ -279,20 +332,23 @@ public class LoanContactDialog extends DialogFragment {
             }
         }
 
-        @Override
-        public ViewBinder getViewBinder() {
-            return new ViewBinder() {
-                @Override
-                public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                    String image = cursor.getString(cursor.getColumnIndex(Contacts.PHOTO_URI));
-                    if ((image == null) && (view instanceof ImageView)) {
-                        ((ImageView) view).setImageResource(R.drawable.ic_contact_24dp);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            };
+        /**
+         * Calculate an arbitrary color with contact name
+         *
+         * @param name a contact name
+         * @return a color
+         */
+        private int getContactColor(String name) {
+            return colors.getColor(Math.abs(name.hashCode()) % colors.length(), 0);
+        }
+
+        /**
+         * Adapter ViewHolder
+         */
+        private class ViewHolder {
+            ImageView contactIconView;
+            TextView contactLetterView;
+            TextView contactNameView;
         }
     }
 
