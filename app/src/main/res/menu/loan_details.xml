@@ -23,20 +23,6 @@
         android:title="@string/create_calendar_event"
         app:showAsAction="ifRoom"/>
 
-    <!-- take picture from camera -->
-    <item
-        android:id="@+id/action_camera"
-        android:icon="@drawable/ic_photo_camera_white_24dp"
-        android:title="@string/take_picture"
-        app:showAsAction="ifRoom"/>
-
-    <!-- pick an image from gallery -->
-    <item
-        android:id="@+id/action_gallery"
-        android:icon="@drawable/ic_photo_library_white_24dp"
-        android:title="@string/pick_image"
-        app:showAsAction="ifRoom"/>
-
     <!-- delete this loan -->
     <item
         android:id="@+id/action_delete"

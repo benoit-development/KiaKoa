@@ -25,7 +25,6 @@
     <string name="loan_details">Loan details</string>
     <string name="picture">Picture</string>
     <string name="no_picture">No picture</string>
-    <string name="choose_picture_item">Choose a picture for the item %s</string>
     <string name="write_external_storage_required">Permission to write on external storage is required to take a picture</string>
     <string name="clear_all_loan_lists">Clear all loan lists</string>
     <string name="clear_all_lists_question">Do you want to clear all loan lists ?</string>
@@ -68,8 +67,6 @@
     <string name="item_borrowed_sentence">%1$s borrowed on %2$s</string>
     <string name="item_returned_sentence">%1$s returned on %2$s</string>
     <string name="background">Background</string>
-    <string name="take_picture">Take a picture</string>
-    <string name="pick_image">Pick an image</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>

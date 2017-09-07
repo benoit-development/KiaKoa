@@ -61,11 +61,6 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
     /**
      * To get a picture for the item
      */
-    private static final int REQUEST_CODE_GET_PICTURE_GALLERY = 234;
-
-    /**
-     * To get a picture for the item
-     */
     private static final int REQUEST_CODE_GET_PICTURE_CAMERA = 345;
 
     /**
@@ -189,12 +184,6 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
             case R.id.action_contact_card:
                 loan.displayContactCard(getContext());
                 return true;
-            case R.id.action_camera:
-                takePicture();
-                return true;
-            case R.id.action_gallery:
-                pickImage();
-                return true;
             case R.id.action_delete:
                 showDeleteLoanDialog();
                 return true;
@@ -293,16 +282,6 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_GET_PICTURE_GALLERY:
-                if (resultCode == Activity.RESULT_OK) {
-                    if (data.getData() != null) {
-                        loan.setItemPicture(data.getData().toString());
-                        updateLoan();
-                    }
-                } else {
-                    Log.i(TAG, "No picture returned from gallery");
-                }
-                break;
             case REQUEST_CODE_GET_PICTURE_CAMERA:
                 if (resultCode == Activity.RESULT_OK) {
                     Log.i(TAG, "Picture returned from camera");
@@ -469,12 +448,9 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                 Log.i(TAG, "Requesting picture for the item");
                 PackageManager packageManager = getContext().getPackageManager();
                 // to check if we can display camera activity
-                boolean camera = false;
                 if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-
                     Log.i(TAG, "Requesting picture : use camera");
                     if (takePictureIntent.resolveActivity(packageManager) != null) {
-
                         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                             // Should we show an explanation?
                             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -488,16 +464,9 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                         } else {
                             takePicture();
                         }
-                        camera = true;
-
                     } else {
                         Log.w(TAG, "Camera request failed");
                     }
-
-                }
-
-                if (!camera) {
-                    pickImage();
                 }
                 break;
             case 3:
@@ -533,17 +502,6 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
 
                 break;
         }
-    }
-
-    /**
-     * Launch activity to pick an image from the gallery
-     */
-    private void pickImage() {
-        Log.i(TAG, "Requesting picture : use gallery");
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_picture_item, loan.getItem())), REQUEST_CODE_GET_PICTURE_GALLERY);
     }
 
     /**
