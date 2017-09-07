@@ -189,6 +189,12 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
             case R.id.action_contact_card:
                 loan.displayContactCard(getContext());
                 return true;
+            case R.id.action_camera:
+                takePicture();
+                return true;
+            case R.id.action_gallery:
+                pickImage();
+                return true;
             case R.id.action_delete:
                 showDeleteLoanDialog();
                 return true;
@@ -274,7 +280,7 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission granted !
                     Log.i(TAG, "WRITE_EXTERNAL_STORAGE permission granted");
-                    startActivityForResult(takePictureIntent, REQUEST_CODE_GET_PICTURE_CAMERA);
+                    takePicture();
                     // launch camera
                 } else {
                     // permission denied
@@ -480,7 +486,7 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
                             }
                         } else {
-                            startActivityForResult(takePictureIntent, REQUEST_CODE_GET_PICTURE_CAMERA);
+                            takePicture();
                         }
                         camera = true;
 
@@ -491,13 +497,7 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                 }
 
                 if (!camera) {
-
-                    Log.i(TAG, "Requesting picture : use gallery");
-                    Intent intent = new Intent();
-                    intent.setType("circleView/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_picture_item, loan.getItem())), REQUEST_CODE_GET_PICTURE_GALLERY);
-
+                    pickImage();
                 }
                 break;
             case 3:
@@ -533,6 +533,24 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
 
                 break;
         }
+    }
+
+    /**
+     * Launch activity to pick an image from the gallery
+     */
+    private void pickImage() {
+        Log.i(TAG, "Requesting picture : use gallery");
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_picture_item, loan.getItem())), REQUEST_CODE_GET_PICTURE_GALLERY);
+    }
+
+    /**
+     * Launch activity to take a picture
+     */
+    private void takePicture() {
+        startActivityForResult(takePictureIntent, REQUEST_CODE_GET_PICTURE_CAMERA);
     }
 
     @Override
