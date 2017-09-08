@@ -234,16 +234,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 });
                 break;
             case 7:
-                Log.i(TAG, "Loans share requested");
-                String title = getString(R.string.app_name);
-                Intent sendIntent = new Intent()
-                        .setAction(Intent.ACTION_SEND)
-                        .putExtra(Intent.EXTRA_SUBJECT, title)
-                        .putExtra(Intent.EXTRA_TEXT, LoanLists.getInstance().toShareText(MainActivity.this))
-                        .setType("text/plain");
-                startActivity(Intent.createChooser(sendIntent, title));
-                break;
-            case 8:
                 // check if there are loan lists to be clear
                 if (LoanLists.getInstance().getLoanCount() == 0) {
                     Toast.makeText(this, R.string.all_loan_lists_already_empty, Toast.LENGTH_SHORT).show();
@@ -339,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public int getCount() {
-            return 9;
+            return 8;
         }
 
         @Override
@@ -450,10 +440,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     textId = R.string.settings;
                     break;
                 case 7:
-                    iconId = R.drawable.ic_share_24dp;
-                    textId = R.string.share;
-                    break;
-                case 8:
                     iconId = R.drawable.ic_delete_forever_24dp;
                     textId = R.string.clear_all_loan_lists;
                     break;
