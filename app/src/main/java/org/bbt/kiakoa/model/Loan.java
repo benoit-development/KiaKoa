@@ -487,7 +487,7 @@ public class Loan implements Parcelable {
                 .setAutoCancel(true)
                 .setColor(ContextCompat.getColor(context, R.color.colorAccent));
 
-        // test if loan is already returned
+        // Miscellaneous if loan is already returned
         if (!isReturned()) {
             // intent to set this loan as returned
             Intent returnIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_RETURN_LOAN)

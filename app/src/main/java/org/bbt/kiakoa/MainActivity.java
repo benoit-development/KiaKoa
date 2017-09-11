@@ -37,6 +37,7 @@ import org.bbt.kiakoa.fragment.LoanList.AbstractLoanListFragment;
 import org.bbt.kiakoa.fragment.LoanList.LoanListsPagerFragment;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
+import org.bbt.kiakoa.tools.Miscellaneous;
 import org.bbt.kiakoa.tools.Preferences;
 import org.bbt.kiakoa.tools.drive.GoogleApiClientTools;
 import org.bbt.kiakoa.tools.drive.LoanListsDriveFile;
@@ -279,18 +280,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.i(TAG, "Connection failed to google drive");
-        if (connectionResult.hasResolution()) {
-            try {
-                Log.i(TAG, "Try starting resolution");
-                connectionResult.startResolutionForResult(this, RESOLVE_GOOGLE_DRIVE_CONNECTION_REQUEST_CODE);
-                return;
-            } catch (IntentSender.SendIntentException e) {
-                Log.e(TAG, "Error : " + e.getMessage());
-                e.printStackTrace();
+        if (Miscellaneous.isOnline(this)) {
+            if (connectionResult.hasResolution()) {
+                try {
+                    Log.i(TAG, "Try starting resolution");
+                    connectionResult.startResolutionForResult(this, RESOLVE_GOOGLE_DRIVE_CONNECTION_REQUEST_CODE);
+                    return;
+                } catch (IntentSender.SendIntentException e) {
+                    Log.e(TAG, "Error : " + e.getMessage());
+                    e.printStackTrace();
+                }
+            } else {
+                Log.w(TAG, "No resolution");
+                GoogleApiAvailability.getInstance().getErrorDialog(this, connectionResult.getErrorCode(), RESOLVE_GOOGLE_DRIVE_CONNECTION_REQUEST_CODE).show();
             }
         } else {
-            Log.i(TAG, "No resolution");
-            GoogleApiAvailability.getInstance().getErrorDialog(this, connectionResult.getErrorCode(), RESOLVE_GOOGLE_DRIVE_CONNECTION_REQUEST_CODE).show();
+            Log.w(TAG, "No internet connection, no need to try to connect to google drive.");
         }
         Toast.makeText(this, R.string.connection_google_drive_failed, Toast.LENGTH_SHORT).show();
     }
