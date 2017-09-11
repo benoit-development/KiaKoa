@@ -8,6 +8,7 @@
     android:orientation="horizontal"
     android:paddingBottom="15dp"
     android:paddingStart="15dp"
+    android:paddingEnd="15dp"
     android:paddingTop="15dp"
     android:id="@+id/container">
 
@@ -55,7 +56,8 @@
         android:layout_margin="5dp"
         android:contentDescription="@string/notification"
         android:src="@drawable/ic_alert_red_24dp"
-        android:paddingEnd="15dp" />
+        android:paddingEnd="15dp"
+        android:paddingStart="15dp" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circle_view"

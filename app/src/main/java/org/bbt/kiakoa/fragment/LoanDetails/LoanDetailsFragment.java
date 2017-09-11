@@ -159,6 +159,8 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         inflater.inflate(R.menu.loan_details, menu);
         // retrieve instance of return menu item
         returnMenuItem = menu.findItem(R.id.action_return);
+        // retrieve instance of contact menu item
+        contactCardMenuItem = menu.findItem(R.id.action_contact_card);
         // retrieve instance of create calendar event menu item
         createCalendarMenuItem = menu.findItem(R.id.action_calendar_event);
         // retrieve instance of delete menu item
@@ -178,6 +180,9 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                     updateView();
                 }
                 Toast.makeText(getContext(), R.string.loan_returned, Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_contact_card:
+                loan.displayContactCard(getContext());
                 return true;
             case R.id.action_calendar_event:
                 createCalendarEvent();
@@ -558,7 +563,7 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
      * @param maxImageSize desired image size
      * @return resized image
      */
-    public Bitmap scaleDown(Bitmap realImage, float maxImageSize) {
+    private Bitmap scaleDown(Bitmap realImage, float maxImageSize) {
 
         float ratio = Math.min(maxImageSize / realImage.getWidth(), maxImageSize / realImage.getHeight());
         int width = Math.round(ratio * realImage.getWidth());

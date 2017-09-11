@@ -3,13 +3,10 @@ package org.bbt.kiakoa.fragment.LoanDetails;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
@@ -54,7 +51,6 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
      * View Holder class for the recycler
      */
     static class ViewHolder extends ItemClickRecyclerAdapter.ViewHolder {
-        final LinearLayout container;
         final ImageView icon;
         final TextView description;
         final TextView value;
@@ -174,26 +170,6 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                 }
                 break;
         }
-    }
-
-    /**
-     * Display popup menu to manage loan picture
-     */
-    private void showPicturePopupMenu(View view) {
-        PopupMenu popup = new PopupMenu(context, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.loan_picture, popup.getMenu());
-        popup.show();
-    }
-
-    /**
-     * Display popup menu to manage loan contact
-     */
-    private void showContactPopupMenu(View view) {
-        PopupMenu popup = new PopupMenu(context, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.loan_contact, popup.getMenu());
-        popup.show();
     }
 
 }

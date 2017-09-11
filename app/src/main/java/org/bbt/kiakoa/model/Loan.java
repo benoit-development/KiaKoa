@@ -616,7 +616,7 @@ public class Loan implements Parcelable {
 
         if (!hasContactId()) {
             // error while retrieving data
-            Log.e(TAG, "Loan does not have a contact in contact list");
+            Log.e(TAG, "Loan does not have a contact from contact list");
         } else {
             Intent contactIntent = new Intent(Intent.ACTION_VIEW);
             Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(getContact().getId()));
