@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- to take a picture -->
+    <item
+        android:id="@+id/action_loan_take_picture"
+        android:icon="@drawable/ic_contact_24dp"
+        android:title="@string/enter_contact"/>
+
+    <!-- pick from gallery -->
+    <item
+        android:id="@+id/action_loan_pick_image"
+        android:icon="@drawable/ic_contacts_24dp"
+        android:title="@string/select_contact"/>
+
+    <!-- delete current contact -->
+    <item
+        android:id="@+id/action_loan_delete_contact"
+        android:icon="@drawable/ic_delete_24dp"
+        android:title="@string/delete"/>
+
+</menu>

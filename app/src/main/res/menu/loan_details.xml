@@ -9,13 +9,6 @@
         android:title="@string/return_loan"
         app:showAsAction="ifRoom"/>
 
-    <!-- to display contact card -->
-    <item
-        android:id="@+id/action_contact_card"
-        android:icon="@drawable/ic_contact_white_24dp"
-        android:title="@string/display_contact_card"
-        app:showAsAction="ifRoom"/>
-
     <!-- to add calendar event -->
     <item
         android:id="@+id/action_calendar_event"

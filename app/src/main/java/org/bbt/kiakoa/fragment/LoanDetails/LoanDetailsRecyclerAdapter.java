@@ -3,10 +3,13 @@ package org.bbt.kiakoa.fragment.LoanDetails;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
@@ -51,12 +54,12 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
      * View Holder class for the recycler
      */
     static class ViewHolder extends ItemClickRecyclerAdapter.ViewHolder {
+        final LinearLayout container;
         final ImageView icon;
         final TextView description;
         final TextView value;
         final ImageView image;
         final ImageView circleView;
-        final ImageView deleteView;
 
         /**
          * Constructor
@@ -70,7 +73,6 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
             value = view.findViewById(R.id.value);
             image = view.findViewById(R.id.image);
             circleView = view.findViewById(R.id.circle_view);
-            deleteView = view.findViewById(R.id.delete_view);
         }
     }
 
@@ -90,10 +92,9 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
 
-        holder.deleteView.setVisibility(View.GONE);
         switch (position) {
             case 0:
                 // item
@@ -121,14 +122,6 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                     holder.circleView.setImageURI(Uri.parse(pictureUri));
                     holder.circleView.setVisibility(View.VISIBLE);
                     holder.value.setText("");
-                    holder.deleteView.setVisibility(View.VISIBLE);
-                    holder.deleteView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            loan.setItemPicture(null);
-                            notifyDataSetChanged();
-                        }
-                    });
                 } else {
                     holder.circleView.setVisibility(View.GONE);
                     holder.value.setVisibility(View.VISIBLE);
@@ -181,6 +174,26 @@ class LoanDetailsRecyclerAdapter extends ItemClickRecyclerAdapter<LoanDetailsRec
                 }
                 break;
         }
+    }
+
+    /**
+     * Display popup menu to manage loan picture
+     */
+    private void showPicturePopupMenu(View view) {
+        PopupMenu popup = new PopupMenu(context, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.loan_picture, popup.getMenu());
+        popup.show();
+    }
+
+    /**
+     * Display popup menu to manage loan contact
+     */
+    private void showContactPopupMenu(View view) {
+        PopupMenu popup = new PopupMenu(context, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.loan_contact, popup.getMenu());
+        popup.show();
     }
 
 }

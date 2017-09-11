@@ -28,7 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@color/activityBackground">
 
             <fragment
                 android:id="@+id/loan_pager_frag"
@@ -47,16 +48,14 @@
                 class="org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:layout_marginStart="40dp"
-                android:layout_marginEnd="40dp" />
+                android:layout_weight="2" />
 
         </LinearLayout>
 
     </LinearLayout>
 
     <!-- The navigation drawer -->
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/left_drawer"
         android:layout_width="@dimen/drawer_layout_width"
         android:layout_height="match_parent"
@@ -72,6 +71,6 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp" />
 
-    </LinearLayout>
+    </FrameLayout>
 
 </android.support.v4.widget.DrawerLayout>

@@ -60,6 +60,10 @@
     <string name="loans_lists_export_failed" tools:ignore="UnusedResources">Loan lists export failed</string>
     <string name="lent_list_count" tools:ignore="UnusedResources">Lent lists [%d]</string>
     <string name="background">Background</string>
+    <string name="take_picture">Take a picture</string>
+    <string name="pick_image">Pick an image</string>
+    <string name="select_contact">Select a contact</string>
+    <string name="enter_contact">Enter contact name</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>

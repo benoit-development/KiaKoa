@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
@@ -39,6 +40,8 @@ import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
 import org.bbt.kiakoa.tools.ItemClickRecyclerAdapter;
 import org.bbt.kiakoa.tools.SimpleDividerItemDecoration;
+
+import java.io.IOException;
 
 /**
  * Activity displaying {@link LoanDetailsFragment}
@@ -158,8 +161,6 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         returnMenuItem = menu.findItem(R.id.action_return);
         // retrieve instance of create calendar event menu item
         createCalendarMenuItem = menu.findItem(R.id.action_calendar_event);
-        // retrieve instance of contact card menu item
-        contactCardMenuItem = menu.findItem(R.id.action_contact_card);
         // retrieve instance of delete menu item
         deleteMenuItem = menu.findItem(R.id.action_delete);
         // update menu item visibility
@@ -180,9 +181,6 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                 return true;
             case R.id.action_calendar_event:
                 createCalendarEvent();
-                return true;
-            case R.id.action_contact_card:
-                loan.displayContactCard(getContext());
                 return true;
             case R.id.action_delete:
                 showDeleteLoanDialog();
@@ -284,6 +282,29 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         switch (requestCode) {
             case REQUEST_CODE_GET_PICTURE_CAMERA:
                 if (resultCode == Activity.RESULT_OK) {
+
+                    Uri uri = data.getData();
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+
+                        bitmap = scaleDown(bitmap, getContext().getResources().getInteger(R.integer.thumbnail_size_in_pixel));
+                        String uriString = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), bitmap, loan.getItem(), "");
+                        if (uri != null) {
+                            Log.i(TAG, "Image added to media store");
+                            loan.setItemPicture(uriString);
+                            updateLoan();
+                        } else {
+                            Log.e(TAG, "Image not added to media store :-(");
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+
+
+                    /*
                     Log.i(TAG, "Picture returned from camera");
                     Bundle extras = data.getExtras();
                     if (extras != null) {
@@ -302,7 +323,7 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                         }
                     } else {
                         Log.e(TAG, "No extra found :-(");
-                    }
+                    }*/
                 } else {
                     Log.w(TAG, "No picture returned from camera");
                 }
@@ -508,7 +529,11 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
      * Launch activity to take a picture
      */
     private void takePicture() {
-        startActivityForResult(takePictureIntent, REQUEST_CODE_GET_PICTURE_CAMERA);
+        //startActivityForResult(takePictureIntent, REQUEST_CODE_GET_PICTURE_CAMERA);
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select image"), REQUEST_CODE_GET_PICTURE_CAMERA);
     }
 
     @Override
@@ -524,5 +549,21 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
             }
         }
         updateView();
+    }
+
+    /**
+     * Resize a {@link Bitmap}
+     *
+     * @param realImage    image to resize
+     * @param maxImageSize desired image size
+     * @return resized image
+     */
+    public Bitmap scaleDown(Bitmap realImage, float maxImageSize) {
+
+        float ratio = Math.min(maxImageSize / realImage.getWidth(), maxImageSize / realImage.getHeight());
+        int width = Math.round(ratio * realImage.getWidth());
+        int height = Math.round(ratio * realImage.getHeight());
+
+        return Bitmap.createScaledBitmap(realImage, width, height, true);
     }
 }
