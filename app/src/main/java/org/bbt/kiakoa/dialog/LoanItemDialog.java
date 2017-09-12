@@ -97,14 +97,6 @@ public class LoanItemDialog extends DialogFragment implements TextView.OnEditorA
             list = getArguments().getString("list", LoanLists.SHARED_PREFERENCES_LENT_KEY);
         }
 
-        // clear button
-        view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                itemEditText.setText("");
-            }
-        });
-
         final AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_item_24dp)
                 .setTitle((ACTION_CREATE == action) ? R.string.new_loan : R.string.item)

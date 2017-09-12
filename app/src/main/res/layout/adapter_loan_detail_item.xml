@@ -17,7 +17,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="20dp"
         android:contentDescription="@string/loan_date"
         android:scaleType="fitXY"
         android:src="@drawable/ic_item_24dp" />
@@ -56,13 +56,13 @@
         android:layout_margin="5dp"
         android:contentDescription="@string/notification"
         android:src="@drawable/ic_alert_red_24dp"
-        android:paddingEnd="15dp"
-        android:paddingStart="15dp" />
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circle_view"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
         android:contentDescription="@string/contact"
         android:elevation="8dp"

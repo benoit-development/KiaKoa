@@ -111,14 +111,6 @@ public class LoanContactDialog extends DialogFragment implements TextView.OnEdit
             pickContactView.setVisibility(View.GONE);
         }
 
-        // clear button
-        view.findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                contactEditText.setText("");
-            }
-        });
-
 
         return new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_contact_24dp)

@@ -49,7 +49,6 @@
     <string name="error_on_deleting_loan">Error on deleting loan</string>
     <string name="delete_loan_question">Do you want to delete this loan ?</string>
     <string name="show_contact">Show contact</string>
-    <string name="display_contact_card">Display contact card</string>
     <string name="sync">Sync</string>
     <string name="google_drive">Google Drive</string>
     <string name="google_drive_summary">Your loans will be saved automatically on your Google Drive account</string>
@@ -60,10 +59,6 @@
     <string name="loans_lists_export_failed" tools:ignore="UnusedResources">Loan lists export failed</string>
     <string name="lent_list_count" tools:ignore="UnusedResources">Lent lists [%d]</string>
     <string name="background">Background</string>
-    <string name="take_picture">Take a picture</string>
-    <string name="pick_image">Pick an image</string>
-    <string name="select_contact">Select a contact</string>
-    <string name="enter_contact">Enter contact name</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
@@ -88,5 +83,9 @@
         <item>@string/lent</item>
         <item>@string/borrowed</item>
         <item>@string/returned</item>
+    </string-array>
+    <string-array name="picture_action_list">
+        <item name="take_picture">Take a picture</item>
+        <item name="pick_image">Pick an image</item>
     </string-array>
 </resources>

@@ -5,7 +5,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.ContactsContract;
@@ -24,6 +26,7 @@ import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.broadcast.NotificationBroadcastReceiver;
 import org.bbt.kiakoa.exception.LoanException;
+import org.bbt.kiakoa.tools.Miscellaneous;
 import org.bbt.kiakoa.tools.Preferences;
 
 import java.io.IOException;
@@ -104,7 +107,9 @@ public class Loan implements Parcelable {
         out.writeParcelable(contact, flags);
     }
 
-    // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
+    /**
+     * this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
+     */
     public static final Parcelable.Creator<Loan> CREATOR = new Parcelable.Creator<Loan>() {
         public Loan createFromParcel(Parcel in) {
             return new Loan(in);
@@ -178,12 +183,54 @@ public class Loan implements Parcelable {
     }
 
     /**
-     * item setter
+     * picture setter
      *
      * @param itemPicture item label
      */
     public void setItemPicture(String itemPicture) {
         this.itemPicture = itemPicture;
+    }
+
+    /**
+     * picture setter from {@link Intent}
+     * This method will try to find a picture in the intent and update this loan with it
+     *
+     * @param context a context
+     * @param data    source of the image
+     */
+    public void setItemPicture(Context context, Intent data) {
+
+        Log.i(TAG, "Setting item picture from intent");
+
+        Uri uri = data.getData();
+        Bundle extras = data.getExtras();
+        Bitmap bitmap = null;
+
+        try {
+            // try extracting bitmap from intent data
+            if (uri != null) {
+                Log.i(TAG, "uri found in getData()");
+                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+            } else if (extras != null) {
+                Log.i(TAG, "extras found");
+                bitmap = (Bitmap) extras.get("data");
+            } else {
+                Log.e(TAG, "No picture found :-(");
+            }
+
+            // resize bitmap and store it on media store
+            if (bitmap != null) {
+                Log.i(TAG, "bitmap retrieved successfully");
+                bitmap = Miscellaneous.scaleDown(bitmap, context.getResources().getInteger(R.integer.thumbnail_size_in_pixel));
+                String uriString = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, getItem(), "");
+                setItemPicture(uriString);
+            } else {
+                Log.i(TAG, "failed retrieving bitmap");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

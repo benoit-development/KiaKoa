@@ -4,8 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
@@ -35,13 +33,13 @@ import org.bbt.kiakoa.dialog.LoanContactDialog;
 import org.bbt.kiakoa.dialog.LoanDateDialog;
 import org.bbt.kiakoa.dialog.LoanItemDialog;
 import org.bbt.kiakoa.dialog.LoanStatusDialog;
+import org.bbt.kiakoa.dialog.PictureDialog;
 import org.bbt.kiakoa.dialog.ReturnDateDialog;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
 import org.bbt.kiakoa.tools.ItemClickRecyclerAdapter;
+import org.bbt.kiakoa.tools.Miscellaneous;
 import org.bbt.kiakoa.tools.SimpleDividerItemDecoration;
-
-import java.io.IOException;
 
 /**
  * Activity displaying {@link LoanDetailsFragment}
@@ -62,14 +60,14 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 123;
 
     /**
-     * To get a picture for the item
-     */
-    private static final int REQUEST_CODE_GET_PICTURE_CAMERA = 345;
-
-    /**
      * To get the result of the permission write external storage request
      */
     private static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 456;
+
+    /**
+     * To pick a picture from local gallery
+     */
+    public static final int REQUEST_CODE_PICTURE = 567;
 
     /**
      * Current loan
@@ -272,65 +270,10 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission granted !
                     Log.i(TAG, "WRITE_EXTERNAL_STORAGE permission granted");
-                    takePicture();
-                    // launch camera
+                    selectLoanPicture();
                 } else {
                     // permission denied
                     Log.i(TAG, "WRITE_EXTERNAL_STORAGE permission denied");
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CODE_GET_PICTURE_CAMERA:
-                if (resultCode == Activity.RESULT_OK) {
-
-                    Uri uri = data.getData();
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-
-                        bitmap = scaleDown(bitmap, getContext().getResources().getInteger(R.integer.thumbnail_size_in_pixel));
-                        String uriString = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), bitmap, loan.getItem(), "");
-                        if (uri != null) {
-                            Log.i(TAG, "Image added to media store");
-                            loan.setItemPicture(uriString);
-                            updateLoan();
-                        } else {
-                            Log.e(TAG, "Image not added to media store :-(");
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
-
-
-                    /*
-                    Log.i(TAG, "Picture returned from camera");
-                    Bundle extras = data.getExtras();
-                    if (extras != null) {
-                        Bitmap bitmap = (Bitmap) extras.get("data");
-                        if (bitmap != null) {
-                            String uri = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), bitmap, loan.getItem(), "");
-                            if (uri != null) {
-                                Log.i(TAG, "Image added to media store");
-                                loan.setItemPicture(uri);
-                                updateLoan();
-                            } else {
-                                Log.e(TAG, "Image not added to media store :-(");
-                            }
-                        } else {
-                            Log.e(TAG, "Image not found :-(");
-                        }
-                    } else {
-                        Log.e(TAG, "No extra found :-(");
-                    }*/
-                } else {
-                    Log.w(TAG, "No picture returned from camera");
                 }
                 break;
         }
@@ -357,6 +300,9 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
      * Display dialog to set the loan contact
      */
     private void showContactDialog() {
+
+        Log.i(TAG, "Contact selection requested");
+
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment contactDialog = getFragmentManager().findFragmentByTag("contact");
         if (contactDialog != null) {
@@ -367,6 +313,54 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         // Create and show the dialog.
         LoanContactDialog newContactDialog = LoanContactDialog.newInstance(loan);
         newContactDialog.show(ft, "contact");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_PICTURE:
+                if (resultCode == Activity.RESULT_OK) {
+                    loan.setItemPicture(getContext(), data);
+                    LoanLists.getInstance().updateLoan(loan, getContext());
+                } else {
+                    Log.w(TAG, "No picture returned from camera");
+                }
+                break;
+        }
+    }
+
+    /**
+     * Purpose to user to change the item picture
+     */
+    private void selectLoanPicture() {
+
+        Log.i(TAG, "Picture selection requested");
+
+        // check if camera is available
+        PackageManager packageManager = getContext().getPackageManager();
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            Log.i(TAG, "Requesting picture : use camera");
+            if (takePictureIntent.resolveActivity(packageManager) != null) {
+
+                Log.i(TAG, "Camera available, displaying dialog to select source");
+
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment loanPictureDialog = getFragmentManager().findFragmentByTag("loan_picture");
+                if (loanPictureDialog != null) {
+                    ft.remove(loanPictureDialog);
+                }
+
+                // Create and show the dialog
+                PictureDialog newPictureDialog = PictureDialog.selectPicture(loan);
+                // attach this fragment to dialog to use this onActivityResult method
+                newPictureDialog.setTargetFragment(this, REQUEST_CODE_PICTURE);
+                newPictureDialog.show(ft, "loan_date");
+
+            } else {
+                Log.w(TAG, "Camera request failed, displaying gallery directly");
+                Miscellaneous.showImageGallery(this);
+            }
+        }
     }
 
     /**
@@ -447,15 +441,6 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         newItemDialog.show(ft, "status");
     }
 
-    /**
-     * Update loan and notify for changes
-     */
-    private void updateLoan() {
-        LoanLists.getInstance().updateLoan(loan, getContext());
-        updateView();
-        LoanLists.getInstance().notifyLoanListsChanged();
-    }
-
     @Override
     public void onItemClick(int position) {
 
@@ -472,28 +457,21 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
                 break;
             case 2:
                 Log.i(TAG, "Requesting picture for the item");
-                PackageManager packageManager = getContext().getPackageManager();
-                // to check if we can display camera activity
-                if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                    Log.i(TAG, "Requesting picture : use camera");
-                    if (takePictureIntent.resolveActivity(packageManager) != null) {
-                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            // Should we show an explanation?
-                            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                // Show an explanation to the user *asynchronously*
-                                Log.i(TAG, "WRITE_EXTERNAL_STORAGE permission not granted");
-                                Toast.makeText(getContext(), R.string.write_external_storage_required, Toast.LENGTH_SHORT).show();
-                            } else {
-                                // No explanation needed, we can request the permission.
-                                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-                            }
-                        } else {
-                            takePicture();
-                        }
+                // check for write external storage permission
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    // Should we show an explanation?
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        // Show an explanation to the user *asynchronously*
+                        Log.i(TAG, "WRITE_EXTERNAL_STORAGE permission not granted");
+                        Toast.makeText(getContext(), R.string.write_external_storage_required, Toast.LENGTH_SHORT).show();
                     } else {
-                        Log.w(TAG, "Camera request failed");
+                        // No explanation needed, we can request the permission.
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
                     }
+                } else {
+                    selectLoanPicture();
                 }
+
                 break;
             case 3:
                 Log.i(TAG, "Loan date modification requested");
@@ -530,16 +508,6 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         }
     }
 
-    /**
-     * Launch activity to take a picture
-     */
-    private void takePicture() {
-        //startActivityForResult(takePictureIntent, REQUEST_CODE_GET_PICTURE_CAMERA);
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select image"), REQUEST_CODE_GET_PICTURE_CAMERA);
-    }
 
     @Override
     public void onLoanListsChanged() {
@@ -554,21 +522,5 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
             }
         }
         updateView();
-    }
-
-    /**
-     * Resize a {@link Bitmap}
-     *
-     * @param realImage    image to resize
-     * @param maxImageSize desired image size
-     * @return resized image
-     */
-    private Bitmap scaleDown(Bitmap realImage, float maxImageSize) {
-
-        float ratio = Math.min(maxImageSize / realImage.getWidth(), maxImageSize / realImage.getHeight());
-        int width = Math.round(ratio * realImage.getWidth());
-        int height = Math.round(ratio * realImage.getHeight());
-
-        return Bitmap.createScaledBitmap(realImage, width, height, true);
     }
 }
