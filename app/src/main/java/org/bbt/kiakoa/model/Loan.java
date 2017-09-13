@@ -110,7 +110,7 @@ public class Loan implements Parcelable {
     /**
      * this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
      */
-    public static final Parcelable.Creator<Loan> CREATOR = new Parcelable.Creator<Loan>() {
+    static final Parcelable.Creator<Loan> CREATOR = new Parcelable.Creator<Loan>() {
         public Loan createFromParcel(Parcel in) {
             return new Loan(in);
         }
@@ -528,7 +528,7 @@ public class Loan implements Parcelable {
 
         // build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, KIAKOA_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_stat_kiakoa)
+                .setSmallIcon(R.drawable.ic_kiakoa_white)
                 .setContentTitle(context.getString(R.string.loan_reached_return_date, getItem()))
                 .setContentText(context.getString(R.string.click_see_loan_details))
                 .setAutoCancel(true)
