@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 // change displayed page in viewpager
                 loanListsPager.showPage(position - 2);
                 break;
-            case 6:
+            case 5:
                 // launch setting activity
                 mDrawerLayout.addDrawerListener(new ActionBarDrawerToggle(this, mDrawerLayout, null, 0, 0) {
                     @Override
@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 });
                 break;
-            case 7:
+            case 6:
                 // check if there are loan lists to be clear
                 if (LoanLists.getInstance().getLoanCount() == 0) {
                     Toast.makeText(this, R.string.all_loan_lists_already_empty, Toast.LENGTH_SHORT).show();
@@ -334,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public int getCount() {
-            return 8;
+            return 7;
         }
 
         @Override
@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         public int getItemViewType(int position) {
             if (position == 0) {
                 return TYPE_TITLE;
-            } else if ((position == 1) || (position == 5)) {
+            } else if ((position == 1) || (position == 4)) {
                 return TYPE_HEADER;
             } else {
                 return TYPE_ITEM;
@@ -433,18 +433,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     loanCount = LoanLists.getInstance().getBorrowedList().size();
                     break;
                 case 4:
-                    iconId = R.drawable.ic_return_24dp;
-                    textId = R.string.returned;
-                    loanCount = LoanLists.getInstance().getReturnedList().size();
-                    break;
-                case 5:
                     textId = R.string.tools;
                     break;
-                case 6:
+                case 5:
                     iconId = R.drawable.ic_settings_24dp;
                     textId = R.string.settings;
                     break;
-                case 7:
+                case 6:
                     iconId = R.drawable.ic_delete_forever_24dp;
                     textId = R.string.clear_all_loan_lists;
                     break;

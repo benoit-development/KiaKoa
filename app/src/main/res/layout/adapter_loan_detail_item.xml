@@ -2,9 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal"
     android:paddingBottom="15dp"
     android:paddingStart="15dp"
@@ -60,14 +57,21 @@
         android:paddingStart="5dp" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circle_view"
+        android:id="@+id/circle"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:contentDescription="@string/contact"
-        android:elevation="8dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_picture_24dp"
         android:visibility="visible" />
+
+    <Switch
+        android:id="@+id/switchView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clickable="false"
+        android:focusable="false" />
 
 </LinearLayout>

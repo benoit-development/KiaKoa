@@ -51,11 +51,14 @@ public class LoanUnitTest {
         assertEquals(loanTest.getId(), newLoan.getId());
         assertEquals(loanTest.getLoanDate(), newLoan.getLoanDate());
         assertEquals(loanTest.getReturnDate(), newLoan.getReturnDate());
+        assertFalse(newLoan.isReturned());
         // no contact
         assertNull(newLoan.getContact());
 
         // with a contact
         loanTest.setContact(contactTest);
+        // with state as returned
+        loanTest.setReturned(true);
         parcel = Parcel.obtain();
         loanTest.writeToParcel(parcel, loanTest.describeContents());
         parcel.setDataPosition(0);
@@ -63,6 +66,7 @@ public class LoanUnitTest {
         assertEquals(17, newLoan.getContact().getId());
         assertEquals("pouet", newLoan.getContact().getName());
         assertEquals("photo_uri", newLoan.getContact().getPhotoUri());
+        assertTrue(newLoan.isReturned());
     }
 
     @Test

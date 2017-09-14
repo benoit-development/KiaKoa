@@ -2,13 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- to return this loan -->
-    <item
-        android:id="@+id/action_return"
-        android:icon="@drawable/ic_return_white_24dp"
-        android:title="@string/return_loan"
-        app:showAsAction="ifRoom"/>
-
     <!-- Show contact information -->
     <item
         android:id="@+id/action_contact_card"

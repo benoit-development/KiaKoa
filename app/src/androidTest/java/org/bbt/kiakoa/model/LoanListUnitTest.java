@@ -61,34 +61,10 @@ public class LoanListUnitTest {
 
         assertEquals(3, loanLists.getBorrowedList().size());
 
-
-        // add some returned loan
-        assertTrue(loanLists.saveReturned(loan1, context));
-        assertEquals(2, loanLists.getLentList().size());
-        assertEquals(3, loanLists.getBorrowedList().size());
-        assertEquals(1, loanLists.getReturnedList().size());
-        assertEquals(6, loanLists.getLoanCount());
-
-        assertTrue(loanLists.saveReturned(loan4, context));
-        assertEquals(2, loanLists.getLentList().size());
-        assertEquals(2, loanLists.getBorrowedList().size());
-        assertEquals(2, loanLists.getReturnedList().size());
-        assertEquals(6, loanLists.getLoanCount());
-
-        // clear returned list
-        loanLists.clearReturnedList(context);
-        assertEquals(2, loanLists.getLentList().size());
-        assertEquals(2, loanLists.getBorrowedList().size());
-        assertEquals(0, loanLists.getReturnedList().size());
-        assertEquals(4, loanLists.getLoanCount());
-
         // clear lists
-        assertTrue(loanLists.saveReturned(new Loan("7"), context));
-        assertTrue(loanLists.saveReturned(new Loan("8"), context));
         loanLists.clearLists(context);
         assertEquals(0, loanLists.getLentList().size());
         assertEquals(0, loanLists.getBorrowedList().size());
-        assertEquals(0, loanLists.getReturnedList().size());
         assertEquals(0, loanLists.getLoanCount());
 
     }
@@ -139,7 +115,6 @@ public class LoanListUnitTest {
         assertFalse(loanLists.updateLoan(anotherLoan, context));
         assertEquals(1, loanLists.getLentList().size());
         assertEquals(0, loanLists.getBorrowedList().size());
-        assertEquals(0, loanLists.getReturnedList().size());
 
         //update loan to list
         loanLists.clearLists(context);
@@ -149,43 +124,7 @@ public class LoanListUnitTest {
         assertFalse(loanLists.updateLoan(anotherLoan, context));
         assertEquals(0, loanLists.getLentList().size());
         assertEquals(1, loanLists.getBorrowedList().size());
-        assertEquals(0, loanLists.getReturnedList().size());
 
-        //update loan to list
-        loanLists.clearLists(context);
-        loanLists.saveReturned(loan, context);
-        assertTrue(loanLists.updateLoan(loan, context));
-        assertTrue(loanLists.updateLoan(sameLoan, context));
-        assertFalse(loanLists.updateLoan(anotherLoan, context));
-        assertEquals(0, loanLists.getLentList().size());
-        assertEquals(0, loanLists.getBorrowedList().size());
-        assertEquals(1, loanLists.getReturnedList().size());
-
-    }
-
-    @Test
-    public void loan_states() {
-        Loan loan = new Loan("test");
-
-        // not in any list
-        assertEquals(LoanStatus.NONE, loan.getStatus());
-        assertFalse(loan.isReturned());
-
-        // in lent list
-        loanLists.saveLent(loan, context);
-        assertEquals(LoanStatus.LENT, loan.getStatus());
-        assertFalse(loan.isReturned());
-
-        // in borrowed list
-        loanLists.clearLists(context);
-        loanLists.saveBorrowed(loan, context);
-        assertEquals(LoanStatus.BORROWED, loan.getStatus());
-        assertFalse(loan.isReturned());
-
-        // moved in return list
-        loanLists.saveReturned(loan, context);
-        assertEquals(LoanStatus.RETURNED, loan.getStatus());
-        assertTrue(loan.isReturned());
     }
 
     @Test
@@ -204,10 +143,6 @@ public class LoanListUnitTest {
         loanLists.saveBorrowed(loan1, context);
         assertTrue(loanLists.deleteLoan(loan1, context));
         assertEquals(1, loanLists.getLoanCount());
-
-        loanLists.saveReturned(loan1, context);
-        assertTrue(loanLists.deleteLoan(loan1, context));
-        assertEquals(1, loanLists.getLoanCount());
     }
 
     @Test
@@ -217,13 +152,11 @@ public class LoanListUnitTest {
         Loan lentLoan = new Loan(1, "lent");
         lentLoan.setContact(new Contact(1, "name", "uri"));
         Loan borrowedLoan = new Loan(2, "borrowed");
-        Loan returnedLoan = new Loan(3, "returned");
 
         // add to LoanLists
         loanLists.clearLists(context);
         loanLists.saveLent(lentLoan, context);
         loanLists.saveBorrowed(borrowedLoan, context);
-        loanLists.saveReturned(returnedLoan, context);
         String jsonExport = loanLists.toJson();
 
         // clear lists
@@ -232,13 +165,12 @@ public class LoanListUnitTest {
 
         // import json
         assertTrue(LoanLists.getInstance().fromJson(jsonExport, context));
-        assertEquals(3, loanLists.getLoanCount());
+        assertEquals(2, loanLists.getLoanCount());
         assertEquals(lentLoan, loanLists.getLentList().get(0));
         assertEquals(lentLoan.getContact().getId(), loanLists.getLentList().get(0).getContact().getId());
         assertEquals(lentLoan.getContact().getName(), loanLists.getLentList().get(0).getContact().getName());
         assertEquals(lentLoan.getContact().getPhotoUri(), loanLists.getLentList().get(0).getContact().getPhotoUri());
         assertEquals(borrowedLoan, loanLists.getBorrowedList().get(0));
-        assertEquals(returnedLoan, loanLists.getReturnedList().get(0));
 
     }
 }

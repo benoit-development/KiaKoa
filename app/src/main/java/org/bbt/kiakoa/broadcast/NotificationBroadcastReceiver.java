@@ -41,14 +41,15 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             switch (action) {
                 case INTENT_ACTION_RETURN_LOAN:
-                    Log.i(TAG, "Request to put a loan in returned list");
+                    Log.i(TAG, "Request to put a loan as returned");
 
                     if (loan == null) {
                         // error while retrieving data
                         Log.e(TAG, "Failed getting data");
                     } else {
                         // data successfully got
-                        loanLists.saveReturned(loan, context);
+                        loan.setReturned();
+                        LoanLists.getInstance().updateLoan(loan, context);
                         if (notificationManager != null) {
                             notificationManager.cancel(loan.getNotificationId());
                         }

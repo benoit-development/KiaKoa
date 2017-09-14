@@ -68,6 +68,12 @@ public class Loan implements Parcelable {
     private String item;
 
     /**
+     * if returned or not
+     * not returned by default
+     */
+    private boolean returned = false;
+
+    /**
      * an {@link Uri} path for the item picture
      */
     @Expose
@@ -101,6 +107,7 @@ public class Loan implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(id);
         out.writeString(item);
+        out.writeByte((byte) (returned ? 1 : 0));
         out.writeString(itemPicture);
         out.writeLong(loanDate);
         out.writeLong(returnDate);
@@ -128,6 +135,7 @@ public class Loan implements Parcelable {
     private Loan(Parcel in) {
         id = in.readLong();
         item = in.readString();
+        returned = in.readByte() != 0;
         itemPicture = in.readString();
         loanDate = in.readLong();
         returnDate = in.readLong();
@@ -416,31 +424,19 @@ public class Loan implements Parcelable {
     }
 
     /**
-     * Method to determine this {@link Loan} state in the {@link LoanLists} instance
-     *
-     * @return current state
-     */
-    public LoanStatus getStatus() {
-        LoanLists loanLists = LoanLists.getInstance();
-
-        if (loanLists.getLentList().contains(this)) {
-            return LoanStatus.LENT;
-        } else if (loanLists.getBorrowedList().contains(this)) {
-            return LoanStatus.BORROWED;
-        } else if (loanLists.getReturnedList().contains(this)) {
-            return LoanStatus.RETURNED;
-        } else {
-            return LoanStatus.NONE;
-        }
-    }
-
-    /**
      * Test if this {@link Loan} is returned
      *
      * @return is returned or not
      */
     public boolean isReturned() {
-        return getStatus().equals(LoanStatus.RETURNED);
+        return returned;
+    }
+
+    /**
+     * returned setter
+     */
+    public void setReturned() {
+        this.returned = true;
     }
 
     /**
@@ -706,5 +702,12 @@ public class Loan implements Parcelable {
      */
     boolean hasContact() {
         return (contact != null) && (contact.getName().length() > 0);
+    }
+
+    /**
+     * This will toggle this loan returned status
+     */
+    public void toggleReturnedStatus() {
+        returned = !returned;
     }
 }

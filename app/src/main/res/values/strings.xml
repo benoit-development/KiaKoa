@@ -28,15 +28,10 @@
     <string name="write_external_storage_required">Permission to write on external storage is required to take a picture</string>
     <string name="clear_all_loan_lists">Clear all loan lists</string>
     <string name="clear_all_lists_question">Do you want to clear all loan lists ?</string>
-    <string name="clear_return_list_question">Do you want to clear return loan list ?</string>
     <string name="all_loan_lists_already_empty">All loan lists are already empty</string>
-    <string name="return_loan_lists_already_empty">Return loan list is already empty</string>
     <string name="all_loan_lists_cleared">All loan lists cleared</string>
-    <string name="return_loan_list_cleared">Return loan list cleared</string>
     <string name="notifications">Notification</string>
     <string name="notification_date_return_summary">You will be notified when return date is reached</string>
-    <string name="return_loan">Return this loan</string>
-    <string name="status">Status</string>
     <string name="loan_returned">Loan has been returned</string>
     <string name="notification">Notification</string>
     <string name="click_see_loan_details">Click here to see loan details</string>
@@ -59,6 +54,7 @@
     <string name="loans_lists_export_failed" tools:ignore="UnusedResources">Loan lists export failed</string>
     <string name="lent_list_count" tools:ignore="UnusedResources">Lent lists [%d]</string>
     <string name="background">Background</string>
+    <string name="in_progress">In Progress</string>
     <plurals name="plural_day">
         <item quantity="zero">%d day</item>
         <item quantity="one">%d day</item>
@@ -79,11 +75,6 @@
         <item quantity="one">%d item</item>
         <item quantity="other">%d items</item>
     </plurals>
-    <string-array name="status_list">
-        <item>@string/lent</item>
-        <item>@string/borrowed</item>
-        <item>@string/returned</item>
-    </string-array>
     <string-array name="picture_action_list">
         <item name="take_picture">Take a picture</item>
         <item name="pick_image">Pick an image</item>

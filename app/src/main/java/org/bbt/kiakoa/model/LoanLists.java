@@ -36,11 +36,6 @@ public class LoanLists {
     public static final String SHARED_PREFERENCES_BORROWED_KEY = "borrowed";
 
     /**
-     * Loan returned list identifier for shared preferences
-     */
-    public static final String SHARED_PREFERENCES_RETURNED_KEY = "returned";
-
-    /**
      * time of last saved loans in preferences
      */
     private static final String SHARED_PREFERENCES_TIME_KEY = "time";
@@ -61,12 +56,6 @@ public class LoanLists {
      */
     @Expose
     private ArrayList<Loan> borrowedList;
-
-    /**
-     * returned loan items
-     */
-    @Expose
-    private ArrayList<Loan> returnedList;
 
     /**
      * Singleton instance
@@ -127,8 +116,6 @@ public class LoanLists {
             }.getType());
             borrowedList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_BORROWED_KEY, "[]"), new TypeToken<ArrayList<Loan>>() {
             }.getType());
-            returnedList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_RETURNED_KEY, "[]"), new TypeToken<ArrayList<Loan>>() {
-            }.getType());
 
             scheduleAllLoanNotification(context);
             sortLists();
@@ -139,12 +126,10 @@ public class LoanLists {
 
             lentList = new ArrayList<>();
             borrowedList = new ArrayList<>();
-            returnedList = new ArrayList<>();
         }
 
         Log.d(TAG, "initLists: lent count:     " + lentList.size());
         Log.d(TAG, "initLists: borrowed count: " + borrowedList.size());
-        Log.d(TAG, "initLists: returned count: " + returnedList.size());
     }
 
     /**
@@ -165,7 +150,6 @@ public class LoanLists {
         ArrayList<ArrayList<Loan>> result = new ArrayList<>();
         result.add(lentList);
         result.add(borrowedList);
-        result.add(returnedList);
         return result;
     }
 
@@ -237,37 +221,6 @@ public class LoanLists {
         return result;
     }
 
-
-    /**
-     * save a {@link Loan} from the Returned list
-     *
-     * @param loan    loan from add
-     * @param context a {@link Context}
-     * @return if add is success or not
-     */
-    public boolean saveReturned(Loan loan, Context context) {
-        Log.i(TAG, "saveReturned: " + loan.toJson());
-
-        // remove this loan from its previous lists
-        for (ArrayList<Loan> list : getAllLists()) {
-            list.remove(loan);
-        }
-
-        // add to returned list
-        boolean result = returnedList.add(loan);
-
-        // if there is a context, then save list
-        saveInSharedPreferences(context);
-
-        if (result) {
-            loan.cancelNotificationSchedule(context);
-            sortList(returnedList);
-            notifyLoanListsChanged();
-        }
-
-        return result;
-    }
-
     /**
      * Update a {@link Loan} present in one of the lists
      *
@@ -288,11 +241,6 @@ public class LoanLists {
             // loan removed from loan from list
             result |= borrowedList.add(loan);
             sortList(borrowedList);
-        }
-        if (returnedList.remove(loan)) {
-            // loan removed from loan returned list
-            result |= returnedList.add(loan);
-            sortList(returnedList);
         }
 
         if (result) {
@@ -324,15 +272,6 @@ public class LoanLists {
      */
     public ArrayList<Loan> getBorrowedList() {
         return borrowedList;
-    }
-
-    /**
-     * Returned list getter
-     *
-     * @return returned list
-     */
-    public ArrayList<Loan> getReturnedList() {
-        return returnedList;
     }
 
     /**
@@ -393,28 +332,11 @@ public class LoanLists {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString(SHARED_PREFERENCES_LENT_KEY, new Gson().toJson(lentList));
             editor.putString(SHARED_PREFERENCES_BORROWED_KEY, new Gson().toJson(borrowedList));
-            editor.putString(SHARED_PREFERENCES_RETURNED_KEY, new Gson().toJson(returnedList));
             editor.putLong(SHARED_PREFERENCES_TIME_KEY, System.currentTimeMillis());
             editor.apply();
             // update the preference that we need to sync with google drive
             Preferences.setSyncNeeded(true, context);
         }
-    }
-
-    /**
-     * empty return loan list
-     *
-     * @param context a {@link Context}
-     */
-    public void clearReturnedList(Context context) {
-        Log.i(TAG, "clearReturnedList");
-
-        // empty list
-        returnedList.clear();
-        saveInSharedPreferences(context);
-
-        // notify changes
-        notifyLoanListsChanged();
     }
 
     /**
@@ -467,7 +389,7 @@ public class LoanLists {
      * @return loans count
      */
     public int getLoanCount() {
-        return lentList.size() + borrowedList.size() + returnedList.size();
+        return lentList.size() + borrowedList.size();
     }
 
     /**
@@ -487,12 +409,6 @@ public class LoanLists {
         }
         // in borrowed
         for (Loan loan : borrowedList) {
-            if (loan.getId() == id) {
-                result = loan;
-            }
-        }
-        // in returned
-        for (Loan loan : returnedList) {
             if (loan.getId() == id) {
                 result = loan;
             }
@@ -563,10 +479,6 @@ public class LoanLists {
                 // borrowed list
                 if (loanLists.borrowedList != null) {
                     borrowedList.addAll(loanLists.borrowedList);
-                }
-                // returned list
-                if (loanLists.returnedList != null) {
-                    returnedList.addAll(loanLists.returnedList);
                 }
 
                 getInstance().saveInSharedPreferences(context);

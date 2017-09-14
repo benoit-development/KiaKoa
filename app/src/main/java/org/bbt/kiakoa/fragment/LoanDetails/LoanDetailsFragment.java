@@ -13,9 +13,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,7 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.LoanDetailsActivity;
@@ -32,14 +31,11 @@ import org.bbt.kiakoa.dialog.DeleteLoanDialog;
 import org.bbt.kiakoa.dialog.LoanContactDialog;
 import org.bbt.kiakoa.dialog.LoanDateDialog;
 import org.bbt.kiakoa.dialog.LoanItemDialog;
-import org.bbt.kiakoa.dialog.LoanStatusDialog;
 import org.bbt.kiakoa.dialog.PictureDialog;
 import org.bbt.kiakoa.dialog.ReturnDateDialog;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
-import org.bbt.kiakoa.tools.ItemClickRecyclerAdapter;
 import org.bbt.kiakoa.tools.Miscellaneous;
-import org.bbt.kiakoa.tools.SimpleDividerItemDecoration;
 
 /**
  * Activity displaying {@link LoanDetailsFragment}
@@ -47,7 +43,7 @@ import org.bbt.kiakoa.tools.SimpleDividerItemDecoration;
  *
  * @author Benoit Bousquet
  */
-public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAdapter.OnItemClickListener, LoanLists.OnLoanListsChangedListener {
+public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoanListsChangedListener, AdapterView.OnItemClickListener {
 
     /**
      * For log
@@ -75,29 +71,9 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
     private Loan loan;
 
     /**
-     * Instance of used {@link LoanDetailsRecyclerAdapter}
-     */
-    private LoanDetailsRecyclerAdapter loanDetailsAdapter;
-
-    /**
      * Intent to take a picture from camera
      */
     private final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-    /**
-     * {@link RecyclerView} displaying loan details
-     */
-    private RecyclerView recyclerView;
-
-    /**
-     * Displayed when no loan is is the list
-     */
-    private TextView emptyTextView;
-
-    /**
-     * {@link MenuItem} to return the displayed loan
-     */
-    private MenuItem returnMenuItem;
 
     /**
      * {@link MenuItem} to display contact card of the displayed loan
@@ -121,6 +97,20 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_loan_details_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        setListAdapter(new LoanDetailsAdapter());
+        getListView().setOnItemClickListener(this);
+        getListView().setEmptyView(view.findViewById(R.id.empty_element));
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         LoanLists.getInstance().registerOnLoanListsChangedListener(this, TAG);
@@ -134,29 +124,8 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_loan_details_list, container, false);
-
-        // customize list
-        recyclerView = view.findViewById(R.id.recycler);
-        // use a linear layout manager
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-
-        loanDetailsAdapter = new LoanDetailsRecyclerAdapter();
-        loanDetailsAdapter.setOnItemClickListener(this);
-        recyclerView.setAdapter(loanDetailsAdapter);
-
-        emptyTextView = view.findViewById(R.id.empty_element);
-
-        return view;
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.loan_details, menu);
-        // retrieve instance of return menu item
-        returnMenuItem = menu.findItem(R.id.action_return);
         // retrieve instance of contact menu item
         contactCardMenuItem = menu.findItem(R.id.action_contact_card);
         // retrieve instance of create calendar event menu item
@@ -170,15 +139,6 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_return:
-                LoanLists.getInstance().saveReturned(loan, getContext());
-                if (getActivity() instanceof LoanDetailsActivity) {
-                    getActivity().finish();
-                } else {
-                    updateView();
-                }
-                Toast.makeText(getContext(), R.string.loan_returned, Toast.LENGTH_SHORT).show();
-                return true;
             case R.id.action_contact_card:
                 loan.displayContactCard(getContext());
                 return true;
@@ -204,25 +164,80 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         updateView();
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+
+        switch (position) {
+            case 0:
+                Log.i(TAG, "Item modification requested");
+                showItemDialog();
+
+                break;
+            case 1:
+                Log.i(TAG, "returned status change requested");
+                loan.toggleReturnedStatus();
+                LoanLists.getInstance().updateLoan(loan, getContext());
+                break;
+            case 2:
+                Log.i(TAG, "Requesting picture for the item");
+                // check for write external storage permission
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    // Should we show an explanation?
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        // Show an explanation to the user *asynchronously*
+                        Log.i(TAG, "WRITE_EXTERNAL_STORAGE permission not granted");
+                        Toast.makeText(getContext(), R.string.write_external_storage_required, Toast.LENGTH_SHORT).show();
+                    } else {
+                        // No explanation needed, we can request the permission.
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                    }
+                } else {
+                    selectLoanPicture();
+                }
+
+                break;
+            case 3:
+                Log.i(TAG, "Loan date modification requested");
+                showDateDialog();
+
+                break;
+            case 4:
+                Log.i(TAG, "Loan date modification requested");
+                showDateReturnDialog();
+
+                break;
+            case 5:
+                Log.i(TAG, "Contact modification requested");
+
+                // check permission to read contacts
+                boolean showDialog = true;
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                    // Should we show an explanation?
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_CONTACTS)) {
+                        // Show an explanation to the user *asynchronously*
+                        Log.i(TAG, "READ_CONTACTS permission not granted");
+                    } else {
+                        // No explanation needed, we can request the permission.
+                        requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+                        showDialog = false;
+                    }
+                }
+
+                if (showDialog) {
+                    showContactDialog();
+                }
+
+                break;
+        }
+    }
+
     /**
      * Method to update view visibility
      */
     private void updateView() {
-        loanDetailsAdapter.setLoan(loan);
-
-        // set display if there is a loan to display
-        if (loanDetailsAdapter.getItemCount() == 0) {
-            recyclerView.setVisibility(View.GONE);
-            emptyTextView.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyTextView.setVisibility(View.GONE);
-        }
+        ((LoanDetailsAdapter) getListAdapter()).setLoan(loan);
 
         // update menu item visibility depending on loan status
-        if (returnMenuItem != null) {
-            returnMenuItem.setVisible((loan != null) && (!loan.isReturned()));
-        }
         if (createCalendarMenuItem != null) {
             createCalendarMenuItem.setVisible((loan != null) && (loan.getReturnDate() != -1) && (!loan.isReturned()));
         }
@@ -423,89 +438,6 @@ public class LoanDetailsFragment extends Fragment implements ItemClickRecyclerAd
         // Create and show the dialog.
         LoanItemDialog newItemDialog = LoanItemDialog.newInstance(loan);
         newItemDialog.show(ft, "item");
-    }
-
-    /**
-     * Display dialog to enter a new status
-     */
-    private void showStatusDialog() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment statusDialog = getFragmentManager().findFragmentByTag("status");
-        if (statusDialog != null) {
-            ft.remove(statusDialog);
-        }
-        ft.addToBackStack(null);
-
-        // Create and show the dialog.
-        LoanStatusDialog newItemDialog = LoanStatusDialog.newInstance(loan);
-        newItemDialog.show(ft, "status");
-    }
-
-    @Override
-    public void onItemClick(int position) {
-
-        switch (position) {
-            case 0:
-                Log.i(TAG, "Item modification requested");
-                showItemDialog();
-
-                break;
-            case 1:
-                Log.i(TAG, "Item status requested");
-                showStatusDialog();
-
-                break;
-            case 2:
-                Log.i(TAG, "Requesting picture for the item");
-                // check for write external storage permission
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    // Should we show an explanation?
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        // Show an explanation to the user *asynchronously*
-                        Log.i(TAG, "WRITE_EXTERNAL_STORAGE permission not granted");
-                        Toast.makeText(getContext(), R.string.write_external_storage_required, Toast.LENGTH_SHORT).show();
-                    } else {
-                        // No explanation needed, we can request the permission.
-                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-                    }
-                } else {
-                    selectLoanPicture();
-                }
-
-                break;
-            case 3:
-                Log.i(TAG, "Loan date modification requested");
-                showDateDialog();
-
-                break;
-            case 4:
-                Log.i(TAG, "Loan date modification requested");
-                showDateReturnDialog();
-
-                break;
-            case 5:
-                Log.i(TAG, "Contact modification requested");
-
-                // check permission to read contacts
-                boolean showDialog = true;
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                    // Should we show an explanation?
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_CONTACTS)) {
-                        // Show an explanation to the user *asynchronously*
-                        Log.i(TAG, "READ_CONTACTS permission not granted");
-                    } else {
-                        // No explanation needed, we can request the permission.
-                        requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
-                        showDialog = false;
-                    }
-                }
-
-                if (showDialog) {
-                    showContactDialog();
-                }
-
-                break;
-        }
     }
 
 

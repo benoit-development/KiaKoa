@@ -101,10 +101,6 @@ public class LoanListsPagerFragment extends Fragment {
                 // borrowed
                 getActivity().setTitle(R.string.borrowed);
                 break;
-            case 2:
-                // returned
-                getActivity().setTitle(R.string.returned);
-                break;
         }
     }
 
@@ -124,7 +120,7 @@ public class LoanListsPagerFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
 
         @Override
@@ -134,11 +130,8 @@ public class LoanListsPagerFragment extends Fragment {
                 case 0:
                     fragment = new LentListFragment();
                     break;
-                case 1:
-                    fragment = new BorrowedListFragment();
-                    break;
                 default:
-                    fragment = new ReturnedListFragment();
+                    fragment = new BorrowedListFragment();
                     break;
             }
 
