@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 
 import org.junit.Test;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -17,7 +19,7 @@ import static org.junit.Assert.assertTrue;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class LoanListUnitTest {
+public class LoanListsUnitTest {
 
     /**
      * a {@link Context}
@@ -172,5 +174,36 @@ public class LoanListUnitTest {
         assertEquals(lentLoan.getContact().getPhotoUri(), loanLists.getLentList().get(0).getContact().getPhotoUri());
         assertEquals(borrowedLoan, loanLists.getBorrowedList().get(0));
 
+    }
+
+    @Test
+    public void comparable_list() {
+        LoanList list = new LoanList();
+
+        // loans
+        Loan loanReturned2 = new Loan("b");
+        loanReturned2.setReturned();
+        Loan loanReturned1 = new Loan("a");
+        loanReturned1.setReturned();
+        Loan loanNotReturned2 = new Loan("b");
+        Loan loanNotReturned1 = new Loan("a");
+
+        // add
+        list.add(loanReturned2);
+        list.add(loanReturned1);
+        list.add(loanNotReturned2);
+        list.add(loanNotReturned1);
+
+        // sort
+        Collections.sort(list, new Loan.LoanComparator());
+
+        // test ^^
+        assertEquals(list.get(0), loanNotReturned1);
+        assertEquals(list.get(1), loanNotReturned2);
+        assertEquals(list.get(2), loanReturned1);
+        assertEquals(list.get(3), loanReturned2);
+
+        // count returned loans
+        assertEquals(2, list.getInProgressCount());
     }
 }

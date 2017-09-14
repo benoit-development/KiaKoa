@@ -326,6 +326,10 @@ public class LoanLists {
      * @param context a context
      */
     private void saveInSharedPreferences(Context context) {
+        // sort lists
+        Loan.LoanComparator loanComparator = new Loan.LoanComparator();
+        Collections.sort(lentList, loanComparator);
+        Collections.sort(borrowedList, loanComparator);
         if (context != null) {
             // remove data from shared preferences
             SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);

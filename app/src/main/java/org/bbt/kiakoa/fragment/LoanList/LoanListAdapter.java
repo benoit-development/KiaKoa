@@ -15,8 +15,7 @@ import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.exception.LoanException;
 import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
-
-import java.util.ArrayList;
+import org.bbt.kiakoa.model.LoanList;
 
 /**
  * Adapter for the loan list {@link RecyclerView}
@@ -29,7 +28,7 @@ class LoanListAdapter extends BaseAdapter {
     /**
      * Loan list to display
      */
-    private final ArrayList<Loan> loanList;
+    private final LoanList loanList;
 
     @Override
     public int getCount() {
@@ -38,7 +37,13 @@ class LoanListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return loanList.get(i - 1);
+        int indexInLoanList;
+        if (i <= loanList.getInProgressCount()) {
+            indexInLoanList = i - 1;
+        } else {
+            indexInLoanList = i - 2;
+        }
+        return loanList.get(indexInLoanList);
     }
 
     @Override
@@ -48,7 +53,7 @@ class LoanListAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if ((position == 0) || (position == loanList.size() + 1)) {
+        if ((position == 0) || (position == loanList.getInProgressCount() + 1)) {
             return TYPE_HEADER;
         } else {
             return TYPE_CARD;
@@ -164,26 +169,8 @@ class LoanListAdapter extends BaseAdapter {
      *
      * @param loanList displayed loan list
      */
-    LoanListAdapter(ArrayList<Loan> loanList) {
+    LoanListAdapter(LoanList loanList) {
         this.loanList = loanList;
     }
-/*
-    @Override
-    public void onBindViewHolder(LoanViewHolder holder, int position) {
-        super.onBindViewHolder(holder, position);
 
-        if (getItemViewType(position) == TYPE_HEADER) {
-
-            int textId;
-            if (position == 0) {
-                textId = R.string.in_progress;
-            } else {
-                textId = R.string.returned;
-            }
-            holder.textView.setText(textId);
-
-        } else {
-
-        }
-    }*/
 }

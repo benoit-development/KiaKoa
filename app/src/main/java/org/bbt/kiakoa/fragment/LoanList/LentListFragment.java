@@ -1,9 +1,7 @@
 package org.bbt.kiakoa.fragment.LoanList;
 
-import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.model.LoanList;
 import org.bbt.kiakoa.model.LoanLists;
-
-import java.util.ArrayList;
 
 /**
  * Loan to fragment list
@@ -18,7 +16,7 @@ public class LentListFragment extends AbstractLoanListFragment {
     }
 
     @Override
-    protected ArrayList<Loan> getLoanList() {
+    protected LoanList getLoanList() {
         return LoanLists.getInstance().getLentList();
     }
 

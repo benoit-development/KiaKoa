@@ -32,6 +32,7 @@ import org.bbt.kiakoa.tools.Preferences;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 
 /**
  * Class defining a loan
@@ -709,5 +710,30 @@ public class Loan implements Parcelable {
      */
     public void toggleReturnedStatus() {
         returned = !returned;
+    }
+
+    /**
+     * {@link Comparator} to sort {@link LoanList}
+     */
+    public static class LoanComparator implements Comparator<Loan> {
+
+        @Override
+        public int compare(Loan loan1, Loan loan2) {
+            if (loan1.equals(loan2)) {
+                // same id
+                return 0;
+            } else if (loan2.isReturned() != loan1.isReturned()) {
+                // one is returned and the other not
+                if (loan1.isReturned()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else {
+                // compare names
+                return loan1.getItem().toLowerCase().compareTo(loan2.getItem().toLowerCase());
+            }
+        }
+
     }
 }

@@ -16,9 +16,8 @@ import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.LoanItemDialog;
 import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.model.LoanList;
 import org.bbt.kiakoa.model.LoanLists;
-
-import java.util.ArrayList;
 
 /**
  * Fragment displaying list of {@link Loan}
@@ -104,7 +103,7 @@ abstract public class AbstractLoanListFragment extends ListFragment implements L
      *
      * @return the list to populate {@link ListView}
      */
-    abstract protected ArrayList<Loan> getLoanList();
+    abstract protected LoanList getLoanList();
 
     /**
      * Id to identify list used in subclasses

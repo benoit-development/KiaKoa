@@ -7,6 +7,17 @@ import java.util.ArrayList;
  */
 public class LoanList extends ArrayList<Loan> {
 
-
+    /**
+     * Get number in progress loan in this list
+     *
+     * @return count
+     */
+    public int getInProgressCount() {
+        int count = 0;
+        for (Loan loan : this) {
+            count += (!loan.isReturned()) ? 1 : 0;
+        }
+        return count;
+    }
 
 }

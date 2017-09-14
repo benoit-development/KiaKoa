@@ -58,7 +58,7 @@ public class LoanUnitTest {
         // with a contact
         loanTest.setContact(contactTest);
         // with state as returned
-        loanTest.setReturned(true);
+        loanTest.setReturned();
         parcel = Parcel.obtain();
         loanTest.writeToParcel(parcel, loanTest.describeContents());
         parcel.setDataPosition(0);
