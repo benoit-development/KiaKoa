@@ -49,13 +49,13 @@ public class LoanLists {
      * list of loaned items
      */
     @Expose
-    private ArrayList<Loan> lentList;
+    private LoanList lentList;
 
     /**
      * borrowed loaned items
      */
     @Expose
-    private ArrayList<Loan> borrowedList;
+    private LoanList borrowedList;
 
     /**
      * Singleton instance
@@ -112,9 +112,9 @@ public class LoanLists {
             Log.i(TAG, "initLists: init lists from shared preferences");
 
             SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
-            lentList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_LENT_KEY, "[]"), new TypeToken<ArrayList<Loan>>() {
+            lentList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_LENT_KEY, "[]"), new TypeToken<LoanList>() {
             }.getType());
-            borrowedList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_BORROWED_KEY, "[]"), new TypeToken<ArrayList<Loan>>() {
+            borrowedList = new Gson().fromJson(sharedPref.getString(SHARED_PREFERENCES_BORROWED_KEY, "[]"), new TypeToken<LoanList>() {
             }.getType());
 
             scheduleAllLoanNotification(context);
@@ -124,8 +124,8 @@ public class LoanLists {
 
             Log.i(TAG, "initLists: init empty lists");
 
-            lentList = new ArrayList<>();
-            borrowedList = new ArrayList<>();
+            lentList = new LoanList();
+            borrowedList = new LoanList();
         }
 
         Log.d(TAG, "initLists: lent count:     " + lentList.size());
@@ -136,7 +136,7 @@ public class LoanLists {
      * Sort all the lists
      */
     private void sortLists() {
-        for (ArrayList<Loan> list : getAllLists()) {
+        for (LoanList list : getAllLists()) {
             sortList(list);
         }
     }
@@ -146,8 +146,8 @@ public class LoanLists {
      *
      * @return all lists
      */
-    private ArrayList<ArrayList<Loan>> getAllLists() {
-        ArrayList<ArrayList<Loan>> result = new ArrayList<>();
+    private ArrayList<LoanList> getAllLists() {
+        ArrayList<LoanList> result = new ArrayList<>();
         result.add(lentList);
         result.add(borrowedList);
         return result;
@@ -158,7 +158,7 @@ public class LoanLists {
      *
      * @param loanList list to be sorted
      */
-    private void sortList(ArrayList<Loan> loanList) {
+    private void sortList(LoanList loanList) {
         Collections.sort(loanList, loanDateComparator);
     }
 
@@ -173,7 +173,7 @@ public class LoanLists {
         Log.i(TAG, "saveLent: " + loan.toJson());
 
         // delete from other lists if necessary
-        for (ArrayList<Loan> list : getAllLists()) {
+        for (LoanList list : getAllLists()) {
             list.remove(loan);
         }
 
@@ -203,7 +203,7 @@ public class LoanLists {
         Log.i(TAG, "saveBorrowed: " + loan.toJson());
 
         // delete from other lists if necessary
-        for (ArrayList<Loan> list : getAllLists()) {
+        for (LoanList list : getAllLists()) {
             list.remove(loan);
         }
 
@@ -261,7 +261,7 @@ public class LoanLists {
      *
      * @return lent list
      */
-    public ArrayList<Loan> getLentList() {
+    public LoanList getLentList() {
         return lentList;
     }
 
@@ -270,7 +270,7 @@ public class LoanLists {
      *
      * @return borrowed list
      */
-    public ArrayList<Loan> getBorrowedList() {
+    public LoanList getBorrowedList() {
         return borrowedList;
     }
 
@@ -284,7 +284,7 @@ public class LoanLists {
 
         // empty lists
         cancelAllLoanNotificationSchedule(context);
-        for (ArrayList<Loan> list : getAllLists()) {
+        for (LoanList list : getAllLists()) {
             list.clear();
         }
         saveInSharedPreferences(context);
@@ -304,7 +304,7 @@ public class LoanLists {
 
         // remove this loan from lists (based on its ID)
         boolean result = false;
-        for (ArrayList<Loan> list : getAllLists()) {
+        for (LoanList list : getAllLists()) {
             result |= list.remove(loan);
         }
 
@@ -424,7 +424,7 @@ public class LoanLists {
      */
     public void scheduleAllLoanNotification(Context context) {
         Log.i(TAG, "Scheduling all notifications");
-        for (ArrayList<Loan> list : getAllLists()) {
+        for (LoanList list : getAllLists()) {
             for (Loan loan : list) {
                 loan.scheduleNotification(context);
             }
@@ -438,7 +438,7 @@ public class LoanLists {
      */
     public void cancelAllLoanNotificationSchedule(Context context) {
         Log.i(TAG, "Cancelling all notifications");
-        for (ArrayList<Loan> list : getAllLists()) {
+        for (LoanList list : getAllLists()) {
             for (Loan loan : list) {
                 loan.cancelNotificationSchedule(context);
             }
@@ -500,7 +500,7 @@ public class LoanLists {
     private boolean isValid() {
         boolean result = true;
 
-        for (ArrayList<Loan> list : getAllLists()) {
+        for (LoanList list : getAllLists()) {
             // check if list exists
             if (lentList == null) {
                 Log.e(TAG, "lent list null");
