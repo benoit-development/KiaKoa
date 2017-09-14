@@ -13,7 +13,6 @@ import org.bbt.kiakoa.tools.Preferences;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Class managing all current loans
@@ -63,16 +62,6 @@ public class LoanLists {
     private static LoanLists instance;
 
     /**
-     * Loan Comparator based on loan date
-     */
-    private final Comparator<Loan> loanDateComparator = new Comparator<Loan>() {
-        @Override
-        public int compare(Loan loan1, Loan loan2) {
-            return Long.compare(loan1.getLoanDate(), loan2.getLoanDate());
-        }
-    };
-
-    /**
      * Listener loan lists changed
      */
     private final ArrayList<OnLoanListsChangedListener> onLoanListsChangedListeners = new ArrayList<>();
@@ -118,7 +107,6 @@ public class LoanLists {
             }.getType());
 
             scheduleAllLoanNotification(context);
-            sortLists();
 
         } else {
 
@@ -133,15 +121,6 @@ public class LoanLists {
     }
 
     /**
-     * Sort all the lists
-     */
-    private void sortLists() {
-        for (LoanList list : getAllLists()) {
-            sortList(list);
-        }
-    }
-
-    /**
      * Get all lists of the {@link LoanLists} instance
      *
      * @return all lists
@@ -151,15 +130,6 @@ public class LoanLists {
         result.add(lentList);
         result.add(borrowedList);
         return result;
-    }
-
-    /**
-     * Sort a list depending on the chosen sort
-     *
-     * @param loanList list to be sorted
-     */
-    private void sortList(LoanList loanList) {
-        Collections.sort(loanList, loanDateComparator);
     }
 
     /**
@@ -184,7 +154,6 @@ public class LoanLists {
 
         if (result) {
             loan.scheduleNotification(context);
-            sortList(lentList);
             notifyLoanListsChanged();
         }
 
@@ -214,7 +183,6 @@ public class LoanLists {
 
         if (result) {
             loan.scheduleNotification(context);
-            sortList(borrowedList);
             notifyLoanListsChanged();
         }
 
@@ -235,12 +203,10 @@ public class LoanLists {
         if (lentList.remove(loan)) {
             // loan removed from loan to list
             result = lentList.add(loan);
-            sortList(lentList);
         }
         if (borrowedList.remove(loan)) {
             // loan removed from loan from list
             result |= borrowedList.add(loan);
-            sortList(borrowedList);
         }
 
         if (result) {
@@ -464,7 +430,8 @@ public class LoanLists {
 
     /**
      * import lists from a json string
-     *  @param json    json string
+     *
+     * @param json    json string
      * @param context a context
      */
     public boolean fromJson(String json, Context context) {
@@ -499,6 +466,7 @@ public class LoanLists {
 
     /**
      * Check if this instance is valid
+     *
      * @return instance validity
      */
     private boolean isValid() {
@@ -513,7 +481,7 @@ public class LoanLists {
                 break;
             }
             // the list exists, check if loans are valid too
-            for(Loan loan : list) {
+            for (Loan loan : list) {
                 result &= loan.isValid();
             }
         }
