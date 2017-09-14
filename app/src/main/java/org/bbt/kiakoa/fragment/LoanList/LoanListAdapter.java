@@ -1,6 +1,8 @@
 package org.bbt.kiakoa.fragment.LoanList;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +19,8 @@ import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Adapter for the loan list {@link RecyclerView}
  */
@@ -26,9 +30,23 @@ class LoanListAdapter extends BaseAdapter {
     private static final int TYPE_CARD = 1;
 
     /**
+     * color list
+     */
+    private TypedArray colors;
+
+    /**
      * Loan list to display
      */
     private final LoanList loanList;
+
+    /**
+     * Constructor
+     *
+     * @param loanList displayed loan list
+     */
+    LoanListAdapter(LoanList loanList) {
+        this.loanList = loanList;
+    }
 
     @Override
     public int getCount() {
@@ -78,13 +96,14 @@ class LoanListAdapter extends BaseAdapter {
             } else {
                 convertView = LayoutInflater.from(context).inflate(R.layout.adapter_loan_item, parent, false);
             }
-            holder.textView = convertView.findViewById(R.id.text);
-            holder.pictureView = convertView.findViewById(R.id.picture);
-            holder.alertView = convertView.findViewById(R.id.alert);
-            holder.itemView = convertView.findViewById(R.id.item);
-            holder.contactView = convertView.findViewById(R.id.contact);
-            holder.durationView = convertView.findViewById(R.id.duration);
-            holder.delayView = convertView.findViewById(R.id.delay);
+            holder.text = convertView.findViewById(R.id.text);
+            holder.initial = convertView.findViewById(R.id.initial);
+            holder.picture = convertView.findViewById(R.id.picture);
+            holder.alert = convertView.findViewById(R.id.alert);
+            holder.item = convertView.findViewById(R.id.item);
+            holder.contact = convertView.findViewById(R.id.contact);
+            holder.duration = convertView.findViewById(R.id.duration);
+            holder.delay = convertView.findViewById(R.id.delay);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -99,7 +118,7 @@ class LoanListAdapter extends BaseAdapter {
             } else {
                 textId = R.string.returned;
             }
-            holder.textView.setText(textId);
+            holder.text.setText(textId);
 
         } else {
 
@@ -107,46 +126,47 @@ class LoanListAdapter extends BaseAdapter {
             Loan loan = (Loan) getItem(position);
 
             // item
-            holder.itemView.setText(loan.getItem());
+            holder.item.setText(loan.getItem());
             // contact
             Contact contact = loan.getContact();
             if ((contact != null)) {
-                holder.contactView.setText(contact.getName());
-                holder.contactView.setVisibility(View.VISIBLE);
+                holder.contact.setText(contact.getName());
+                holder.contact.setVisibility(View.VISIBLE);
             } else {
-                holder.contactView.setVisibility(View.GONE);
+                holder.contact.setVisibility(View.GONE);
             }
             // duration
             String loanDateString = loan.getLoanDateString();
-            holder.durationView.setText(loanDateString);
-            holder.alertView.setVisibility(View.GONE);
+            holder.duration.setText(loanDateString);
+            holder.alert.setVisibility(View.GONE);
             // delay
             if (loan.isReturned()) {
-                holder.delayView.setText(loan.getDurationString(context));
+                holder.delay.setText(loan.getDurationString(context));
             } else {
-                holder.delayView.setText(loan.getReturnDateDelayString(context));
+                holder.delay.setText(loan.getReturnDateDelayString(context));
             }
             // delay is > 0
-            holder.alertView.setVisibility(View.GONE);
-            holder.delayView.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
+            holder.alert.setVisibility(View.GONE);
+            holder.delay.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
             try {
                 if ((!loan.isReturned()) && (loan.getDatesDifferenceInDays() > 0)) {
-                    holder.delayView.setTextColor(ContextCompat.getColor(context, R.color.alertRedText));
-                    holder.alertView.setVisibility(View.VISIBLE);
+                    holder.delay.setTextColor(ContextCompat.getColor(context, R.color.alertRedText));
+                    holder.alert.setVisibility(View.VISIBLE);
                 }
             } catch (LoanException e) {
                 // no return date
             }
 
-            // pictureView
+            // picture
             Uri picture = loan.getPicture();
             if (picture != null) {
-                holder.pictureView.setImageURI(picture);
-                holder.pictureView.setPadding(0, 0, 0, 0);
+                holder.picture.setImageURI(picture);
+                holder.picture.setPadding(0, 0, 0, 0);
             } else {
-                holder.pictureView.setImageResource(R.drawable.ic_item_24dp);
-                int padding = (int) context.getResources().getDimension(R.dimen.list_item_icon_padding);
-                holder.pictureView.setPadding(padding, padding, padding, padding);
+                // initial
+                holder.initial.setText(loan.getItem().substring(0, 1).toUpperCase());
+                holder.picture.setImageURI(null);
+                ((GradientDrawable) holder.picture.getBackground()).setColor(pickColor(loan.getItem(), context));
             }
         }
         return convertView;
@@ -155,22 +175,32 @@ class LoanListAdapter extends BaseAdapter {
     // Provide a reference to the views for a loan
     static class ViewHolder {
 
-        TextView textView;
-        ImageView pictureView;
-        ImageView alertView;
-        TextView itemView;
-        TextView contactView;
-        TextView durationView;
-        TextView delayView;
+        TextView text;
+        CircleImageView picture;
+        TextView initial;
+        ImageView alert;
+        TextView item;
+        TextView contact;
+        TextView duration;
+        TextView delay;
     }
 
+
     /**
-     * Constructor
+     * Pick a color with item name
      *
-     * @param loanList displayed loan list
+     * @param item    item
+     * @param context a context
+     * @return a color
      */
-    LoanListAdapter(LoanList loanList) {
-        this.loanList = loanList;
+    private int pickColor(String item, Context context) {
+
+        // init resources if not done
+        if (colors == null) {
+            colors = context.getResources().obtainTypedArray(R.array.letter_tile_colors);
+        }
+        // get color
+        return colors.getColor(Math.abs(item.hashCode()) % colors.length(), colors.getIndex(0));
     }
 
 }
