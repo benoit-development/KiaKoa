@@ -162,8 +162,10 @@ class LoanListAdapter extends BaseAdapter {
             if (picture != null) {
                 holder.picture.setImageURI(picture);
                 holder.picture.setPadding(0, 0, 0, 0);
+                holder.initial.setVisibility(View.GONE);
             } else {
                 // initial
+                holder.initial.setVisibility(View.VISIBLE);
                 holder.initial.setText(loan.getItem().substring(0, 1).toUpperCase());
                 holder.picture.setImageURI(null);
                 ((GradientDrawable) holder.picture.getBackground()).setColor(pickColor(loan.getItem(), context));

@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -452,6 +454,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             if (loanCount != 0) {
                 holder.badge.setText(String.valueOf(loanCount));
+                ((GradientDrawable) holder.badge.getBackground()).setColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
             }
             if (itemViewType == TYPE_ITEM) {
                 holder.badge.setVisibility((loanCount == 0) ? View.GONE : View.VISIBLE);
