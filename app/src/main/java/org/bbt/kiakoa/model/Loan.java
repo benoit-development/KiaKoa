@@ -264,13 +264,12 @@ public class Loan implements Parcelable {
      * loan date setter
      *
      * @param loanDate new loan date
-     * @param context  a context
      */
-    public void setLoanDate(long loanDate, Context context) {
+    public void setLoanDate(long loanDate) {
         this.loanDate = loanDate;
         if ((loanDate > returnDate) && (returnDate != -1)) {
             Log.i(TAG, "loan date should not be greater than return date");
-            setReturnDate(loanDate, context);
+            setReturnDate(loanDate);
         }
     }
 
@@ -284,15 +283,24 @@ public class Loan implements Parcelable {
     }
 
     /**
+     * Set today as returnDate if no returnDate were set
+     */
+    private void initReturnDate() {
+        if (!hasReturnDate()) {
+            setReturnDate(System.currentTimeMillis());
+        }
+    }
+
+    /**
      * return date setter
      *
      * @param returnDate new return date
      */
-    public void setReturnDate(long returnDate, Context context) {
+    public void setReturnDate(long returnDate) {
         this.returnDate = returnDate;
         if ((returnDate < loanDate) && (returnDate != -1)) {
             Log.i(TAG, "return date should not be lower than loan date");
-            setLoanDate(returnDate, context);
+            setLoanDate(returnDate);
         }
     }
 
@@ -438,6 +446,7 @@ public class Loan implements Parcelable {
      */
     public void setReturned() {
         this.returned = true;
+        initReturnDate();
     }
 
     /**
@@ -467,48 +476,11 @@ public class Loan implements Parcelable {
     }
 
     /**
-     * Get a string representing loan duration. For returned loans.
-     *
-     * @param context a context
-     * @return a string representation of the duration
+     * Check if this loan have a return date
+     * @return true or false
      */
-    public String getDurationString(Context context) {
-
-        int duration;
-        try {
-            duration = getDurationInDays();
-        } catch (LoanException e) {
-            // no return date
-            return "";
-        }
-
-        return context.getResources().getQuantityString(R.plurals.plural_day, duration, duration);
-    }
-
-    /**
-     * Get a string representing delay remaining. For not returned loans.
-     *
-     * @param context a context for translations
-     * @return a string representation of the delay
-     */
-    public String getReturnDateDelayString(Context context) {
-
-        int delay;
-        try {
-            delay = getDatesDifferenceInDays();
-        } catch (LoanException e) {
-            // no return date
-            return "";
-        }
-
-        int strId;
-        if (delay <= 0) {
-            strId = R.plurals.plural_day_left;
-        } else {
-            strId = R.plurals.plural_day_late;
-        }
-
-        return context.getResources().getQuantityString(strId, delay, Math.abs(delay));
+    public boolean hasReturnDate() {
+        return returnDate != -1;
     }
 
     /**
@@ -595,7 +567,7 @@ public class Loan implements Parcelable {
     void scheduleNotification(Context context) {
         // schedule alarm for notification if necessary
         boolean notificationEnabled = Preferences.isReturnDateNotificationEnabled(context);
-        if ((returnDate != -1) && (notificationEnabled) && (!isReturned())) {
+        if (hasReturnDate() && (notificationEnabled) && (!isReturned())) {
 
             Log.i(TAG, "Scheduling notification for loan " + getItem() + " / " + getReturnDateString(context));
 
@@ -710,6 +682,9 @@ public class Loan implements Parcelable {
      */
     public void toggleReturnedStatus() {
         returned = !returned;
+        if (returned) {
+            initReturnDate();
+        }
     }
 
     /**

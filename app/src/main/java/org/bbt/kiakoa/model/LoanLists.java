@@ -297,13 +297,20 @@ public class LoanLists {
         Collections.sort(lentList, loanComparator);
         Collections.sort(borrowedList, loanComparator);
         if (context != null) {
-            // remove data from shared preferences
+            String jsonLentList = new Gson().toJson(lentList);
+            Log.d(TAG, "Saving lent in SharedPreferences : " + jsonLentList);
+
+            String jsonBorrowedList = new Gson().toJson(borrowedList);
+            Log.d(TAG, "Saving borrowed in SharedPreferences : " + jsonBorrowedList);
+
+            // saving data from shared preferences
             SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_LOAN_LISTS_ID, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(SHARED_PREFERENCES_LENT_KEY, new Gson().toJson(lentList));
-            editor.putString(SHARED_PREFERENCES_BORROWED_KEY, new Gson().toJson(borrowedList));
+            editor.putString(SHARED_PREFERENCES_LENT_KEY, jsonLentList);
+            editor.putString(SHARED_PREFERENCES_BORROWED_KEY, jsonBorrowedList);
             editor.putLong(SHARED_PREFERENCES_TIME_KEY, System.currentTimeMillis());
             editor.apply();
+
             // update the preference that we need to sync with google drive
             Preferences.setSyncNeeded(true, context);
         }

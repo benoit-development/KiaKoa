@@ -102,8 +102,9 @@ class LoanListAdapter extends BaseAdapter {
             holder.alert = convertView.findViewById(R.id.alert);
             holder.item = convertView.findViewById(R.id.item);
             holder.contact = convertView.findViewById(R.id.contact);
-            holder.duration = convertView.findViewById(R.id.duration);
-            holder.delay = convertView.findViewById(R.id.delay);
+            holder.loanDate = convertView.findViewById(R.id.loan_date);
+            holder.dateSeparator = convertView.findViewById(R.id.date_separator);
+            holder.returnDate = convertView.findViewById(R.id.return_date);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -135,26 +136,29 @@ class LoanListAdapter extends BaseAdapter {
             } else {
                 holder.contact.setVisibility(View.GONE);
             }
-            // duration
-            String loanDateString = loan.getLoanDateString();
-            holder.duration.setText(loanDateString);
+            // loanDate
+            holder.loanDate.setText(loan.getLoanDateString());
             holder.alert.setVisibility(View.GONE);
-            // delay
-            if (loan.isReturned()) {
-                holder.delay.setText(loan.getDurationString(context));
-            } else {
-                holder.delay.setText(loan.getReturnDateDelayString(context));
-            }
-            // delay is > 0
-            holder.alert.setVisibility(View.GONE);
-            holder.delay.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
-            try {
-                if ((!loan.isReturned()) && (loan.getDatesDifferenceInDays() > 0)) {
-                    holder.delay.setTextColor(ContextCompat.getColor(context, R.color.alertRedText));
-                    holder.alert.setVisibility(View.VISIBLE);
+            // return date
+            if (loan.hasReturnDate()) {
+                holder.dateSeparator.setVisibility(View.VISIBLE);
+                holder.returnDate.setVisibility(View.VISIBLE);
+                holder.returnDate.setText(loan.getReturnDateString(context));
+                // returnDate is > 0
+                try {
+                    if ((!loan.isReturned()) && (loan.getDatesDifferenceInDays() > 0)) {
+                        holder.returnDate.setTextColor(ContextCompat.getColor(context, R.color.alertRedText));
+                        holder.alert.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.returnDate.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
+                        holder.alert.setVisibility(View.GONE);
+                    }
+                } catch (LoanException e) {
+                    // no return date
                 }
-            } catch (LoanException e) {
-                // no return date
+            } else {
+                holder.dateSeparator.setVisibility(View.GONE);
+                holder.returnDate.setVisibility(View.GONE);
             }
 
             // picture
@@ -183,8 +187,9 @@ class LoanListAdapter extends BaseAdapter {
         ImageView alert;
         TextView item;
         TextView contact;
-        TextView duration;
-        TextView delay;
+        TextView loanDate;
+        TextView returnDate;
+        ImageView dateSeparator;
     }
 
 

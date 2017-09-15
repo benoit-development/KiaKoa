@@ -63,7 +63,7 @@ public class LoanDateDialog extends DialogFragment implements DatePickerDialog.O
             cal.set(Calendar.YEAR, year);
             cal.set(Calendar.MONTH, month);
             cal.set(Calendar.DAY_OF_MONTH, day);
-            loan.setLoanDate(cal.getTimeInMillis(), getContext());
+            loan.setLoanDate(cal.getTimeInMillis());
             LoanLists.getInstance().updateLoan(loan, getContext());
         }
     }

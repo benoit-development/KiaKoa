@@ -55,21 +55,6 @@
     <string name="lent_list_count" tools:ignore="UnusedResources">Lent lists [%d]</string>
     <string name="background">Background</string>
     <string name="in_progress">In Progress</string>
-    <plurals name="plural_day">
-        <item quantity="zero">%d day</item>
-        <item quantity="one">%d day</item>
-        <item quantity="other">%d days</item>
-    </plurals>
-    <plurals name="plural_day_left">
-        <item quantity="zero">%d day left</item>
-        <item quantity="one">%d day left</item>
-        <item quantity="other">%d days left</item>
-    </plurals>
-    <plurals name="plural_day_late">
-        <item quantity="zero">%d day late</item>
-        <item quantity="one">%d day late</item>
-        <item quantity="other">%d days late</item>
-    </plurals>
     <plurals name="plural_item">
         <item quantity="zero">%d item</item>
         <item quantity="one">%d item</item>
