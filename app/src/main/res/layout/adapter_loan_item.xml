@@ -26,17 +26,6 @@
         android:textColor="#BBFFFFFF"
         android:textSize="35sp" />
 
-    <ImageView
-        android:id="@+id/alert"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:layout_alignBottom="@id/initial"
-        android:layout_alignEnd="@id/initial"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="12dp"
-        android:contentDescription="@string/notification"
-        android:src="@drawable/ic_alert_red_24dp" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

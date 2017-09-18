@@ -100,7 +100,6 @@ class LoanListAdapter extends BaseAdapter {
             holder.emptyText = convertView.findViewById(R.id.empty_text);
             holder.initial = convertView.findViewById(R.id.initial);
             holder.picture = convertView.findViewById(R.id.picture);
-            holder.alert = convertView.findViewById(R.id.alert);
             holder.item = convertView.findViewById(R.id.item);
             holder.contact = convertView.findViewById(R.id.contact);
             holder.loanDate = convertView.findViewById(R.id.loan_date);
@@ -153,7 +152,6 @@ class LoanListAdapter extends BaseAdapter {
             }
             // loanDate
             holder.loanDate.setText(loan.getLoanDateString());
-            holder.alert.setVisibility(View.GONE);
             // return date
             if (loan.hasReturnDate()) {
                 holder.dateSeparator.setVisibility(View.VISIBLE);
@@ -163,10 +161,8 @@ class LoanListAdapter extends BaseAdapter {
                 try {
                     if ((!loan.isReturned()) && (loan.getDatesDifferenceInDays() > 0)) {
                         holder.returnDate.setTextColor(ContextCompat.getColor(context, R.color.alertRedText));
-                        holder.alert.setVisibility(View.VISIBLE);
                     } else {
                         holder.returnDate.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
-                        holder.alert.setVisibility(View.GONE);
                     }
                 } catch (LoanException e) {
                     // no return date
@@ -200,7 +196,6 @@ class LoanListAdapter extends BaseAdapter {
         TextView emptyText;
         CircleImageView picture;
         TextView initial;
-        ImageView alert;
         TextView item;
         TextView contact;
         TextView loanDate;
