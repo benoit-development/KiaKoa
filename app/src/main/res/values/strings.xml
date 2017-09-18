@@ -57,6 +57,7 @@
     <string name="in_progress">In Progress</string>
     <string name="no_loan_in_progress">No loan in progress</string>
     <string name="no_loan_returned">No loan returned</string>
+    <string name="clipart">Clipart</string>
     <plurals name="plural_item">
         <item quantity="zero">%d item</item>
         <item quantity="one">%d item</item>
@@ -65,5 +66,6 @@
     <string-array name="picture_action_list">
         <item name="take_picture">Take a picture</item>
         <item name="pick_image">Pick an image</item>
+        <item name="pick_image">Pick a clipart</item>
     </string-array>
 </resources>

@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import org.bbt.kiakoa.LoanDetailsActivity;
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.dialog.ClipartDialog;
 import org.bbt.kiakoa.dialog.DeleteLoanDialog;
 import org.bbt.kiakoa.dialog.LoanContactDialog;
 import org.bbt.kiakoa.dialog.LoanDateDialog;
@@ -359,17 +360,11 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
 
                 Log.i(TAG, "Camera available, displaying dialog to select source");
 
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment loanPictureDialog = getFragmentManager().findFragmentByTag("loan_picture");
-                if (loanPictureDialog != null) {
-                    ft.remove(loanPictureDialog);
-                }
-
                 // Create and show the dialog
                 PictureDialog newPictureDialog = PictureDialog.selectPicture(loan);
                 // attach this fragment to dialog to use this onActivityResult method
                 newPictureDialog.setTargetFragment(this, REQUEST_CODE_PICTURE);
-                newPictureDialog.show(ft, "loan_date");
+                newPictureDialog.show(getFragmentManager(), "loan_date");
 
             } else {
                 Log.w(TAG, "Camera request failed, displaying gallery directly");
@@ -382,62 +377,45 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
      * Display dialog to change the loan date
      */
     private void showDateDialog() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment loanDateDialog = getFragmentManager().findFragmentByTag("loan_date");
-        if (loanDateDialog != null) {
-            ft.remove(loanDateDialog);
-        }
-
         // Create and show the dialog
         LoanDateDialog newLoanDateDialog = LoanDateDialog.newInstance(loan);
-        newLoanDateDialog.show(ft, "loan_date");
+        newLoanDateDialog.show(getFragmentManager(), "loan_date");
+    }
+
+    /**
+     * Display dialog to change picture with a clipart
+     */
+    public void showClipartDialog() {
+        // Create and show the dialog
+        ClipartDialog clipartDialog = ClipartDialog.newInstance(loan);
+        clipartDialog.show(getFragmentManager(), "clipart");
     }
 
     /**
      * Display dialog to change the return date
      */
     private void showDateReturnDialog() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment returnDateDialog = getFragmentManager().findFragmentByTag("return_date");
-        if (returnDateDialog != null) {
-            ft.remove(returnDateDialog);
-        }
-
         // Create and show the dialog
         ReturnDateDialog newReturnDateDialog = ReturnDateDialog.newInstance(loan);
-        newReturnDateDialog.show(ft, "return_date");
+        newReturnDateDialog.show(getFragmentManager(), "return_date");
     }
 
     /**
      * Display dialog to delete this loan
      */
     private void showDeleteLoanDialog() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment dialog = getFragmentManager().findFragmentByTag("delete");
-        if (dialog != null) {
-            ft.remove(dialog);
-        }
-        ft.addToBackStack(null);
-
         // Create and show the dialog.
         DeleteLoanDialog newDialog = DeleteLoanDialog.newInstance(loan);
-        newDialog.show(ft, "delete");
+        newDialog.show(getFragmentManager(), "delete");
     }
 
     /**
      * Display dialog to enter a new item
      */
     private void showItemDialog() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment itemDialog = getFragmentManager().findFragmentByTag("item");
-        if (itemDialog != null) {
-            ft.remove(itemDialog);
-        }
-        ft.addToBackStack(null);
-
         // Create and show the dialog.
         LoanItemDialog newItemDialog = LoanItemDialog.newInstance(loan);
-        newItemDialog.show(ft, "item");
+        newItemDialog.show(getFragmentManager(), "item");
     }
 
 

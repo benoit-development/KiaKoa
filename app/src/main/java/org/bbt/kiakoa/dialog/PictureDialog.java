@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
 import org.bbt.kiakoa.tools.Miscellaneous;
@@ -62,6 +63,10 @@ public class PictureDialog extends DialogFragment {
                             case 1:
                                 Log.i(TAG, "Picture from gallery requested");
                                 Miscellaneous.showImageGallery(getTargetFragment());
+                                break;
+                            case 2:
+                                Log.i(TAG, "Picture from gallery requested");
+                                ((LoanDetailsFragment) getTargetFragment()).showClipartDialog();
                                 break;
                         }
                     }

@@ -9,7 +9,11 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment;
+
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 
 /**
  * Several tool methods
@@ -25,6 +29,35 @@ public class Miscellaneous {
      * Intent to take a picture from camera
      */
     private static final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+    /**
+     * list of available clipart
+     */
+    public static final ArrayList<SimpleEntry<Integer, Integer>> clipartList;
+    static
+    {
+        clipartList = new ArrayList<>();
+        clipartList.add(new SimpleEntry<>(1, R.drawable.clipart_money));
+        clipartList.add(new SimpleEntry<>(2, R.drawable.clipart_music));
+        clipartList.add(new SimpleEntry<>(3, R.drawable.clipart_movie));
+        clipartList.add(new SimpleEntry<>(4, R.drawable.clipart_book));
+        clipartList.add(new SimpleEntry<>(5, R.drawable.clipart_camera));
+        clipartList.add(new SimpleEntry<>(6, R.drawable.clipart_brush));
+        clipartList.add(new SimpleEntry<>(7, R.drawable.clipart_tool));
+        clipartList.add(new SimpleEntry<>(8, R.drawable.clipart_pet));
+        clipartList.add(new SimpleEntry<>(9, R.drawable.clipart_plant));
+        clipartList.add(new SimpleEntry<>(10, R.drawable.clipart_computer));
+        clipartList.add(new SimpleEntry<>(11, R.drawable.clipart_smartphone));
+        clipartList.add(new SimpleEntry<>(12, R.drawable.clipart_trophy));
+        clipartList.add(new SimpleEntry<>(13, R.drawable.clipart_game));
+        clipartList.add(new SimpleEntry<>(14, R.drawable.clipart_bar));
+        clipartList.add(new SimpleEntry<>(15, R.drawable.clipart_restaurant));
+        clipartList.add(new SimpleEntry<>(16, R.drawable.clipart_tshirt));
+        clipartList.add(new SimpleEntry<>(17, R.drawable.clipart_bike));
+        clipartList.add(new SimpleEntry<>(18, R.drawable.clipart_motorcycle));
+        clipartList.add(new SimpleEntry<>(19, R.drawable.clipart_car));
+        clipartList.add(new SimpleEntry<>(20, R.drawable.clipart_key));
+    }
 
     /**
      * Check is internet is available
