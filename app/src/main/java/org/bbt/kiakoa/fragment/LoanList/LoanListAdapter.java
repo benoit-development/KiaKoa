@@ -97,6 +97,7 @@ class LoanListAdapter extends BaseAdapter {
                 convertView = LayoutInflater.from(context).inflate(R.layout.adapter_loan_item, parent, false);
             }
             holder.text = convertView.findViewById(R.id.text);
+            holder.emptyText = convertView.findViewById(R.id.empty_text);
             holder.initial = convertView.findViewById(R.id.initial);
             holder.picture = convertView.findViewById(R.id.picture);
             holder.alert = convertView.findViewById(R.id.alert);
@@ -115,9 +116,23 @@ class LoanListAdapter extends BaseAdapter {
 
             int textId;
             if (position == 0) {
+                // in progress header
                 textId = R.string.in_progress;
+                if (loanList.getInProgressCount() > 0) {
+                    holder.emptyText.setVisibility(View.GONE);
+                } else {
+                    holder.emptyText.setVisibility(View.VISIBLE);
+                    holder.emptyText.setText(R.string.no_loan_in_progress);
+                }
             } else {
+                // returned header
                 textId = R.string.returned;
+                if (loanList.getReturnedCount() > 0) {
+                    holder.emptyText.setVisibility(View.GONE);
+                } else {
+                    holder.emptyText.setVisibility(View.VISIBLE);
+                    holder.emptyText.setText(R.string.no_loan_returned);
+                }
             }
             holder.text.setText(textId);
 
@@ -182,6 +197,7 @@ class LoanListAdapter extends BaseAdapter {
     static class ViewHolder {
 
         TextView text;
+        TextView emptyText;
         CircleImageView picture;
         TextView initial;
         ImageView alert;

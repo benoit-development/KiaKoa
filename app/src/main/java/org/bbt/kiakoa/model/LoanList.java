@@ -20,4 +20,13 @@ public class LoanList extends ArrayList<Loan> {
         return count;
     }
 
+    /**
+     * Get number returned loan in this list
+     *
+     * @return count
+     */
+    public int getReturnedCount() {
+        return size() - getInProgressCount();
+    }
+
 }

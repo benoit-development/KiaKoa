@@ -205,5 +205,6 @@ public class LoanListsUnitTest {
 
         // count returned loans
         assertEquals(2, list.getInProgressCount());
+        assertEquals(2, list.getReturnedCount());
     }
 }

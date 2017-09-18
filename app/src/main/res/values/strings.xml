@@ -55,6 +55,8 @@
     <string name="lent_list_count" tools:ignore="UnusedResources">Lent lists [%d]</string>
     <string name="background">Background</string>
     <string name="in_progress">In Progress</string>
+    <string name="no_loan_in_progress">No loan in progress</string>
+    <string name="no_loan_returned">No loan returned</string>
     <plurals name="plural_item">
         <item quantity="zero">%d item</item>
         <item quantity="one">%d item</item>
