@@ -65,7 +65,7 @@ public class PictureDialog extends DialogFragment {
                                 Miscellaneous.showImageGallery(getTargetFragment());
                                 break;
                             case 2:
-                                Log.i(TAG, "Picture from gallery requested");
+                                Log.i(TAG, "Picture from clipart list requested");
                                 ((LoanDetailsFragment) getTargetFragment()).showClipartDialog();
                                 break;
                         }
@@ -77,7 +77,7 @@ public class PictureDialog extends DialogFragment {
 
                     }
                 });
-        if ((loan != null) && loan.getPicture() != null) {
+        if ((loan != null) && (loan.getItemPicture() != null)) {
             dialogBuilder.setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
