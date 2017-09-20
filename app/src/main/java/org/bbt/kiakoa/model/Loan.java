@@ -75,7 +75,7 @@ public class Loan implements Parcelable {
     private boolean returned = false;
 
     /**
-     * an {@link Uri} path for the item picture
+     * an {@link Uri} path or an index in {@link Miscellaneous#clipartList} for the item picture
      */
     @Expose
     private String itemPicture;
@@ -198,6 +198,20 @@ public class Loan implements Parcelable {
      */
     public void setItemPicture(String itemPicture) {
         this.itemPicture = itemPicture;
+    }
+
+    /**
+     * Check if item picture is a drawable index in {@link Miscellaneous#clipartList}
+     *
+     * @return if itemPicture is a numeric value
+     */
+    public boolean isItemPictureDrawable() {
+        try {
+            Integer val = Integer.valueOf(itemPicture);
+            return (val != null);
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     /**
@@ -477,6 +491,7 @@ public class Loan implements Parcelable {
 
     /**
      * Check if this loan have a return date
+     *
      * @return true or false
      */
     public boolean hasReturnDate() {

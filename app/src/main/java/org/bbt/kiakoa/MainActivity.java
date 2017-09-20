@@ -401,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     // Creates a ViewHolder
                     holder.icon = view.findViewById(R.id.icon);
                     holder.text = view.findViewById(R.id.text);
-                    holder.badge = view.findViewById(R.id.badge);
+                    holder.badge = view.findViewById(R.id.clipart);
 
                 }
                 view.setTag(holder);

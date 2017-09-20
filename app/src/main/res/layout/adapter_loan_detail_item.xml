@@ -24,7 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:layout_gravity="center">
 
         <TextView
             android:id="@+id/description"
@@ -45,26 +46,46 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/image"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="5dp"
-        android:contentDescription="@string/notification"
-        android:src="@drawable/ic_alert_red_24dp"
-        android:paddingEnd="5dp"
-        android:paddingStart="5dp" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circle"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
         android:layout_gravity="center"
-        android:contentDescription="@string/contact"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_picture_24dp"
-        android:visibility="visible" />
+        android:layout_margin="10dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/circle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/picture"
+            android:scaleType="centerCrop"
+            android:src="@drawable/clipart_book"
+            android:visibility="visible"
+            android:background="@drawable/badge_background" />
+
+        <ImageView
+            android:id="@+id/clipart"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="12dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/notification"
+            android:src="@drawable/clipart_book"
+            android:tint="@color/colorIconToolbar"
+            android:alpha="0.8" />
+
+        <TextView
+            android:id="@+id/initial"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:text="O"
+            android:textColor="@color/colorBadgeContent"
+            android:textSize="35sp"
+            android:alpha="0.8" />
+
+    </RelativeLayout>
 
     <Switch
         android:id="@+id/switchView"

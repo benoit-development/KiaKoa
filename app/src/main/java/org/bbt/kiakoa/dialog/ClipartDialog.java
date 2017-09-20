@@ -11,12 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.model.LoanLists;
 import org.bbt.kiakoa.tools.Miscellaneous;
 
 /**
@@ -60,6 +62,15 @@ public class ClipartDialog extends DialogFragment {
         // setup GridView
         GridView gridView = view.findViewById(R.id.grid_view);
         gridView.setAdapter(new ClipartAdapter());
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Log.i(TAG, "Selecting clipart : " + id + " (position " + position + ")");
+                loan.setItemPicture(String.valueOf(id));
+                LoanLists.getInstance().updateLoan(loan, getContext());
+                dismiss();
+            }
+        });
 
 
         return new AlertDialog.Builder(getActivity())
@@ -101,9 +112,9 @@ public class ClipartDialog extends DialogFragment {
             ViewHolder holder;
             if (convertView == null) {
                 // if it's not recycled, initialize some attributes
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_image_gridview, viewGroup, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_image_clipart, viewGroup, false);
                 holder = new ViewHolder();
-                holder.image = convertView.findViewById(R.id.image);
+                holder.image = convertView.findViewById(R.id.alert);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();

@@ -1,11 +1,11 @@
 package org.bbt.kiakoa.fragment.LoanList;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,21 +18,25 @@ import org.bbt.kiakoa.exception.LoanException;
 import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanList;
+import org.bbt.kiakoa.tools.Miscellaneous;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static org.bbt.kiakoa.tools.Miscellaneous.pickColor;
 
 /**
  * Adapter for the loan list {@link RecyclerView}
  */
 class LoanListAdapter extends BaseAdapter {
 
+
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_CARD = 1;
 
     /**
-     * color list
+     * For logs
      */
-    private TypedArray colors;
+    private static final String TAG = "LoanListAdapter";
 
     /**
      * Loan list to display
@@ -99,6 +103,7 @@ class LoanListAdapter extends BaseAdapter {
             holder.text = convertView.findViewById(R.id.text);
             holder.emptyText = convertView.findViewById(R.id.empty_text);
             holder.initial = convertView.findViewById(R.id.initial);
+            holder.clipart = convertView.findViewById(R.id.clipart);
             holder.picture = convertView.findViewById(R.id.picture);
             holder.item = convertView.findViewById(R.id.item);
             holder.contact = convertView.findViewById(R.id.contact);
@@ -173,17 +178,30 @@ class LoanListAdapter extends BaseAdapter {
             }
 
             // picture
-            Uri picture = loan.getPicture();
-            if (picture != null) {
-                holder.picture.setImageURI(picture);
-                holder.picture.setPadding(0, 0, 0, 0);
-                holder.initial.setVisibility(View.INVISIBLE);
+            if (loan.isItemPictureDrawable()) {
+                try {
+                    int clipartIndex = Integer.valueOf(loan.getItemPicture());
+                    holder.clipart.setVisibility(View.VISIBLE);
+                    holder.initial.setVisibility(View.GONE);
+                    holder.clipart.setImageResource(Miscellaneous.getClipartResId(clipartIndex));
+                    ((GradientDrawable) holder.picture.getBackground()).setColor(pickColor(loan.getItem(), context));
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed parsing clipart drawable index. Should not happen.");
+                }
             } else {
-                // initial
-                holder.initial.setVisibility(View.VISIBLE);
-                holder.initial.setText(loan.getItem().substring(0, 1).toUpperCase());
-                holder.picture.setImageURI(null);
-                ((GradientDrawable) holder.picture.getBackground()).setColor(pickColor(loan.getItem(), context));
+                holder.clipart.setVisibility(View.GONE);
+                Uri picture = loan.getPicture();
+                if (picture != null) {
+                    holder.picture.setImageURI(picture);
+                    holder.picture.setPadding(0, 0, 0, 0);
+                    holder.initial.setVisibility(View.GONE);
+                } else {
+                    // initial
+                    holder.initial.setVisibility(View.VISIBLE);
+                    holder.initial.setText(loan.getItem().substring(0, 1).toUpperCase());
+                    holder.picture.setImageURI(null);
+                    ((GradientDrawable) holder.picture.getBackground()).setColor(pickColor(loan.getItem(), context));
+                }
             }
         }
         return convertView;
@@ -196,29 +214,13 @@ class LoanListAdapter extends BaseAdapter {
         TextView emptyText;
         CircleImageView picture;
         TextView initial;
+        ImageView clipart;
         TextView item;
         TextView contact;
         TextView loanDate;
         TextView returnDate;
         ImageView dateSeparator;
-    }
 
-
-    /**
-     * Pick a color with item name
-     *
-     * @param item    item
-     * @param context a context
-     * @return a color
-     */
-    private int pickColor(String item, Context context) {
-
-        // init resources if not done
-        if (colors == null) {
-            colors = context.getResources().obtainTypedArray(R.array.letter_tile_colors);
-        }
-        // get color
-        return colors.getColor(Math.abs(item.hashCode()) % colors.length(), colors.getIndex(0));
     }
 
 }

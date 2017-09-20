@@ -2,8 +2,10 @@ package org.bbt.kiakoa.fragment.LoanDetails;
 
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,9 @@ import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.exception.LoanException;
 import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.tools.Miscellaneous;
+
+import static org.bbt.kiakoa.tools.Miscellaneous.pickColor;
 
 /**
  * Adapter in charge of displaying {@link Loan} details.
@@ -70,9 +75,10 @@ class LoanDetailsAdapter extends BaseAdapter {
         ImageView icon;
         TextView description;
         TextView value;
-        ImageView image;
         ImageView circle;
         Switch switchView;
+        ImageView clipart;
+        TextView initial;
     }
 
     @Override
@@ -87,8 +93,11 @@ class LoanDetailsAdapter extends BaseAdapter {
             holder.icon = convertView.findViewById(R.id.icon);
             holder.description = convertView.findViewById(R.id.description);
             holder.value = convertView.findViewById(R.id.value);
-            holder.image = convertView.findViewById(R.id.image);
+
             holder.circle = convertView.findViewById(R.id.circle);
+            holder.clipart = convertView.findViewById(R.id.clipart);
+            holder.initial = convertView.findViewById(R.id.initial);
+
             holder.switchView = convertView.findViewById(R.id.switchView);
             convertView.setTag(holder);
         } else {
@@ -99,8 +108,10 @@ class LoanDetailsAdapter extends BaseAdapter {
         // by default visible
         holder.value.setVisibility(View.VISIBLE);
         // by default hidden
-        holder.image.setVisibility(View.GONE);
         holder.circle.setVisibility(View.GONE);
+        holder.circle.setImageDrawable(null);
+        holder.clipart.setVisibility(View.GONE);
+        holder.initial.setVisibility(View.GONE);
         holder.switchView.setVisibility(View.GONE);
 
         switch (position) {
@@ -109,6 +120,12 @@ class LoanDetailsAdapter extends BaseAdapter {
                 holder.icon.setImageResource(R.drawable.ic_item_24dp);
                 holder.description.setText(R.string.item);
                 holder.value.setText(loan.getItem());
+
+                // initial
+                holder.circle.setVisibility(View.VISIBLE);
+                ((GradientDrawable) holder.circle.getBackground()).setColor(pickColor(loan.getItem(), context));
+                holder.initial.setVisibility(View.VISIBLE);
+                holder.initial.setText(loan.getItem().substring(0, 1).toUpperCase());
                 break;
             case 1:
                 // returned
@@ -122,12 +139,20 @@ class LoanDetailsAdapter extends BaseAdapter {
                 // loan picture
                 holder.description.setText(R.string.picture);
                 holder.icon.setImageResource(R.drawable.ic_picture_24dp);
-                String pictureUri = loan.getItemPicture();
-                if (pictureUri != null) {
-                    holder.circle.setImageURI(Uri.parse(pictureUri));
+                String itemPicture = loan.getItemPicture();
+                if (loan.isItemPictureDrawable()) {
+                    // drawable
+                    holder.circle.setVisibility(View.VISIBLE);
+                    ((GradientDrawable) holder.circle.getBackground()).setColor(pickColor(loan.getItem(), context));
+                    holder.clipart.setVisibility(View.VISIBLE);
+                    holder.clipart.setImageResource(Miscellaneous.getClipartResId(Integer.valueOf(itemPicture)));
+                } else if (itemPicture != null) {
+                    // uri
+                    holder.circle.setImageURI(Uri.parse(itemPicture));
                     holder.circle.setVisibility(View.VISIBLE);
                     holder.value.setText("");
                 } else {
+                    // no picture
                     holder.value.setVisibility(View.VISIBLE);
                     holder.value.setText(R.string.no_picture);
                 }
@@ -145,8 +170,9 @@ class LoanDetailsAdapter extends BaseAdapter {
                 holder.value.setText(loan.getReturnDateString(context));
                 try {
                     if ((!loan.isReturned()) && (loan.getDatesDifferenceInDays() > 0)) {
-                        holder.image.setVisibility(View.VISIBLE);
-                        holder.image.setImageResource(R.drawable.ic_alert_red_24dp);
+                        holder.value.setTextColor(ContextCompat.getColor(context, R.color.alertRedText));
+                    } else {
+                        holder.value.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
                     }
                 } catch (LoanException e) {
                     // nothing to do visibility already gone

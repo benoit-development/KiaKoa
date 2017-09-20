@@ -23,15 +23,29 @@
         android:layout_alignParentStart="true"
         android:gravity="center"
         android:text="O"
-        android:textColor="#BBFFFFFF"
-        android:textSize="35sp" />
+        android:textColor="@color/colorBadgeContent"
+        android:textSize="35sp"
+        android:alpha="0.8" />
+
+    <ImageView
+        android:id="@+id/clipart"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:gravity="center"
+        android:padding="25dp"
+        android:contentDescription="@string/clipart"
+        android:src="@drawable/clipart_money"
+        android:tint="@color/colorBadgeContent"
+        android:alpha="0.8" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/picture"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginStart="10dp">
 
         <TextView
             android:id="@+id/item"

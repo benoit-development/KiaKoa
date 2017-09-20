@@ -2,6 +2,7 @@ package org.bbt.kiakoa.tools;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,6 +22,11 @@ import java.util.ArrayList;
 public class Miscellaneous {
 
     /**
+     * color list
+     */
+    private static TypedArray colors;
+
+    /**
      * For logs
      */
     private static final String TAG = "Miscellaneous";
@@ -34,25 +40,26 @@ public class Miscellaneous {
      * list of available clipart
      */
     public static final ArrayList<SimpleEntry<Integer, Integer>> clipartList;
-    static
-    {
+
+    static {
+        // Be careful ! you can change the "add" order but never change id associated to the drawable.
         clipartList = new ArrayList<>();
         clipartList.add(new SimpleEntry<>(1, R.drawable.clipart_money));
         clipartList.add(new SimpleEntry<>(2, R.drawable.clipart_music));
         clipartList.add(new SimpleEntry<>(3, R.drawable.clipart_movie));
         clipartList.add(new SimpleEntry<>(4, R.drawable.clipart_book));
-        clipartList.add(new SimpleEntry<>(5, R.drawable.clipart_camera));
-        clipartList.add(new SimpleEntry<>(6, R.drawable.clipart_brush));
+        clipartList.add(new SimpleEntry<>(5, R.drawable.clipart_tshirt));
+        clipartList.add(new SimpleEntry<>(6, R.drawable.clipart_home));
         clipartList.add(new SimpleEntry<>(7, R.drawable.clipart_tool));
-        clipartList.add(new SimpleEntry<>(8, R.drawable.clipart_pet));
-        clipartList.add(new SimpleEntry<>(9, R.drawable.clipart_plant));
-        clipartList.add(new SimpleEntry<>(10, R.drawable.clipart_computer));
+        clipartList.add(new SimpleEntry<>(8, R.drawable.clipart_plant));
+        clipartList.add(new SimpleEntry<>(9, R.drawable.clipart_pet));
+        clipartList.add(new SimpleEntry<>(10, R.drawable.clipart_camera));
         clipartList.add(new SimpleEntry<>(11, R.drawable.clipart_smartphone));
-        clipartList.add(new SimpleEntry<>(12, R.drawable.clipart_trophy));
-        clipartList.add(new SimpleEntry<>(13, R.drawable.clipart_game));
-        clipartList.add(new SimpleEntry<>(14, R.drawable.clipart_bar));
-        clipartList.add(new SimpleEntry<>(15, R.drawable.clipart_restaurant));
-        clipartList.add(new SimpleEntry<>(16, R.drawable.clipart_tshirt));
+        clipartList.add(new SimpleEntry<>(12, R.drawable.clipart_computer));
+        clipartList.add(new SimpleEntry<>(13, R.drawable.clipart_trophy));
+        clipartList.add(new SimpleEntry<>(14, R.drawable.clipart_game));
+        clipartList.add(new SimpleEntry<>(15, R.drawable.clipart_bar));
+        clipartList.add(new SimpleEntry<>(16, R.drawable.clipart_restaurant));
         clipartList.add(new SimpleEntry<>(17, R.drawable.clipart_bike));
         clipartList.add(new SimpleEntry<>(18, R.drawable.clipart_motorcycle));
         clipartList.add(new SimpleEntry<>(19, R.drawable.clipart_car));
@@ -78,7 +85,7 @@ public class Miscellaneous {
     /**
      * Launch activity to take a picture
      *
-     * @param fragment    fragment requiring activity to start
+     * @param fragment fragment requiring activity to start
      */
     public static void takePicture(Fragment fragment) {
         Log.i(TAG, "take picture action requested");
@@ -88,7 +95,7 @@ public class Miscellaneous {
     /**
      * Launch activity to select a local image from
      *
-     * @param fragment    fragment requiring activity to start
+     * @param fragment fragment requiring activity to start
      */
     public static void showImageGallery(Fragment fragment) {
         Log.i(TAG, "show gallery action requested");
@@ -114,4 +121,37 @@ public class Miscellaneous {
         return Bitmap.createScaledBitmap(realImage, width, height, true);
     }
 
+    /**
+     * getter on clipart drawable id with clipart id
+     *
+     * @param clipartIndex clipart id
+     * @return resource id
+     */
+    public static int getClipartResId(int clipartIndex) {
+        int result = R.drawable.ic_item_24dp;
+        for (SimpleEntry<Integer, Integer> entry : clipartList) {
+            if (entry.getKey() == clipartIndex) {
+                return entry.getValue();
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * Pick a color from a name
+     *
+     * @param name    name
+     * @param context a context
+     * @return a color
+     */
+    public static int pickColor(String name, Context context) {
+
+        // init resources if not done
+        if (colors == null) {
+            colors = context.getResources().obtainTypedArray(R.array.letter_tile_colors);
+        }
+        // get color
+        return colors.getColor(Math.abs(name.hashCode()) % colors.length(), colors.getIndex(0));
+    }
 }

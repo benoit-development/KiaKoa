@@ -4,11 +4,11 @@
     android:layout_width="wrap_content" android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/alert"
         android:layout_width="70dp"
         android:layout_height="70dp"
         app:srcCompat="@drawable/clipart_money"
-        android:tint="@color/colorAccent"
+        android:tint="@color/colorPrimary"
         android:padding="10dp"
         android:contentDescription="@string/clipart" />
 
