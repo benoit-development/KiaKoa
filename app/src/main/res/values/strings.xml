@@ -58,14 +58,21 @@
     <string name="no_loan_in_progress">No loan in progress</string>
     <string name="no_loan_returned">No loan returned</string>
     <string name="clipart">Clipart</string>
+    <string name="pick_image">Pick an image</string>
+    <string name="pick_clipart">Pick a clipart</string>
+    <string name="take_picture">Take a picture</string>
     <plurals name="plural_item">
         <item quantity="zero">%d item</item>
         <item quantity="one">%d item</item>
         <item quantity="other">%d items</item>
     </plurals>
     <string-array name="picture_action_list">
-        <item name="take_picture">Take a picture</item>
-        <item name="pick_image">Pick an image</item>
-        <item name="pick_image">Pick a clipart</item>
+        <item name="pick_image">@string/pick_image</item>
+        <item name="pick_image">@string/pick_clipart</item>
+        <item name="take_picture">@string/take_picture</item>
+    </string-array>
+    <string-array name="picture_action_list_without_camera">
+        <item name="pick_image">@string/pick_image</item>
+        <item name="pick_image">@string/pick_clipart</item>
     </string-array>
 </resources>

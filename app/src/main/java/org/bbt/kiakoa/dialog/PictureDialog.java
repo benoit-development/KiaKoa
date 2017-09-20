@@ -3,7 +3,10 @@ package org.bbt.kiakoa.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -30,6 +33,11 @@ public class PictureDialog extends DialogFragment {
     private Loan loan;
 
     /**
+     * Intent to take a picture from camera
+     */
+    private final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+    /**
      * Create a new instance of PictureDialog
      *
      * @param loan loan to update
@@ -49,24 +57,37 @@ public class PictureDialog extends DialogFragment {
 
         loan = getArguments().getParcelable("loan");
 
+
+        // check if camera is available
+        PackageManager packageManager = getContext().getPackageManager();
+        int picture_action_list;
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA) && (takePictureIntent.resolveActivity(packageManager) != null)) {
+            Log.i(TAG, "Camera available");
+            picture_action_list = R.array.picture_action_list;
+        } else {
+            Log.i(TAG, "Camera not available");
+            picture_action_list = R.array.picture_action_list_without_camera;
+        }
+
+        // build dialog
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_picture_24dp)
                 .setTitle(R.string.picture)
-                .setItems(R.array.picture_action_list, new DialogInterface.OnClickListener() {
+                .setItems(picture_action_list, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position) {
                         switch (position) {
                             case 0:
-                                Log.i(TAG, "Picture from camera requested");
-                                Miscellaneous.takePicture(getTargetFragment());
-                                break;
-                            case 1:
                                 Log.i(TAG, "Picture from gallery requested");
                                 Miscellaneous.showImageGallery(getTargetFragment());
                                 break;
-                            case 2:
+                            case 1:
                                 Log.i(TAG, "Picture from clipart list requested");
                                 ((LoanDetailsFragment) getTargetFragment()).showClipartDialog();
+                                break;
+                            case 2:
+                                Log.i(TAG, "Picture from camera requested");
+                                Miscellaneous.takePicture(getTargetFragment());
                                 break;
                         }
                     }

@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -36,7 +35,6 @@ import org.bbt.kiakoa.dialog.PictureDialog;
 import org.bbt.kiakoa.dialog.ReturnDateDialog;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
-import org.bbt.kiakoa.tools.Miscellaneous;
 
 /**
  * Activity displaying {@link LoanDetailsFragment}
@@ -70,11 +68,6 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
      * Current loan
      */
     private Loan loan;
-
-    /**
-     * Intent to take a picture from camera
-     */
-    private final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
     /**
      * {@link MenuItem} to display contact card of the displayed loan
@@ -193,7 +186,7 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
                         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
                     }
                 } else {
-                    selectLoanPicture();
+                    showPictureDialog();
                 }
 
                 break;
@@ -286,7 +279,7 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission granted !
                     Log.i(TAG, "WRITE_EXTERNAL_STORAGE permission granted");
-                    selectLoanPicture();
+                    showPictureDialog();
                 } else {
                     // permission denied
                     Log.i(TAG, "WRITE_EXTERNAL_STORAGE permission denied");
@@ -348,29 +341,15 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
     /**
      * Purpose to user to change the item picture
      */
-    private void selectLoanPicture() {
+    private void showPictureDialog() {
 
         Log.i(TAG, "Picture selection requested");
 
-        // check if camera is available
-        PackageManager packageManager = getContext().getPackageManager();
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            Log.i(TAG, "Requesting picture : use camera");
-            if (takePictureIntent.resolveActivity(packageManager) != null) {
-
-                Log.i(TAG, "Camera available, displaying dialog to select source");
-
-                // Create and show the dialog
-                PictureDialog newPictureDialog = PictureDialog.selectPicture(loan);
-                // attach this fragment to dialog to use this onActivityResult method
-                newPictureDialog.setTargetFragment(this, REQUEST_CODE_PICTURE);
-                newPictureDialog.show(getFragmentManager(), "loan_date");
-
-            } else {
-                Log.w(TAG, "Camera request failed, displaying gallery directly");
-                Miscellaneous.showImageGallery(this);
-            }
-        }
+        // Create and show the dialog
+        PictureDialog newPictureDialog = PictureDialog.selectPicture(loan);
+        // attach this fragment to dialog to use this onActivityResult method
+        newPictureDialog.setTargetFragment(this, REQUEST_CODE_PICTURE);
+        newPictureDialog.show(getFragmentManager(), "loan_date");
     }
 
     /**
