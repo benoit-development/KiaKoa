@@ -66,13 +66,4 @@
         <item quantity="one">%d item</item>
         <item quantity="other">%d items</item>
     </plurals>
-    <string-array name="picture_action_list">
-        <item name="pick_image">@string/pick_image</item>
-        <item name="pick_image">@string/pick_clipart</item>
-        <item name="take_picture">@string/take_picture</item>
-    </string-array>
-    <string-array name="picture_action_list_without_camera">
-        <item name="pick_image">@string/pick_image</item>
-        <item name="pick_image">@string/pick_clipart</item>
-    </string-array>
 </resources>

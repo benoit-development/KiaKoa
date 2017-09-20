@@ -1,5 +1,6 @@
 package org.bbt.kiakoa.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -10,6 +11,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.View;
 
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment;
@@ -57,41 +59,53 @@ public class PictureDialog extends DialogFragment {
 
         loan = getArguments().getParcelable("loan");
 
+        // Inflate view
+        @SuppressLint
+                ("InflateParams") View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_item_picture, null, false);
 
         // check if camera is available
         PackageManager packageManager = getContext().getPackageManager();
-        int picture_action_list;
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA) && (takePictureIntent.resolveActivity(packageManager) != null)) {
-            Log.i(TAG, "Camera available");
-            picture_action_list = R.array.picture_action_list;
+        boolean cameraAvailable = (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA) && (takePictureIntent.resolveActivity(packageManager) != null));
+
+        // customize view
+        // camera
+        View cameraView = view.findViewById(R.id.image_camera);
+        if (cameraAvailable) {
+            cameraView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i(TAG, "Picture from camera requested");
+                    Miscellaneous.takePicture(getTargetFragment());
+                    dismiss();
+                }
+            });
         } else {
-            Log.i(TAG, "Camera not available");
-            picture_action_list = R.array.picture_action_list_without_camera;
+            cameraView.setVisibility(View.GONE);
         }
+        // gallery
+        view.findViewById(R.id.image_gallery).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "Picture from gallery requested");
+                Miscellaneous.showImageGallery(getTargetFragment());
+                dismiss();
+            }
+        });
+        // clipart
+        view.findViewById(R.id.image_clipart).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "Picture from clipart list requested");
+                ((LoanDetailsFragment) getTargetFragment()).showClipartDialog();
+                dismiss();
+            }
+        });
 
         // build dialog
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_picture_24dp)
                 .setTitle(R.string.picture)
-                .setItems(picture_action_list, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int position) {
-                        switch (position) {
-                            case 0:
-                                Log.i(TAG, "Picture from gallery requested");
-                                Miscellaneous.showImageGallery(getTargetFragment());
-                                break;
-                            case 1:
-                                Log.i(TAG, "Picture from clipart list requested");
-                                ((LoanDetailsFragment) getTargetFragment()).showClipartDialog();
-                                break;
-                            case 2:
-                                Log.i(TAG, "Picture from camera requested");
-                                Miscellaneous.takePicture(getTargetFragment());
-                                break;
-                        }
-                    }
-                })
+                .setView(view)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

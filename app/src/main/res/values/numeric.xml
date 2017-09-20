@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="thumbnail_size_in_pixel">150</integer>
+    <item name="icon_alpha" format="float" type="integer">0.9</item>
 </resources>

@@ -25,7 +25,7 @@
         android:text="O"
         android:textColor="@color/colorBadgeContent"
         android:textSize="35sp"
-        android:alpha="0.8" />
+        android:alpha="@integer/icon_alpha" />
 
     <ImageView
         android:id="@+id/clipart"
@@ -37,7 +37,7 @@
         android:contentDescription="@string/clipart"
         android:src="@drawable/clipart_money"
         android:tint="@color/colorBadgeContent"
-        android:alpha="0.8" />
+        android:alpha="@integer/icon_alpha" />
 
     <LinearLayout
         android:layout_width="match_parent"

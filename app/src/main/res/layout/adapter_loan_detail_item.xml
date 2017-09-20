@@ -33,8 +33,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
             android:text="@string/app_name"
-            android:textSize="@dimen/list_item_text_size_primary"
-            android:textStyle="bold" />
+            android:textSize="@dimen/list_item_text_size_primary" />
 
         <TextView
             android:id="@+id/value"
@@ -72,7 +71,7 @@
             android:contentDescription="@string/notification"
             android:src="@drawable/clipart_book"
             android:tint="@color/colorIconToolbar"
-            android:alpha="0.8" />
+            android:alpha="@integer/icon_alpha" />
 
         <TextView
             android:id="@+id/initial"
@@ -83,7 +82,7 @@
             android:text="O"
             android:textColor="@color/colorBadgeContent"
             android:textSize="35sp"
-            android:alpha="0.8" />
+            android:alpha="@integer/icon_alpha" />
 
     </RelativeLayout>
 
