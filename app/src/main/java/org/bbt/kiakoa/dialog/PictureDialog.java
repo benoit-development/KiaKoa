@@ -80,7 +80,7 @@ public class PictureDialog extends DialogFragment {
                 }
             });
         } else {
-            cameraView.setVisibility(View.GONE);
+            view.findViewById(R.id.camera_button_container).setVisibility(View.GONE);
         }
         // gallery
         view.findViewById(R.id.image_gallery).setOnClickListener(new View.OnClickListener() {
