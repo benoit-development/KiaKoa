@@ -22,8 +22,7 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
