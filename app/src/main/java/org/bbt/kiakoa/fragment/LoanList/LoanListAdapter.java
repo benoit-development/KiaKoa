@@ -31,7 +31,7 @@ class LoanListAdapter extends BaseAdapter {
 
 
     private static final int TYPE_HEADER = 0;
-    private static final int TYPE_CARD = 1;
+    private static final int TYPE_LOAN = 1;
 
     /**
      * For logs
@@ -74,11 +74,22 @@ class LoanListAdapter extends BaseAdapter {
     }
 
     @Override
+    public boolean areAllItemsEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        // header are not clickable
+        return getItemViewType(position) == TYPE_LOAN;
+    }
+
+    @Override
     public int getItemViewType(int position) {
         if ((position == 0) || (position == loanList.getInProgressCount() + 1)) {
             return TYPE_HEADER;
         } else {
-            return TYPE_CARD;
+            return TYPE_LOAN;
         }
     }
 
@@ -104,7 +115,7 @@ class LoanListAdapter extends BaseAdapter {
             holder.emptyText = convertView.findViewById(R.id.empty_text);
             holder.initial = convertView.findViewById(R.id.initial);
             holder.clipart = convertView.findViewById(R.id.clipart);
-            holder.picture = convertView.findViewById(R.id.picture);
+            holder.circle = convertView.findViewById(R.id.circle);
             holder.item = convertView.findViewById(R.id.item);
             holder.contact = convertView.findViewById(R.id.contact);
             holder.loanDate = convertView.findViewById(R.id.loan_date);
@@ -139,6 +150,7 @@ class LoanListAdapter extends BaseAdapter {
                 }
             }
             holder.text.setText(textId);
+            convertView.setEnabled(false);
 
         } else {
 
@@ -177,30 +189,31 @@ class LoanListAdapter extends BaseAdapter {
                 holder.returnDate.setVisibility(View.GONE);
             }
 
-            // picture
+            // circle
+            holder.circle.setImageDrawable(null);
+            holder.initial.setVisibility(View.GONE);
+            holder.clipart.setVisibility(View.GONE);
             if (loan.isItemPictureDrawable()) {
                 try {
                     int clipartIndex = Integer.valueOf(loan.getItemPicture());
                     holder.clipart.setVisibility(View.VISIBLE);
-                    holder.initial.setVisibility(View.GONE);
+
                     holder.clipart.setImageResource(Miscellaneous.getClipartResId(clipartIndex));
-                    ((GradientDrawable) holder.picture.getBackground()).setColor(pickColor(loan.getItem(), context));
+                    ((GradientDrawable) holder.circle.getBackground()).setColor(pickColor(loan.getItem(), context));
                 } catch (Exception e) {
                     Log.e(TAG, "Failed parsing clipart drawable index. Should not happen.");
                 }
             } else {
-                holder.clipart.setVisibility(View.GONE);
                 Uri picture = loan.getPicture();
                 if (picture != null) {
-                    holder.picture.setImageURI(picture);
-                    holder.picture.setPadding(0, 0, 0, 0);
-                    holder.initial.setVisibility(View.GONE);
+                    holder.circle.setImageURI(picture);
+                    holder.circle.setPadding(0, 0, 0, 0);
                 } else {
                     // initial
                     holder.initial.setVisibility(View.VISIBLE);
                     holder.initial.setText(loan.getItem().substring(0, 1).toUpperCase());
-                    holder.picture.setImageURI(null);
-                    ((GradientDrawable) holder.picture.getBackground()).setColor(pickColor(loan.getItem(), context));
+                    holder.circle.setImageURI(null);
+                    ((GradientDrawable) holder.circle.getBackground()).setColor(pickColor(loan.getItem(), context));
                 }
             }
         }
@@ -212,7 +225,7 @@ class LoanListAdapter extends BaseAdapter {
 
         TextView text;
         TextView emptyText;
-        CircleImageView picture;
+        CircleImageView circle;
         TextView initial;
         ImageView clipart;
         TextView item;
@@ -222,5 +235,4 @@ class LoanListAdapter extends BaseAdapter {
         ImageView dateSeparator;
 
     }
-
 }
