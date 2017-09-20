@@ -1,6 +1,7 @@
 package org.bbt.kiakoa.dialog;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -14,10 +15,8 @@ import android.util.Log;
 import android.view.View;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
-import org.bbt.kiakoa.tools.Miscellaneous;
 
 /**
  * Dialog used to select image from various sources
@@ -37,7 +36,12 @@ public class PictureDialog extends DialogFragment {
     /**
      * Intent to take a picture from camera
      */
-    private final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    private static final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+    /**
+     * To pick a picture from local gallery
+     */
+    private static final int REQUEST_CODE_PICTURE = 567;
 
     /**
      * Create a new instance of PictureDialog
@@ -75,8 +79,7 @@ public class PictureDialog extends DialogFragment {
                 @Override
                 public void onClick(View view) {
                     Log.i(TAG, "Picture from camera requested");
-                    Miscellaneous.takePicture(getTargetFragment());
-                    dismiss();
+                    takePicture();
                 }
             });
         } else {
@@ -87,8 +90,7 @@ public class PictureDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "Picture from gallery requested");
-                Miscellaneous.showImageGallery(getTargetFragment());
-                dismiss();
+                showImageGallery();
             }
         });
         // clipart
@@ -96,7 +98,7 @@ public class PictureDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "Picture from clipart list requested");
-                ((LoanDetailsFragment) getTargetFragment()).showClipartDialog();
+                showClipartDialog();
                 dismiss();
             }
         });
@@ -124,5 +126,48 @@ public class PictureDialog extends DialogFragment {
         }
         return dialogBuilder.create();
 
+    }
+
+    /**
+     * Launch activity to take a picture
+     */
+    private void takePicture() {
+        Log.i(TAG, "take picture action requested");
+        startActivityForResult(takePictureIntent, REQUEST_CODE_PICTURE);
+    }
+
+    /**
+     * Launch activity to select a local image from
+     */
+    private void showImageGallery() {
+        Log.i(TAG, "show gallery action requested");
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select image"), REQUEST_CODE_PICTURE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_PICTURE:
+                if (resultCode == Activity.RESULT_OK) {
+                    loan.setItemPicture(getContext(), data);
+                    LoanLists.getInstance().updateLoan(loan, getContext());
+                    dismiss();
+                } else {
+                    Log.w(TAG, "No picture returned from camera");
+                }
+                break;
+        }
+    }
+
+    /**
+     * Display dialog to change picture with a clipart
+     */
+    private void showClipartDialog() {
+        // Create and show the dialog
+        ClipartDialog clipartDialog = ClipartDialog.newInstance(loan);
+        clipartDialog.show(getFragmentManager(), "clipart");
     }
 }

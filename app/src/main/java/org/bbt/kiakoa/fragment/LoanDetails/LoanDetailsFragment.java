@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import org.bbt.kiakoa.LoanDetailsActivity;
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.dialog.ClipartDialog;
 import org.bbt.kiakoa.dialog.DeleteLoanDialog;
 import org.bbt.kiakoa.dialog.LoanContactDialog;
 import org.bbt.kiakoa.dialog.LoanDateDialog;
@@ -58,11 +57,6 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
      * To get the result of the permission write external storage request
      */
     private static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 456;
-
-    /**
-     * To pick a picture from local gallery
-     */
-    public static final int REQUEST_CODE_PICTURE = 567;
 
     /**
      * Current loan
@@ -324,20 +318,6 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
         newContactDialog.show(ft, "contact");
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CODE_PICTURE:
-                if (resultCode == Activity.RESULT_OK) {
-                    loan.setItemPicture(getContext(), data);
-                    LoanLists.getInstance().updateLoan(loan, getContext());
-                } else {
-                    Log.w(TAG, "No picture returned from camera");
-                }
-                break;
-        }
-    }
-
     /**
      * Purpose to user to change the item picture
      */
@@ -347,8 +327,6 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
 
         // Create and show the dialog
         PictureDialog newPictureDialog = PictureDialog.selectPicture(loan);
-        // attach this fragment to dialog to use this onActivityResult method
-        newPictureDialog.setTargetFragment(this, REQUEST_CODE_PICTURE);
         newPictureDialog.show(getFragmentManager(), "loan_date");
     }
 
@@ -356,24 +334,21 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
      * Display dialog to change the loan date
      */
     private void showDateDialog() {
+
+        Log.i(TAG, "Loan date requested");
+
         // Create and show the dialog
         LoanDateDialog newLoanDateDialog = LoanDateDialog.newInstance(loan);
         newLoanDateDialog.show(getFragmentManager(), "loan_date");
     }
 
     /**
-     * Display dialog to change picture with a clipart
-     */
-    public void showClipartDialog() {
-        // Create and show the dialog
-        ClipartDialog clipartDialog = ClipartDialog.newInstance(loan);
-        clipartDialog.show(getFragmentManager(), "clipart");
-    }
-
-    /**
      * Display dialog to change the return date
      */
     private void showDateReturnDialog() {
+
+        Log.i(TAG, "Return date requested");
+
         // Create and show the dialog
         ReturnDateDialog newReturnDateDialog = ReturnDateDialog.newInstance(loan);
         newReturnDateDialog.show(getFragmentManager(), "return_date");
@@ -383,6 +358,9 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
      * Display dialog to delete this loan
      */
     private void showDeleteLoanDialog() {
+
+        Log.i(TAG, "Loan delete requested");
+
         // Create and show the dialog.
         DeleteLoanDialog newDialog = DeleteLoanDialog.newInstance(loan);
         newDialog.show(getFragmentManager(), "delete");
@@ -392,6 +370,9 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
      * Display dialog to enter a new item
      */
     private void showItemDialog() {
+
+        Log.i(TAG, "Loan item requested");
+
         // Create and show the dialog.
         LoanItemDialog newItemDialog = LoanItemDialog.newInstance(loan);
         newItemDialog.show(getFragmentManager(), "item");
