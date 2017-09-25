@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Set as returned -->
+    <item
+        android:id="@+id/action_set_returned"
+        android:icon="@drawable/ic_contact_white_24dp"
+        android:title="@string/set_as_returned"/>
+
     <!-- Show contact information -->
     <item
         android:id="@+id/action_contact_card"
         android:icon="@drawable/ic_contact_white_24dp"
         android:title="@string/show_contact"/>
+
+    <!-- delete this loan -->
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/ic_delete_white_24dp"
+        android:title="@string/delete"/>
 
 </menu>

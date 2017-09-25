@@ -66,7 +66,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                         Log.e(TAG, "Week : Failed getting data");
                     } else {
                         // data successfully got
-                        loan.setReturnDate(System.currentTimeMillis() + (Loan.DAYS_IN_MILLIS * 7));
+                        loan.addWeek();
                         loanLists.updateLoan(loan, context);
                         if (notificationManager != null) {
                             notificationManager.cancel(loan.getNotificationId());

@@ -49,7 +49,7 @@ public class Loan implements Parcelable {
     /**
      * Constant representing a day in millis
      */
-    public static final int DAYS_IN_MILLIS = 24 * 60 * 60 * 1000;
+    private static final int DAYS_IN_MILLIS = 24 * 60 * 60 * 1000;
 
     /**
      * Channel id for notifications
@@ -523,7 +523,7 @@ public class Loan implements Parcelable {
             // intent to set this loan as returned
             Intent returnIntent = new Intent(NotificationBroadcastReceiver.INTENT_ACTION_RETURN_LOAN)
                     .putExtra(NotificationBroadcastReceiver.EXTRA_LOAN_ID, this.getId());
-            builder.addAction(R.drawable.ic_return_24dp, context.getString(R.string.set_as_return), PendingIntent.getBroadcast(context, 0, returnIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+            builder.addAction(R.drawable.ic_return_24dp, context.getString(R.string.set_as_returned), PendingIntent.getBroadcast(context, 0, returnIntent, PendingIntent.FLAG_UPDATE_CURRENT));
         }
 
         // add a week to this loan
@@ -700,6 +700,13 @@ public class Loan implements Parcelable {
         if (returned) {
             initReturnDate();
         }
+    }
+
+    /**
+     * Add a week to return date from the current date
+     */
+    public void addWeek() {
+        setReturnDate(System.currentTimeMillis() + (Loan.DAYS_IN_MILLIS * 7));
     }
 
     /**

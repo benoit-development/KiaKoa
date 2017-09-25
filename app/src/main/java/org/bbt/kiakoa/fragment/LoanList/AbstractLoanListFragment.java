@@ -8,6 +8,7 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 
 import org.bbt.kiakoa.MainActivity;
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.dialog.DeleteLoanDialog;
 import org.bbt.kiakoa.dialog.LoanItemDialog;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanList;
@@ -26,9 +28,19 @@ import org.bbt.kiakoa.model.LoanLists;
 abstract public class AbstractLoanListFragment extends ListFragment implements LoanLists.OnLoanListsChangedListener, AdapterView.OnItemClickListener {
 
     /**
+     * For logs
+     */
+    private static final String TAG = "AbstractLoanList";
+
+    /**
      * Adapter in charge of creating views
      */
     private LoanListAdapter listAdapter;
+
+    /**
+     * Selected loan with context menu
+     */
+    private Loan selectedLoan;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +74,49 @@ abstract public class AbstractLoanListFragment extends ListFragment implements L
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         getActivity().getMenuInflater().inflate(R.menu.loan_list_context_menu, menu);
+
+        // get loan selected
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        selectedLoan = ((Loan) listAdapter.getItem(info.position));
+
+        // contact
+        if (!selectedLoan.hasContactId()) {
+            menu.findItem(R.id.action_contact_card).setVisible(false);
+        }
+
+        // returned
+        if (selectedLoan.isReturned()) {
+            menu.findItem(R.id.action_set_returned).setVisible(false);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        if (selectedLoan != null) {
+
+            switch (item.getItemId()) {
+                case R.id.action_contact_card:
+                    selectedLoan.displayContactCard(getContext());
+                    return true;
+                case R.id.action_set_returned:
+                    Log.i(TAG, "Loan returned");
+                    selectedLoan.setReturned();
+                    LoanLists.getInstance().updateLoan(selectedLoan, getContext());
+                    return true;
+                case R.id.action_delete:
+                    Log.i(TAG, "Loan delete requested");
+                    // Create and show the dialog.
+                    DeleteLoanDialog newDialog = DeleteLoanDialog.newInstance(selectedLoan);
+                    newDialog.show(getFragmentManager(), "delete");
+                    break;
+            }
+
+        } else {
+            Log.e(TAG, "Selected loan is null. Should not happen.");
+        }
+
+        return super.onContextItemSelected(item);
     }
 
     @Override
