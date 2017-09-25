@@ -19,6 +19,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
@@ -112,7 +114,7 @@ public class LoanContactDialog extends DialogFragment implements TextView.OnEdit
         }
 
 
-        return new AlertDialog.Builder(getActivity())
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_contact_24dp)
                 .setTitle(R.string.contact)
                 .setView(view)
@@ -141,6 +143,12 @@ public class LoanContactDialog extends DialogFragment implements TextView.OnEdit
                     }
                 })
                 .create();
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
+        return dialog;
     }
 
     @Override
