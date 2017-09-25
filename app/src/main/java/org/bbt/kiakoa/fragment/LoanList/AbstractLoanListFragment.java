@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,14 +46,22 @@ abstract public class AbstractLoanListFragment extends ListFragment implements L
 
         // adapter
         listAdapter = new LoanListAdapter(getLoanList());
-        getListView().setAdapter(listAdapter);
-        getListView().setOnItemClickListener(this);
-        getListView().setEmptyView(view.findViewById(R.id.empty_element));
+        ListView listView = getListView();
+        listView.setAdapter(listAdapter);
+        listView.setOnItemClickListener(this);
+        listView.setEmptyView(view.findViewById(R.id.empty_element));
+        registerForContextMenu(listView);
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         ((MainActivity) getActivity()).displayLoanDetails((Loan) adapterView.getItemAtPosition(position));
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getActivity().getMenuInflater().inflate(R.menu.loan_list_context_menu, menu);
     }
 
     @Override
@@ -117,5 +126,4 @@ abstract public class AbstractLoanListFragment extends ListFragment implements L
         Log.i(getLogTag(), "Notified that loan lists changed");
         listAdapter.notifyDataSetChanged();
     }
-
 }

@@ -33,7 +33,8 @@
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
             android:text="@string/app_name"
-            android:textSize="@dimen/list_item_text_size_primary" />
+            android:textSize="@dimen/list_item_text_size_primary"
+            android:textColor="@color/colorText"/>
 
         <TextView
             android:id="@+id/value"

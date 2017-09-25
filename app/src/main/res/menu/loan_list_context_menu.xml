@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Show contact information -->
+    <item
+        android:id="@+id/action_contact_card"
+        android:icon="@drawable/ic_contact_white_24dp"
+        android:title="@string/show_contact"/>
+
+</menu>

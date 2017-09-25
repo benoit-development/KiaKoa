@@ -1,26 +1,19 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@color/colorText</item>
+
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:colorBackground">@color/colorPrimary</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="popupMenuStyle">@style/PopupMenu</item>
+
     </style>
 
     <style name="ToolBarTheme" parent="AppTheme.NoActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="actionMenuTextColor">@android:color/white</item>
-    </style>
-
-    <style name="PopupMenu" parent="Base.Widget.AppCompat.Light.PopupMenu">
-        <item name="android:popupBackground">@color/activityBackground</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
 </resources>

@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // toolbar
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+        myToolbar.setPadding(0, Miscellaneous.getStatusBarHeight(this), 0, 0);
 
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {

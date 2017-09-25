@@ -8,6 +8,7 @@ import android.util.Log;
 
 import org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment;
 import org.bbt.kiakoa.model.Loan;
+import org.bbt.kiakoa.tools.Miscellaneous;
 
 public class LoanDetailsActivity extends AppCompatActivity {
 
@@ -29,6 +30,7 @@ public class LoanDetailsActivity extends AppCompatActivity {
         // toolbar
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+        myToolbar.setPadding(0, Miscellaneous.getStatusBarHeight(this), 0, 0);
 
         // Get a support ActionBar corresponding to this toolbar
         ActionBar ab = getSupportActionBar();

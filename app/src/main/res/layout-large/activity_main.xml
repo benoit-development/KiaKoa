@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    tools:ignore="InconsistentLayout">
+    tools:context=".MainActivity">
 
     <!-- The main content view -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:fitsSystemWindows="true">
+        android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:layout_height="wrap_content"
             android:elevation="0dp"
-            android:theme="@style/ToolBarTheme"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ToolBarTheme" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:background="@color/activityBackground">
+            android:orientation="horizontal">
 
             <fragment
                 android:id="@+id/loan_pager_frag"
@@ -48,7 +43,8 @@
                 class="org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2" />
+                android:layout_weight="2"
+                tools:ignore="InconsistentLayout" />
 
         </LinearLayout>
 
@@ -59,9 +55,8 @@
         android:id="@+id/left_drawer"
         android:layout_width="@dimen/drawer_layout_width"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_gravity="start"
-        android:background="@color/activityBackground">
+        android:background="@android:color/background_light">
 
         <ListView
             android:id="@+id/left_drawer_list"
