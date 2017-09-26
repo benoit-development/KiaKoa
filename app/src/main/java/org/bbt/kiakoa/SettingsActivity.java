@@ -12,7 +12,6 @@ import android.util.Log;
 
 import org.bbt.kiakoa.fragment.SettingsFragment;
 import org.bbt.kiakoa.model.LoanLists;
-import org.bbt.kiakoa.tools.Miscellaneous;
 import org.bbt.kiakoa.tools.Preferences;
 
 /**
@@ -41,7 +40,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         // toolbar
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        myToolbar.setPadding(0, Miscellaneous.getStatusBarHeight(this), 0, 0);
 
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {

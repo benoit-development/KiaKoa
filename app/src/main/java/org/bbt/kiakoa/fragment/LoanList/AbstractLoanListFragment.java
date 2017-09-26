@@ -2,8 +2,6 @@ package org.bbt.kiakoa.fragment.LoanList;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -148,16 +146,9 @@ abstract public class AbstractLoanListFragment extends ListFragment implements L
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment prev = getFragmentManager().findFragmentByTag(getLoanListId());
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-
                 // Create and show the dialog.
                 LoanItemDialog newItemDialog = LoanItemDialog.newInstance(getLoanListId());
-                newItemDialog.show(ft, getLoanListId());
+                newItemDialog.show(getFragmentManager(), getLoanListId());
             }
         };
     }

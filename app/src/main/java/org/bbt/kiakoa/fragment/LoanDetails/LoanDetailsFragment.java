@@ -10,8 +10,6 @@ import android.provider.CalendarContract.Events;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -306,16 +304,9 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
 
         Log.i(TAG, "Contact selection requested");
 
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment contactDialog = getFragmentManager().findFragmentByTag("contact");
-        if (contactDialog != null) {
-            ft.remove(contactDialog);
-        }
-        ft.addToBackStack(null);
-
         // Create and show the dialog.
         LoanContactDialog newContactDialog = LoanContactDialog.newInstance(loan);
-        newContactDialog.show(ft, "contact");
+        newContactDialog.show(getFragmentManager(), "contact");
     }
 
     /**
