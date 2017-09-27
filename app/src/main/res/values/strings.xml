@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">My Loan Lists</string>
     <string name="settings">Settings</string>
     <string name="lent">Lent</string>
@@ -49,10 +49,6 @@
     <string name="google_drive_summary">Your loans will be saved automatically on your Google Drive account</string>
     <string name="connection_google_drive_failed">Connection to Google Drive failed</string>
     <string name="create_calendar_event">Create a calendar event</string>
-    <string name="export_loan_lists" tools:ignore="UnusedResources">Export loan lists</string>
-    <string name="export_loan_lists_text" tools:ignore="UnusedResources">Loan lists exported in JSON format</string>
-    <string name="loans_lists_export_failed" tools:ignore="UnusedResources">Loan lists export failed</string>
-    <string name="lent_list_count" tools:ignore="UnusedResources">Lent lists [%d]</string>
     <string name="background">Background</string>
     <string name="in_progress">In Progress</string>
     <string name="no_loan_in_progress">No loan in progress</string>
@@ -61,6 +57,11 @@
     <string name="pick_image">Pick an image</string>
     <string name="pick_clipart">Pick a clipart</string>
     <string name="take_picture">Take a picture</string>
+    <string name="about">About</string>
+    <string name="version">Version</string>
+    <string name="creator">Creator</string>
+    <string name="licence">Licence</string>
+    <string name="mail_body">Hi Benoît !\n\n</string>
     <plurals name="plural_item">
         <item quantity="zero">%d item</item>
         <item quantity="one">%d item</item>

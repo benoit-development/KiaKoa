@@ -14,6 +14,7 @@
     <color name="alertRedText">@color/alertRed</color>
     <color name="lightGray">#CCCCCC</color>
     <color name="colorBadgeContent">@android:color/white</color>
+    <color name="background">@android:color/white</color>
     <array name="letter_tile_colors">
         <item>#DB4437</item>
         <item>#E91E63</item>

@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import org.bbt.kiakoa.LoanDetailsActivity;
+import org.bbt.kiakoa.activity.LoanDetailsActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.DeleteLoanDialog;
 import org.bbt.kiakoa.dialog.LoanContactDialog;

@@ -9,7 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.bbt.kiakoa.MainActivity;
+import org.bbt.kiakoa.activity.MainActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.LoanLists;
 

@@ -1,4 +1,4 @@
-package org.bbt.kiakoa;
+package org.bbt.kiakoa.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment;
 import org.bbt.kiakoa.model.Loan;
 

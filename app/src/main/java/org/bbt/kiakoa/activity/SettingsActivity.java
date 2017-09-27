@@ -1,4 +1,4 @@
-package org.bbt.kiakoa;
+package org.bbt.kiakoa.activity;
 
 
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.fragment.SettingsFragment;
 import org.bbt.kiakoa.model.LoanLists;
 import org.bbt.kiakoa.tools.Preferences;

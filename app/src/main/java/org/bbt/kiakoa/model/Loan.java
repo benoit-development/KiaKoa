@@ -22,7 +22,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 
-import org.bbt.kiakoa.MainActivity;
+import org.bbt.kiakoa.activity.MainActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.broadcast.NotificationBroadcastReceiver;
 import org.bbt.kiakoa.exception.LoanException;

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import org.bbt.kiakoa.MainActivity;
+import org.bbt.kiakoa.activity.MainActivity;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.DeleteLoanDialog;
 import org.bbt.kiakoa.dialog.LoanItemDialog;

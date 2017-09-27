@@ -28,7 +28,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/badge_background_clickable" />
+            android:background="@drawable/badge_background_accent" />
 
         <ImageView
             android:layout_width="40dp"
