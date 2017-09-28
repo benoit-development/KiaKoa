@@ -3,8 +3,10 @@ package org.bbt.kiakoa.model;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,13 +24,14 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 
-import org.bbt.kiakoa.activity.MainActivity;
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.activity.MainActivity;
 import org.bbt.kiakoa.broadcast.NotificationBroadcastReceiver;
 import org.bbt.kiakoa.exception.LoanException;
 import org.bbt.kiakoa.tools.Miscellaneous;
 import org.bbt.kiakoa.tools.Preferences;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -188,6 +191,39 @@ public class Loan implements Parcelable {
      * @return item label
      */
     public String getItemPicture() {
+        return itemPicture;
+    }
+
+    /**
+     * item picture Getter
+     * This getter will also check if item picture exists if it's an {@link Uri}
+     *
+     * @param context a context
+     * @return item label
+     */
+    public String getItemPictureSafe(Context context) {
+        if ((!isItemPictureDrawable()) && (itemPicture != null)) {
+            // It's an URI (not a drawable and not null)
+            ContentResolver cr = context.getContentResolver();
+            String[] projection = {MediaStore.MediaColumns.DATA};
+            Cursor cur = cr.query(Uri.parse(itemPicture), projection, null, null, null);
+            if (cur != null) {
+                if (cur.moveToFirst()) {
+                    String filePath = cur.getString(0);
+
+                    if (!new File(filePath).exists()) {
+                        itemPicture = null;
+                    }
+
+                } else {
+                    itemPicture = null;
+                }
+                cur.close();
+            } else {
+                itemPicture = null;
+            }
+        }
+
         return itemPicture;
     }
 
@@ -432,8 +468,9 @@ public class Loan implements Parcelable {
      */
     public
     @Nullable
-    Uri getPicture() {
+    Uri getPicture(Context context) {
         Uri result = null;
+        String itemPicture = getItemPictureSafe(context);
         if (itemPicture != null) {
             result = Uri.parse(itemPicture);
         } else if (contact != null) {
@@ -539,7 +576,7 @@ public class Loan implements Parcelable {
 
         // add picture if available
         try {
-            Uri picture = getPicture();
+            Uri picture = getPicture(context);
             if (picture != null) {
                 builder.setLargeIcon(MediaStore.Images.Media.getBitmap(context.getContentResolver(), picture));
             }

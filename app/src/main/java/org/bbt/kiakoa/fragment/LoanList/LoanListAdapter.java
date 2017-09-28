@@ -196,7 +196,7 @@ class LoanListAdapter extends BaseAdapter {
             holder.clipart.setVisibility(View.GONE);
             if (loan.isItemPictureDrawable()) {
                 try {
-                    int clipartIndex = Integer.valueOf(loan.getItemPicture());
+                    int clipartIndex = Integer.valueOf(loan.getItemPictureSafe(context));
                     holder.clipart.setVisibility(View.VISIBLE);
 
                     holder.clipart.setImageResource(Miscellaneous.getClipartResId(clipartIndex));
@@ -205,7 +205,7 @@ class LoanListAdapter extends BaseAdapter {
                     Log.e(TAG, "Failed parsing clipart drawable index. Should not happen.");
                 }
             } else {
-                Uri picture = loan.getPicture();
+                Uri picture = loan.getPicture(context);
                 if (picture != null) {
                     holder.circle.setImageURI(picture);
                     holder.circle.setPadding(0, 0, 0, 0);

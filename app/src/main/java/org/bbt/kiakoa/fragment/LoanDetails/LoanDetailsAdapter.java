@@ -139,7 +139,7 @@ class LoanDetailsAdapter extends BaseAdapter {
                 // loan picture
                 holder.description.setText(R.string.picture);
                 holder.icon.setImageResource(R.drawable.ic_picture_24dp);
-                String itemPicture = loan.getItemPicture();
+                String itemPicture = loan.getItemPictureSafe(context);
                 if (loan.isItemPictureDrawable()) {
                     // drawable
                     holder.circle.setVisibility(View.VISIBLE);
