@@ -121,7 +121,7 @@ public class Loan implements Parcelable {
     /**
      * this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
      */
-    static final Parcelable.Creator<Loan> CREATOR = new Parcelable.Creator<Loan>() {
+    public static final Parcelable.Creator<Loan> CREATOR = new Parcelable.Creator<Loan>() {
         public Loan createFromParcel(Parcel in) {
             return new Loan(in);
         }
