@@ -1,8 +1,6 @@
 package org.bbt.kiakoa.activity;
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +35,7 @@ class DrawerLayoutAdapter extends BaseAdapter {
 
     /**
      * Constructor
+     *
      * @param context a context
      */
     DrawerLayoutAdapter(Context context) {
@@ -168,7 +167,6 @@ class DrawerLayoutAdapter extends BaseAdapter {
         }
         if (loanCount != 0) {
             holder.badge.setText(String.valueOf(loanCount));
-            ((GradientDrawable) holder.badge.getBackground()).setColor(ContextCompat.getColor(context, R.color.colorAccent));
         }
         if (itemViewType == TYPE_ITEM) {
             holder.badge.setVisibility((loanCount == 0) ? View.GONE : View.VISIBLE);
