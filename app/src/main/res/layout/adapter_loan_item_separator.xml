@@ -4,25 +4,24 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <View
+        android:layout_marginTop="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorPrimary"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"/>
+
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
         android:text="@string/app_name"
         android:textColor="@color/colorPrimary"
-        android:textSize="22sp"
-        android:textStyle="italic" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/colorPrimary"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"/>
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/empty_text"
@@ -31,11 +30,8 @@
         android:layout_margin="5dp"
         android:text="@string/app_name"
         android:textColor="@color/lightGray"
-        android:textSize="15sp"
-        android:gravity="center" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
+        android:textSize="13sp"
+        android:gravity="center"
+        android:paddingBottom="10dp"/>
 
 </LinearLayout>
