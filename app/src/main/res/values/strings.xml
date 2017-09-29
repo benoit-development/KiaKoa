@@ -62,6 +62,9 @@
     <string name="creator">Creator</string>
     <string name="licence">Licence</string>
     <string name="mail_body">Hi Benoît !\n\n</string>
+    <string name="privacy_policy">Privacy</string>
+    <string name="rate_app">Rate this app</string>
+    <string name="readme">Readme</string>
     <plurals name="plural_item">
         <item quantity="zero">%d item</item>
         <item quantity="one">%d item</item>

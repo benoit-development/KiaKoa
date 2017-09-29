@@ -27,14 +27,14 @@
             android:layout_margin="15dp"
             android:columnCount="3">
 
+            <!-- Logo -->
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:gravity="center"
                 android:layout_columnSpan="3"
                 android:layout_gravity="center"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="30dp"
+                android:gravity="center">
 
                 <View
                     android:layout_width="90dp"
@@ -50,6 +50,7 @@
 
             </RelativeLayout>
 
+            <!-- App name -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,126 +62,275 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <RelativeLayout
+            <!-- Creator -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <View
-                    android:layout_width="@dimen/about_circle_icon"
-                    android:layout_height="@dimen/about_circle_icon"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/badge_background_accent" />
+                <RelativeLayout
+                    android:id="@+id/creator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="@dimen/about_circle_icon"
+                        android:layout_height="@dimen/about_circle_icon"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/badge_background_accent" />
+
+                    <ImageView
+                        android:layout_width="@dimen/about_circle_icon"
+                        android:layout_height="@dimen/about_circle_icon"
+                        android:layout_centerHorizontal="true"
+                        android:alpha="@integer/icon_alpha"
+                        android:contentDescription="@string/creator"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_contact_24dp"
+                        android:tint="@color/colorBadgeContent" />
+
+                </RelativeLayout>
 
                 <TextView
-                    android:layout_width="@dimen/about_circle_icon"
-                    android:layout_height="@dimen/about_circle_icon"
-                    android:layout_centerHorizontal="true"
-                    android:alpha="@integer/icon_alpha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="V."
-                    android:textColor="@color/colorBadgeContent"
-                    android:textSize="35sp"
-                    android:textStyle="bold|italic" />
+                    android:text="@string/creator"
+                    android:textStyle="bold" />
 
-            </RelativeLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Benoît" />
 
-            <RelativeLayout
-                android:id="@+id/creator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:gravity="center">
+            </LinearLayout>
 
-                <View
-                    android:layout_width="@dimen/about_circle_icon"
-                    android:layout_height="@dimen/about_circle_icon"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/badge_background_accent" />
 
-                <ImageView
-                    android:layout_width="@dimen/about_circle_icon"
-                    android:layout_height="@dimen/about_circle_icon"
-                    android:layout_centerHorizontal="true"
-                    android:alpha="@integer/icon_alpha"
-                    android:contentDescription="@string/creator"
-                    android:padding="15dp"
-                    android:src="@drawable/ic_contact_24dp"
-                    android:tint="@color/colorBadgeContent" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/licence"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:gravity="center">
-
-                <View
-                    android:layout_width="@dimen/about_circle_icon"
-                    android:layout_height="@dimen/about_circle_icon"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/badge_background_accent" />
-
-                <ImageView
-                    android:layout_width="@dimen/about_circle_icon"
-                    android:layout_height="@dimen/about_circle_icon"
-                    android:layout_centerHorizontal="true"
-                    android:alpha="@integer/icon_alpha"
-                    android:contentDescription="@string/licence"
-                    android:padding="15dp"
-                    android:src="@drawable/ic_licence_24dp"
-                    android:tint="@color/colorBadgeContent" />
-
-            </RelativeLayout>
-
-            <TextView
+            <!-- Version -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:gravity="center"
-                android:text="@string/version"
-                android:textStyle="bold" />
+                android:orientation="vertical">
 
-            <TextView
+                <RelativeLayout
+                    android:id="@+id/version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="@dimen/about_circle_icon"
+                        android:layout_height="@dimen/about_circle_icon"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/badge_background_accent" />
+
+                    <TextView
+                        android:layout_width="@dimen/about_circle_icon"
+                        android:layout_height="@dimen/about_circle_icon"
+                        android:layout_centerHorizontal="true"
+                        android:alpha="@integer/icon_alpha"
+                        android:gravity="center"
+                        android:text="V."
+                        android:textColor="@color/colorBadgeContent"
+                        android:textSize="35sp"
+                        android:textStyle="bold|italic" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/version"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/version_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="1.0.0" />
+
+            </LinearLayout>
+
+
+            <!-- Rate -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:gravity="center"
-                android:text="@string/creator"
-                android:textStyle="bold" />
+                android:orientation="vertical">
 
-            <TextView
+                <RelativeLayout
+                    android:id="@+id/rate_app"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="@dimen/about_circle_icon"
+                        android:layout_height="@dimen/about_circle_icon"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/badge_background_accent" />
+
+                    <ImageView
+                        android:layout_width="@dimen/about_circle_icon"
+                        android:layout_height="@dimen/about_circle_icon"
+                        android:layout_centerHorizontal="true"
+                        android:alpha="@integer/icon_alpha"
+                        android:contentDescription="@string/creator"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_stars_24dp"
+                        android:tint="@color/colorBadgeContent" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/rate_app"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_columnSpan="3" />
+
+            <!-- Readme -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:gravity="center"
-                android:text="@string/licence"
-                android:textStyle="bold" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/version_name"
+                <RelativeLayout
+                    android:id="@+id/readme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="@dimen/about_circle_icon"
+                        android:layout_height="@dimen/about_circle_icon"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/badge_background_accent" />
+
+                    <ImageView
+                        android:layout_width="@dimen/about_circle_icon"
+                        android:layout_height="@dimen/about_circle_icon"
+                        android:layout_centerHorizontal="true"
+                        android:alpha="@integer/icon_alpha"
+                        android:contentDescription="@string/licence"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_readme_24dp"
+                        android:tint="@color/colorBadgeContent" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/readme"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <!-- Privacy policy -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:gravity="center"
-                android:text="1.0.0" />
+                android:orientation="vertical">
 
-            <TextView
+                <RelativeLayout
+                    android:id="@+id/privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="@dimen/about_circle_icon"
+                        android:layout_height="@dimen/about_circle_icon"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/badge_background_accent" />
+
+                    <ImageView
+                        android:layout_width="@dimen/about_circle_icon"
+                        android:layout_height="@dimen/about_circle_icon"
+                        android:layout_centerHorizontal="true"
+                        android:alpha="@integer/icon_alpha"
+                        android:contentDescription="@string/creator"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_lock_24dp"
+                        android:tint="@color/colorBadgeContent" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/privacy_policy"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <!-- Licence -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:gravity="center"
-                android:text="Benoît" />
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:gravity="center"
-                android:text="GNU GPL" />
+                <RelativeLayout
+                    android:id="@+id/licence"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="@dimen/about_circle_icon"
+                        android:layout_height="@dimen/about_circle_icon"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/badge_background_accent" />
+
+                    <ImageView
+                        android:layout_width="@dimen/about_circle_icon"
+                        android:layout_height="@dimen/about_circle_icon"
+                        android:layout_centerHorizontal="true"
+                        android:alpha="@integer/icon_alpha"
+                        android:contentDescription="@string/licence"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_licence_24dp"
+                        android:tint="@color/colorBadgeContent" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/licence"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="GNU GPL" />
+
+            </LinearLayout>
 
         </GridLayout>
 
