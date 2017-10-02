@@ -50,7 +50,7 @@ abstract public class AbstractLoanListFragment extends ListFragment implements L
         super.onViewCreated(view, savedInstanceState);
 
         // Attach floating button
-        //Floating button used for various actions (add, empty, ...) depending on the list to display
+        // Floating button used for various actions (add, empty, ...) depending on the list to display
         FloatingActionButton fab = view.findViewById(R.id.loan_list_fab);
         fab.setOnClickListener(getFABOnClickListener());
 
@@ -59,7 +59,6 @@ abstract public class AbstractLoanListFragment extends ListFragment implements L
         ListView listView = getListView();
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(this);
-        listView.setEmptyView(view.findViewById(R.id.empty_element));
         registerForContextMenu(listView);
     }
 
