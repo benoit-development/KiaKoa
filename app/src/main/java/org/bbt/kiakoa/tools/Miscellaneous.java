@@ -3,8 +3,6 @@ package org.bbt.kiakoa.tools;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 import org.bbt.kiakoa.R;
 
@@ -49,22 +47,6 @@ public class Miscellaneous {
         clipartList.add(new SimpleEntry<>(18, R.drawable.clipart_motorcycle));
         clipartList.add(new SimpleEntry<>(19, R.drawable.clipart_car));
         clipartList.add(new SimpleEntry<>(20, R.drawable.clipart_key));
-    }
-
-    /**
-     * Check is internet is available
-     *
-     * @param context a context
-     * @return internet available or not
-     */
-    public static boolean isOnline(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            NetworkInfo netInfo = cm.getActiveNetworkInfo();
-            return netInfo != null && netInfo.isConnectedOrConnecting();
-        } else {
-            return false;
-        }
     }
 
     /**

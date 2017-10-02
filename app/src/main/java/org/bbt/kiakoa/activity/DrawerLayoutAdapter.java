@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.LoanLists;
-import org.bbt.kiakoa.tools.Preferences;
 
 /**
  * Adapter for the {@link ListView} inside the {@link DrawerLayout} of this activity
@@ -29,18 +28,12 @@ class DrawerLayoutAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
 
     /**
-     * a context
-     */
-    private final Context context;
-
-    /**
      * Constructor
      *
      * @param context a context
      */
     DrawerLayoutAdapter(Context context) {
         inflater = (LayoutInflater.from(context));
-        this.context = context;
     }
 
     @Override
@@ -126,12 +119,6 @@ class DrawerLayoutAdapter extends BaseAdapter {
         switch (position) {
             case 1:
                 textId = R.string.loan_lists;
-                // check google drive icon status
-                int gDriveIcon = 0;
-                if (Preferences.isGoogleDriveSyncEnabled(context)) {
-                    gDriveIcon = (Preferences.isSyncNeeded(context)) ? R.drawable.ic_drive_red_16dp : R.drawable.ic_drive_green_16dp;
-                }
-                holder.text.setCompoundDrawablesWithIntrinsicBounds(0, 0, gDriveIcon, 0);
                 break;
             case 2:
                 iconId = R.drawable.ic_lent_24dp;

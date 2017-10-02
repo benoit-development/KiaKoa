@@ -1,12 +1,8 @@
 package org.bbt.kiakoa.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -22,10 +18,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.dialog.ClearAllDialog;
 import org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment;
@@ -33,12 +25,8 @@ import org.bbt.kiakoa.fragment.LoanList.AbstractLoanListFragment;
 import org.bbt.kiakoa.fragment.LoanList.LoanListsPagerFragment;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanLists;
-import org.bbt.kiakoa.tools.Miscellaneous;
-import org.bbt.kiakoa.tools.Preferences;
-import org.bbt.kiakoa.tools.drive.GoogleApiClientTools;
-import org.bbt.kiakoa.tools.drive.LoanListsDriveFile;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LoanLists.OnLoanListsChangedListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LoanLists.OnLoanListsChangedListener {
 
     /**
      * For Log
@@ -49,11 +37,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * extra key used by notification to display a loan
      */
     public static final String EXTRA_NOTIFICATION_LOAN = "loan";
-
-    /**
-     * Used for google drive loans sync
-     */
-    private static final int RESOLVE_GOOGLE_DRIVE_CONNECTION_REQUEST_CODE = 1234;
 
     /**
      * For navigation
@@ -73,11 +56,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * {@link android.support.v4.app.Fragment} displaying Loans lists
      */
     private LoanListsPagerFragment loanListsPager;
-
-    /**
-     * google api client for loans sync
-     */
-    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onResume();
         mDrawerLayoutAdapter.notifyDataSetChanged();
         LoanLists.getInstance().registerOnLoanListsChangedListener(this, TAG);
-        syncLoansOnGoogleDrive();
     }
 
     @Override
@@ -154,26 +131,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    /**
-     * Start process to connect and sync loans on Google drive
-     */
-    private void syncLoansOnGoogleDrive() {
-        if (Preferences.isGoogleDriveSyncEnabled(this)) {
-            if (Preferences.isSyncNeeded(this)) {
-                Log.i(TAG, "Start GoogleDrive sync process");
-                googleApiClient = GoogleApiClientTools.getGoogleApiClient(this)
-                        .addConnectionCallbacks(this)
-                        .addOnConnectionFailedListener(this)
-                        .build();
-                googleApiClient.connect();
-            } else {
-                Log.i(TAG, "GoogleDrive sync process not needed");
-            }
-        } else {
-            Log.i(TAG, "GoogleDrive sync process disabled");
-        }
     }
 
     /**
@@ -269,61 +226,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onLoanListsChanged() {
         mDrawerLayoutAdapter.notifyDataSetChanged();
-        // try saving change
-        syncLoansOnGoogleDrive();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Log.i(TAG, "Connected to google drive");
-        LoanListsDriveFile loanListsDriveFile = new LoanListsDriveFile(googleApiClient);
-        loanListsDriveFile.syncLoanLists();
-    }
-
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i(TAG, "Connection suspended to google drive");
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.i(TAG, "Connection failed to google drive");
-        if (Miscellaneous.isOnline(this)) {
-            if (connectionResult.hasResolution()) {
-                try {
-                    Log.i(TAG, "Try starting resolution");
-                    connectionResult.startResolutionForResult(this, RESOLVE_GOOGLE_DRIVE_CONNECTION_REQUEST_CODE);
-                    return;
-                } catch (IntentSender.SendIntentException e) {
-                    Log.e(TAG, "Error : " + e.getMessage());
-                    e.printStackTrace();
-                }
-            } else {
-                Log.w(TAG, "No resolution");
-                GoogleApiAvailability.getInstance().getErrorDialog(this, connectionResult.getErrorCode(), RESOLVE_GOOGLE_DRIVE_CONNECTION_REQUEST_CODE).show();
-            }
-        } else {
-            Log.w(TAG, "No internet connection, no need to try to connect to google drive.");
-        }
-        Toast.makeText(this, R.string.connection_google_drive_failed, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case RESOLVE_GOOGLE_DRIVE_CONNECTION_REQUEST_CODE:
-                Log.i(TAG, "Google Drive result received");
-                if (resultCode == Activity.RESULT_OK) {
-                    Log.i(TAG, "Google Drive result received OK");
-                    googleApiClient.connect();
-                } else {
-                    Log.i(TAG, "Google Drive result received KO");
-                }
-                break;
-        }
-
     }
 
 }

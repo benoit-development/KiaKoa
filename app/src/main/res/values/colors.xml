@@ -9,7 +9,6 @@
     <color name="colorTextLight">#787878</color>
     <color name="colorIcon">@color/colorAccent</color>
     <color name="colorIconToolbar">@android:color/white</color>
-    <color name="okGreen">#1ebe63</color>
     <color name="alertRed">#ff7c09</color>
     <color name="alertRedText">@color/alertRed</color>
     <color name="lightGray">#CCCCCC</color>

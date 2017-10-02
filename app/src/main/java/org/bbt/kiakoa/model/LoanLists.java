@@ -9,8 +9,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 
-import org.bbt.kiakoa.tools.Preferences;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -310,9 +308,6 @@ public class LoanLists {
             editor.putString(SHARED_PREFERENCES_BORROWED_KEY, jsonBorrowedList);
             editor.putLong(SHARED_PREFERENCES_TIME_KEY, System.currentTimeMillis());
             editor.apply();
-
-            // update the preference that we need to sync with google drive
-            Preferences.setSyncNeeded(true, context);
         }
     }
 

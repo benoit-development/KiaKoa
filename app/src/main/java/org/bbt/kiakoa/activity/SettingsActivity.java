@@ -75,12 +75,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
                     LoanLists.getInstance().cancelAllLoanNotificationSchedule(this);
                 }
                 break;
-            case Preferences.KEY_GOOGLE_DRIVE_SYNC:
-                if (Preferences.isGoogleDriveSyncEnabled(this)) {
-                    Log.i(TAG, "Google Sync has been enabled. Set sync as needed.");
-                    Preferences.setSyncNeeded(true, this);
-                }
-                break;
         }
     }
 

@@ -6,8 +6,7 @@
     android:paddingBottom="15dp"
     android:paddingStart="15dp"
     android:paddingEnd="15dp"
-    android:paddingTop="15dp"
-    android:id="@+id/container">
+    android:paddingTop="15dp">
 
     <ImageView
         android:id="@+id/icon"
