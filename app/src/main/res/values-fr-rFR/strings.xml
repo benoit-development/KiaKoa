@@ -10,7 +10,8 @@
     <string name="loan_date">Date d\'emprunt</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
-    <string name="new_loan">Nouvel emprunt</string>
+    <string name="new_item_lent">Nouvel article prêté</string>
+    <string name="new_item_borrowed">Nouvel article emprunté</string>
     <string name="item_cant_be_blank">l\'article est obligatoire</string>
     <string name="no_loan_selected">Aucun emprunt sélectionné</string>
     <string name="open">Ouvrir</string>

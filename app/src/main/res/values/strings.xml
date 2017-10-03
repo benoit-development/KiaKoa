@@ -9,7 +9,8 @@
     <string name="loan_date">Loan date</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="new_loan">New loan</string>
+    <string name="new_item_lent">New item lent</string>
+    <string name="new_item_borrowed">New item borrowed</string>
     <string name="item_cant_be_blank">Item can\'t be blank</string>
     <string name="no_loan_selected">No loan selected</string>
     <string name="open">Open</string>

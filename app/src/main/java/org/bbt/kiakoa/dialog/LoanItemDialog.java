@@ -100,8 +100,6 @@ public class LoanItemDialog extends DialogFragment implements TextView.OnEditorA
         }
 
         final AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setIcon(R.drawable.ic_item_24dp)
-                .setTitle((ACTION_CREATE == action) ? R.string.new_loan : R.string.item)
                 .setView(view)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -115,6 +113,28 @@ public class LoanItemDialog extends DialogFragment implements TextView.OnEditorA
 
                     }
                 }).create();
+
+        // set icon and title
+        int iconId;
+        if (list == null) {
+            iconId = R.drawable.ic_item_24dp;
+        } else if (LoanLists.SHARED_PREFERENCES_LENT_KEY.equals(list)) {
+            iconId = R.drawable.ic_lent_24dp;
+        } else {
+            iconId = R.drawable.ic_borrowed_24dp;
+        }
+        dialog.setIcon(iconId);
+
+        // set title
+        if (ACTION_CREATE == action) {
+            if (LoanLists.SHARED_PREFERENCES_LENT_KEY.equals(list)) {
+                dialog.setTitle(R.string.new_item_lent);
+            } else {
+                dialog.setTitle(R.string.new_item_borrowed);
+            }
+        } else {
+            dialog.setTitle(loan.getItem());
+        }
 
         // manually manage ok button
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
