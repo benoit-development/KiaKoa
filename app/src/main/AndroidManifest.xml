@@ -18,6 +18,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+
+        <!-- Main Activity -->
         <activity
             android:name=".activity.MainActivity"
             android:windowSoftInputMode="adjustResize">
@@ -38,6 +40,7 @@
             </intent-filter>
         </activity>
 
+        <!-- Loan detail activity (only for phones, not tablets) -->
         <activity
             android:name=".activity.LoanDetailsActivity"
             android:parentActivityName=".activity.MainActivity">
@@ -46,6 +49,7 @@
                 android:value=".activity.MainActivity" />
         </activity>
 
+        <!-- Settings activity -->
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/settings"
@@ -55,6 +59,7 @@
                 android:value=".activity.MainActivity" />
         </activity>
 
+        <!-- Broadcast receiver to interact with notifications -->
         <receiver
             android:name=".broadcast.NotificationBroadcastReceiver"
             android:exported="false">
@@ -66,12 +71,29 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.AboutActivity"
+        <!-- About activity -->
+        <activity
+            android:name=".activity.AboutActivity"
             android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
+
+        <!-- Widget displaying in progress loans -->
+        <receiver
+            android:name=".widget.LoanAppWidgetService"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/appwidget_info" />
+        </receiver>
+
     </application>
 
 </manifest>

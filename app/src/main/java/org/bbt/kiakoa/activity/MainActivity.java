@@ -36,7 +36,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /**
      * extra key used by notification to display a loan
      */
-    public static final String EXTRA_NOTIFICATION_LOAN = "loan";
+    public static final String EXTRA_LOAN = "loan";
+
+    /**
+     * Action to create a new loan
+     */
+    public static final String ACTION_NEW_LENT = "org.bbt.kiakoa.new.lent";
 
     /**
      * For navigation
@@ -95,9 +100,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Check if this activity is displayed because of a loan notification
         try {
-            Loan notificationLoan = getIntent().getParcelableExtra(EXTRA_NOTIFICATION_LOAN);
+            Loan notificationLoan = getIntent().getParcelableExtra(EXTRA_LOAN);
             if (notificationLoan != null) {
-                Log.i(TAG, "This activity has been launch from notification");
+                Log.i(TAG, "This activity has been launch from notification or widget");
                 Log.i(TAG, "Displaying loan : " + notificationLoan.getItem());
                 displayLoanDetails(notificationLoan);
             }

@@ -587,7 +587,7 @@ public class Loan implements Parcelable {
 
         // Call MainActivity to display loan details
         Intent resultIntent = new Intent(context, MainActivity.class);
-        resultIntent.putExtra(MainActivity.EXTRA_NOTIFICATION_LOAN, this);
+        resultIntent.putExtra(MainActivity.EXTRA_LOAN, this);
 
         // The stack builder object will contain an artificial back stack for the
         // started Activity.

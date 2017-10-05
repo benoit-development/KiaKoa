@@ -22,6 +22,8 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
     public static final String INTENT_ACTION_LOAN_CONTACT = "org.bbt.kiakoa.ACTION_LOAN_CONTACT";
     public static final String INTENT_ACTION_LOAN_NOTIFICATION = "org.bbt.kiakoa.ACTION_LOAN_NOTIFICATION";
     public static final String EXTRA_LOAN_ID = "extra_loan";
+    // actions from widget
+
 
     /**
      * For log
