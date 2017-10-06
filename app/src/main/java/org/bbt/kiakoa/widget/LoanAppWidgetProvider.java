@@ -3,6 +3,7 @@ package org.bbt.kiakoa.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -45,7 +46,11 @@ public class LoanAppWidgetProvider extends AppWidgetProvider {
             // click on title to launch main activity
             Intent mainActivityIntent = new Intent(context, LoanAppWidgetProvider.class);
             mainActivityIntent.setAction(LoanAppWidgetProvider.ACTION_MAIN_ACTIVITY);
-            views.setOnClickPendingIntent(R.id.title, PendingIntent.getBroadcast(context, 0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+            Intent intentSync = new Intent(context, LoanAppWidgetProvider.class);
+            intentSync.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+            views.setOnClickPendingIntent(R.id.title, PendingIntent.getBroadcast(context, 0, intentSync, PendingIntent.FLAG_UPDATE_CURRENT));
 
             // populate ListView
             Intent svcIntent = new Intent(context, LoanAppWidgetService.class);
@@ -85,6 +90,10 @@ public class LoanAppWidgetProvider extends AppWidgetProvider {
                     newLentIntent.setAction(MainActivity.ACTION_NEW_LENT);
                     context.startActivity(newLentIntent);
                     break;
+                case AppWidgetManager.ACTION_APPWIDGET_UPDATE:
+                    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                    onUpdate(context, appWidgetManager, appWidgetManager.getAppWidgetIds(new ComponentName(context, this.getClass())));
+                    break;
             }
 
         } else {
@@ -92,4 +101,5 @@ public class LoanAppWidgetProvider extends AppWidgetProvider {
         }
 
     }
+
 }

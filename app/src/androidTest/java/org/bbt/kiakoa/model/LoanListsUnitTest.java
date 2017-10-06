@@ -207,4 +207,20 @@ public class LoanListsUnitTest {
         assertEquals(2, list.getInProgressCount());
         assertEquals(2, list.getReturnedCount());
     }
+
+    @Test
+    public void is_lent() {
+        Loan loan = new Loan(1, "lent");
+
+        // no list
+        assertFalse(loan.isLent());
+
+        // lent
+        loanLists.saveLent(loan, context);
+        assertTrue(loan.isLent());
+
+        // lent
+        loanLists.saveBorrowed(loan, context);
+        assertFalse(loan.isLent());
+    }
 }

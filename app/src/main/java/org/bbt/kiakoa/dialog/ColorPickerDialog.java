@@ -52,11 +52,10 @@ public class ColorPickerDialog extends DialogFragment {
 
         return ColorPickerDialogBuilder
                 .with(getContext())
-                .setTitle(R.string.color)
                 .initialColor(loan.getColor(getContext()))
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
-                .noSliders()
+                .showAlphaSlider(false)
                 .setPositiveButton(R.string.ok, new ColorPickerClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int selectedColor, Integer[] allColors) {

@@ -777,6 +777,15 @@ public class Loan implements Parcelable {
     }
 
     /**
+     * Check in {@link LoanLists} instance if loan is lent or borrowed
+     *
+     * @return true if lent, false if borrowed
+     */
+    public boolean isLent() {
+        return LoanLists.getInstance().getLentList().contains(this);
+    }
+
+    /**
      * {@link Comparator} to sort {@link LoanList}
      */
     public static class LoanComparator implements Comparator<Loan> {

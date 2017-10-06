@@ -145,6 +145,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @param loan loan to display
      */
     public void displayLoanDetails(Loan loan) {
+        // change ViewPager page
+        if (loan != null) {
+            if (loan.isLent()) {
+                loanListsPager.showPage(0);
+            } else {
+                loanListsPager.showPage(1);
+            }
+        }
+
+        // display loan details
         if (loanDetailsFragment != null) {
             // update fragment with selected loan
             loanDetailsFragment.setLoan(loan);
