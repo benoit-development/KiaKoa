@@ -22,8 +22,6 @@ import org.bbt.kiakoa.tools.Miscellaneous;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static org.bbt.kiakoa.tools.Miscellaneous.pickColor;
-
 /**
  * Adapter for the loan list {@link RecyclerView}
  */
@@ -200,7 +198,7 @@ class LoanListAdapter extends BaseAdapter {
                     holder.clipart.setVisibility(View.VISIBLE);
 
                     holder.clipart.setImageResource(Miscellaneous.getClipartResId(clipartIndex));
-                    ((GradientDrawable) holder.circle.getBackground()).setColor(pickColor(loan.getItem(), context));
+                    ((GradientDrawable) holder.circle.getBackground()).setColor(loan.getColor(context));
                 } catch (Exception e) {
                     Log.e(TAG, "Failed parsing clipart drawable index. Should not happen.");
                 }
@@ -214,7 +212,7 @@ class LoanListAdapter extends BaseAdapter {
                     holder.initial.setVisibility(View.VISIBLE);
                     holder.initial.setText(loan.getItem().substring(0, 1).toUpperCase());
                     holder.circle.setImageURI(null);
-                    ((GradientDrawable) holder.circle.getBackground()).setColor(pickColor(loan.getItem(), context));
+                    ((GradientDrawable) holder.circle.getBackground()).setColor(loan.getColor(context));
                 }
             }
 

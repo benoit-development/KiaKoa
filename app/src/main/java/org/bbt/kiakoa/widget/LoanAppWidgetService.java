@@ -13,7 +13,7 @@ import org.bbt.kiakoa.model.LoanLists;
 /**
  * Service to populate Widget {@link android.widget.ListView}
  */
-class LoanAppWidgetService extends RemoteViewsService {
+public class LoanAppWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new LoanAppWidgetFactory(this.getApplicationContext());

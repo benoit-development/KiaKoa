@@ -61,6 +61,7 @@
     <string name="privacy_policy">Privacy</string>
     <string name="rate_app">Rate this app</string>
     <string name="readme">Readme</string>
+    <string name="color">Color</string>
     <plurals name="plural_item">
         <item quantity="zero">%d item</item>
         <item quantity="one">%d item</item>

@@ -20,8 +20,6 @@ import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.tools.Miscellaneous;
 
-import static org.bbt.kiakoa.tools.Miscellaneous.pickColor;
-
 /**
  * Adapter in charge of displaying {@link Loan} details.
  * Here is the details displayed :
@@ -52,7 +50,7 @@ class LoanDetailsAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         if (loan != null) {
-            return 6;
+            return 7;
         } else {
             return 0;
         }
@@ -122,10 +120,10 @@ class LoanDetailsAdapter extends BaseAdapter {
                 holder.value.setText(loan.getItem());
 
                 // initial
-                holder.circle.setVisibility(View.VISIBLE);
-                ((GradientDrawable) holder.circle.getBackground()).setColor(pickColor(loan.getItem(), context));
-                holder.initial.setVisibility(View.VISIBLE);
-                holder.initial.setText(loan.getItem().substring(0, 1).toUpperCase());
+//                holder.circle.setVisibility(View.VISIBLE);
+//                ((GradientDrawable) holder.circle.getBackground()).setColor(loan.getColor(context));
+//                holder.initial.setVisibility(View.VISIBLE);
+//                holder.initial.setText(loan.getItem().substring(0, 1).toUpperCase());
                 break;
             case 1:
                 // returned
@@ -143,7 +141,7 @@ class LoanDetailsAdapter extends BaseAdapter {
                 if (loan.isItemPictureDrawable()) {
                     // drawable
                     holder.circle.setVisibility(View.VISIBLE);
-                    ((GradientDrawable) holder.circle.getBackground()).setColor(pickColor(loan.getItem(), context));
+                    ((GradientDrawable) holder.circle.getBackground()).setColor(loan.getColor(context));
                     holder.clipart.setVisibility(View.VISIBLE);
                     holder.clipart.setImageResource(Miscellaneous.getClipartResId(Integer.valueOf(itemPicture)));
                 } else if (itemPicture != null) {
@@ -196,6 +194,14 @@ class LoanDetailsAdapter extends BaseAdapter {
                 } else {
                     holder.value.setText(R.string.no_contact);
                 }
+                break;
+            case 6:
+                // loan color
+                holder.description.setText(R.string.color);
+                holder.value.setVisibility(View.INVISIBLE);
+                holder.icon.setImageResource(R.drawable.ic_color_24dp);
+                holder.circle.setVisibility(View.VISIBLE);
+                ((GradientDrawable) holder.circle.getBackground()).setColor(loan.getColor(context));
                 break;
         }
 

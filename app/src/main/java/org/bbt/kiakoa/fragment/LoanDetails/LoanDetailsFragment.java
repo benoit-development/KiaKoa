@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import org.bbt.kiakoa.activity.LoanDetailsActivity;
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.dialog.ColorPickerDialog;
 import org.bbt.kiakoa.dialog.DeleteLoanDialog;
 import org.bbt.kiakoa.dialog.LoanContactDialog;
 import org.bbt.kiakoa.dialog.LoanDateDialog;
@@ -214,6 +215,10 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
                 }
 
                 break;
+            case 6:
+                Log.i(TAG, "Color modification requested");
+                showColorPickerDialog();
+                break;
         }
     }
 
@@ -297,6 +302,15 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
         }
     }
 
+
+    private void showColorPickerDialog() {
+        Log.i(TAG, "Color selection requested");
+
+        // Create and show the dialog.
+        ColorPickerDialog colorPickerDialog = ColorPickerDialog.newInstance(loan);
+        colorPickerDialog.show(getFragmentManager(), "color");
+    }
+
     /**
      * Display dialog to set the loan contact
      */
@@ -305,8 +319,8 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
         Log.i(TAG, "Contact selection requested");
 
         // Create and show the dialog.
-        LoanContactDialog newContactDialog = LoanContactDialog.newInstance(loan);
-        newContactDialog.show(getFragmentManager(), "contact");
+        LoanContactDialog contactDialog = LoanContactDialog.newInstance(loan);
+        contactDialog.show(getFragmentManager(), "contact");
     }
 
     /**

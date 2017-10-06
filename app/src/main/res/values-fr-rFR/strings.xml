@@ -66,4 +66,5 @@
         <item quantity="one">%d article</item>
         <item quantity="other">%d articles</item>
     </plurals>
+    <string name="color">Couleur</string>
 </resources>
