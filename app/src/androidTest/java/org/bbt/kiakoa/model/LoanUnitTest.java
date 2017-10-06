@@ -1,6 +1,8 @@
 package org.bbt.kiakoa.model;
 
+import android.content.Context;
 import android.os.Parcel;
+import android.support.test.InstrumentationRegistry;
 
 import com.google.gson.Gson;
 
@@ -23,6 +25,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class LoanUnitTest {
 
+    /**
+     * a {@link Context}
+     */
+    private final Context context = InstrumentationRegistry.getTargetContext();
+
     private static final String LOAN_ITEM = "a label";
     private static final String LOAN_ANOTHER_ITEM = "a another label";
     final private Loan loanTest = new Loan(LOAN_ITEM);
@@ -43,12 +50,14 @@ public class LoanUnitTest {
         assertEquals(loanTest.getId(), newLoan.getId());
         assertEquals(loanTest.getLoanDate(), newLoan.getLoanDate());
         assertEquals(loanTest.getReturnDate(), newLoan.getReturnDate());
+        assertEquals(loanTest.getColor(context), newLoan.getColor(context));
         assertFalse(newLoan.isReturned());
         // no contact
         assertNull(newLoan.getContact());
 
         // with a contact
         loanTest.setContact(contactTest);
+
         // with state as returned
         loanTest.setReturned();
         parcel = Parcel.obtain();
@@ -59,6 +68,14 @@ public class LoanUnitTest {
         assertEquals("pouet", newLoan.getContact().getName());
         assertEquals("photo_uri", newLoan.getContact().getPhotoUri());
         assertTrue(newLoan.isReturned());
+
+        // with a color forced
+        loanTest.setColor(android.R.color.holo_red_light);
+        parcel = Parcel.obtain();
+        loanTest.writeToParcel(parcel, loanTest.describeContents());
+        parcel.setDataPosition(0);
+        newLoan = Loan.CREATOR.createFromParcel(parcel);
+        assertEquals(android.R.color.holo_red_light, newLoan.getColor(context));
     }
 
     @Test

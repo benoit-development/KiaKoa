@@ -101,6 +101,12 @@ public class Loan implements Parcelable {
     @Expose
     private Contact contact;
 
+    /**
+     * loan color
+     */
+    @Expose
+    private int color;
+
     @Override
     public int describeContents() {
         return 0;
@@ -116,6 +122,7 @@ public class Loan implements Parcelable {
         out.writeLong(loanDate);
         out.writeLong(returnDate);
         out.writeParcelable(contact, flags);
+        out.writeInt(color);
     }
 
     /**
@@ -144,6 +151,7 @@ public class Loan implements Parcelable {
         loanDate = in.readLong();
         returnDate = in.readLong();
         contact = in.readParcelable(Contact.class.getClassLoader());
+        color = in.readInt();
     }
 
     /**
@@ -701,6 +709,28 @@ public class Loan implements Parcelable {
     }
 
     /**
+     * Color setter
+     *
+     * @param color new color
+     */
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    /**
+     * Color getter
+     *
+     * @return loan color
+     */
+    public int getColor(Context context) {
+        if (color == 0) {
+            // set a random color
+            color = Miscellaneous.pickColor(item, context);
+        }
+        return color;
+    }
+
+    /**
      * Check if loan data are valid
      *
      * @return loan validity
@@ -770,4 +800,6 @@ public class Loan implements Parcelable {
         }
 
     }
+
+
 }
