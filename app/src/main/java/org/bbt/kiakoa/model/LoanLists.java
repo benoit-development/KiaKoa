@@ -1,6 +1,9 @@
 package org.bbt.kiakoa.model;
 
+import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -8,6 +11,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
+
+import org.bbt.kiakoa.widget.LoanAppWidgetProvider;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -308,6 +313,16 @@ public class LoanLists {
             editor.putString(SHARED_PREFERENCES_BORROWED_KEY, jsonBorrowedList);
             editor.putLong(SHARED_PREFERENCES_TIME_KEY, System.currentTimeMillis());
             editor.apply();
+
+            // intent for app widget
+            try {
+                Log.i(TAG, "Intent to refresh app widget");
+                Intent intentSync = new Intent(context, LoanAppWidgetProvider.class);
+                intentSync.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                PendingIntent.getBroadcast(context, 0, intentSync, PendingIntent.FLAG_UPDATE_CURRENT).send();
+            } catch (PendingIntent.CanceledException e) {
+                e.printStackTrace();
+            }
         }
     }
 

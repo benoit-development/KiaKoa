@@ -13,6 +13,8 @@ import android.widget.RemoteViews;
 import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.activity.MainActivity;
 
+import java.util.Random;
+
 /**
  * Application widget displaying in progress loans on home screen
  */
@@ -46,16 +48,13 @@ public class LoanAppWidgetProvider extends AppWidgetProvider {
             // click on title to launch main activity
             Intent mainActivityIntent = new Intent(context, LoanAppWidgetProvider.class);
             mainActivityIntent.setAction(LoanAppWidgetProvider.ACTION_MAIN_ACTIVITY);
-
-            Intent intentSync = new Intent(context, LoanAppWidgetProvider.class);
-            intentSync.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-
-            views.setOnClickPendingIntent(R.id.title, PendingIntent.getBroadcast(context, 0, intentSync, PendingIntent.FLAG_UPDATE_CURRENT));
+            views.setOnClickPendingIntent(R.id.title, PendingIntent.getBroadcast(context, 0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
             // populate ListView
             Intent svcIntent = new Intent(context, LoanAppWidgetService.class);
             svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+//            svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+            svcIntent.setData(Uri.fromParts("content", String.valueOf(appWidgetId + new Random().nextInt()), null));
             views.setRemoteAdapter(R.id.list, svcIntent);
 
             Intent clickIntent = new Intent(context, MainActivity.class);
@@ -101,5 +100,4 @@ public class LoanAppWidgetProvider extends AppWidgetProvider {
         }
 
     }
-
 }
