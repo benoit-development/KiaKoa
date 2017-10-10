@@ -627,7 +627,7 @@ public class Loan implements Parcelable {
     void scheduleNotification(Context context) {
         // schedule alarm for notification if necessary
         boolean notificationEnabled = Preferences.isReturnDateNotificationEnabled(context);
-        if (hasReturnDate() && (notificationEnabled) && (!isReturned())) {
+        if (hasReturnDate() && (notificationEnabled) && (!isReturned()) && (returnDate > System.currentTimeMillis())) {
 
             Log.i(TAG, "Scheduling notification for loan " + getItem() + " / " + getReturnDateString(context));
 
