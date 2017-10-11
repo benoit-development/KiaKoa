@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -358,6 +359,22 @@ public class LoanLists {
     public void unregisterOnLoanListsChangedListener(OnLoanListsChangedListener listener, String id) {
         Log.i(TAG, "Removing OnLoanListsChangedListener : " + id);
         onLoanListsChangedListeners.remove(listener);
+    }
+
+    /**
+     * Get all loans lent in progress
+     */
+    @NonNull
+    public ArrayList<Loan> getLentInProgress() {
+        return lentList.getInProgressLoanList();
+    }
+
+    /**
+     * Get all loans borrowed in progress
+     */
+    @NonNull
+    public ArrayList<Loan> getBorrowedInProgress() {
+        return borrowedList.getInProgressLoanList();
     }
 
     /**

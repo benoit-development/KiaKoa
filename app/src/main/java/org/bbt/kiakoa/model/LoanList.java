@@ -1,5 +1,7 @@
 package org.bbt.kiakoa.model;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 
 /**
@@ -18,6 +20,20 @@ public class LoanList extends ArrayList<Loan> {
             count += (!loan.isReturned()) ? 1 : 0;
         }
         return count;
+    }
+
+    /**
+     * Get all loans in progress in a list
+     */
+    @NonNull
+    public ArrayList<Loan> getInProgressLoanList() {
+        ArrayList<Loan> result = new ArrayList<>();
+        for (Loan loan : this) {
+            if (!loan.isReturned()) {
+                result.add(loan);
+            }
+        }
+        return result;
     }
 
     /**
