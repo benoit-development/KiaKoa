@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -32,7 +33,7 @@ public class LoanAppWidgetProvider extends AppWidgetProvider {
     /**
      * Action to show a specific loan
      */
-    private static final String ACTION_SHOW_LOAN = "org.bbt.kiakoa.action.show.loan";
+    static final String ACTION_SHOW_LOAN = "org.bbt.kiakoa.action.show.loan";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -43,26 +44,23 @@ public class LoanAppWidgetProvider extends AppWidgetProvider {
             Log.i(TAG, "Widget ID : " + appWidgetId);
 
             // create view
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
             // click on title to launch main activity
             Intent mainActivityIntent = new Intent(context, LoanAppWidgetProvider.class);
             mainActivityIntent.setAction(LoanAppWidgetProvider.ACTION_MAIN_ACTIVITY);
-            views.setOnClickPendingIntent(R.id.title, PendingIntent.getBroadcast(context, 0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+            remoteViews.setOnClickPendingIntent(R.id.title, PendingIntent.getBroadcast(context, 0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
             // populate ListView
             Intent svcIntent = new Intent(context, LoanAppWidgetService.class);
             svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-//            svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
             svcIntent.setData(Uri.fromParts("content", String.valueOf(appWidgetId + new Random().nextInt()), null));
-            views.setRemoteAdapter(R.id.list, svcIntent);
+            remoteViews.setRemoteAdapter(R.id.list, svcIntent);
 
-            Intent clickIntent = new Intent(context, MainActivity.class);
-            PendingIntent clickPI = PendingIntent.getActivity(context, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            views.setPendingIntentTemplate(R.id.list, clickPI);
+
 
             // update widget
-            appWidgetManager.updateAppWidget(appWidgetId, views);
+            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
         }
     }
 
@@ -83,11 +81,12 @@ public class LoanAppWidgetProvider extends AppWidgetProvider {
                     context.startActivity(mainActivityIntent);
                     break;
                 case ACTION_SHOW_LOAN:
-                    Log.i(TAG, "New lent required");
+                    Log.i(TAG, "Display loan required");
                     // launch activity with popup to create a new loan
-                    Intent newLentIntent = new Intent(context, MainActivity.class);
-                    newLentIntent.setAction(MainActivity.ACTION_NEW_LENT);
-                    context.startActivity(newLentIntent);
+                    Intent loanIntent = new Intent(context, MainActivity.class);
+                    loanIntent.setAction(MainActivity.ACTION_LOAN);
+                    loanIntent.putExtra(MainActivity.EXTRA_LOAN, intent.getParcelableExtra(MainActivity.EXTRA_LOAN));
+                    context.startActivity(loanIntent);
                     break;
                 case AppWidgetManager.ACTION_APPWIDGET_UPDATE:
                     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);

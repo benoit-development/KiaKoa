@@ -80,12 +80,12 @@ public class LoanAppWidgetService extends RemoteViewsService {
         @Override
         public RemoteViews getViewAt(int position) {
 
-            RemoteViews row;
+            RemoteViews remoteViews;
 
             switch (getViewType(position)) {
                 case TYPE_HEADER:
 
-                    row = new RemoteViews(context.getPackageName(), R.layout.adapter_loan_item_separator);
+                    remoteViews = new RemoteViews(context.getPackageName(), R.layout.adapter_loan_item_separator);
                     int textId;
                     if (position == 0) {
                         textId = R.string.lent;
@@ -93,45 +93,53 @@ public class LoanAppWidgetService extends RemoteViewsService {
                         textId = R.string.borrowed;
                     }
                     int count = (position == 0)? lentList.size() : borrowedList.size();
-                    row.setTextViewText(R.id.text, context.getString(textId) + " [" + count + "]");
-                    row.setViewVisibility(R.id.empty_text, View.GONE);
+                    remoteViews.setTextViewText(R.id.text, context.getString(textId) + " [" + count + "]");
+                    remoteViews.setViewVisibility(R.id.empty_text, View.GONE);
 
                     break;
                 default:
 
                     Loan loan = getItem(position);
 
-                    row = new RemoteViews(context.getPackageName(), R.layout.widget_adapter_loan_item);
+                    remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_adapter_loan_item);
                     if (loan != null) {
-                        row.setTextViewText(R.id.item, loan.getItem());
-                        row.setTextViewText(R.id.loan_date, loan.getLoanDateString());
-                        row.setInt(R.id.color, "setBackgroundColor", loan.getColor(context));
+                        remoteViews.setTextViewText(R.id.item, loan.getItem());
+                        remoteViews.setTextViewText(R.id.loan_date, loan.getLoanDateString());
+                        remoteViews.setInt(R.id.color, "setBackgroundColor", loan.getColor(context));
                         // return date
                         if (loan.hasReturnDate()) {
-                            row.setViewVisibility(R.id.date_separator, View.VISIBLE);
-                            row.setViewVisibility(R.id.return_date, View.VISIBLE);
-                            row.setTextViewText(R.id.return_date, loan.getReturnDateString(context));
+                            remoteViews.setViewVisibility(R.id.date_separator, View.VISIBLE);
+                            remoteViews.setViewVisibility(R.id.return_date, View.VISIBLE);
+                            remoteViews.setTextViewText(R.id.return_date, loan.getReturnDateString(context));
                             // returnDate is > 0
                             try {
                                 if ((!loan.isReturned()) && (loan.getDatesDifferenceInDays() > 0)) {
-                                    row.setTextColor(R.id.return_date, ContextCompat.getColor(context, R.color.alertRedText));
+                                    remoteViews.setTextColor(R.id.return_date, ContextCompat.getColor(context, R.color.alertRedText));
                                 } else {
-                                    row.setTextColor(R.id.return_date, ContextCompat.getColor(context, R.color.colorTextLight));
+                                    remoteViews.setTextColor(R.id.return_date, ContextCompat.getColor(context, R.color.colorTextLight));
                                 }
                             } catch (LoanException e) {
                                 // no return date
                             }
                         } else {
-                            row.setViewVisibility(R.id.date_separator, View.GONE);
-                            row.setViewVisibility(R.id.return_date, View.GONE);
+                            remoteViews.setViewVisibility(R.id.date_separator, View.GONE);
+                            remoteViews.setViewVisibility(R.id.return_date, View.GONE);
                         }
 
                         // click to see details
-                        Intent intent = new Intent(context, MainActivity.class);
-                        Bundle extras = new Bundle();
-                        extras.putParcelable(MainActivity.EXTRA_LOAN, loan);
-                        intent.putExtras(extras);
-                        row.setOnClickFillInIntent(android.R.id.text1, intent);
+//                        Intent intent = new Intent();
+//                        intent.putExtra(MainActivity.EXTRA_LOAN, loan);
+//                        remoteViews.setOnClickFillInIntent(R.id.container, intent);
+
+
+                        final Intent fillInIntent = new Intent();
+                        fillInIntent.setAction(LoanAppWidgetProvider.ACTION_SHOW_LOAN);
+                        final Bundle bundle = new Bundle();
+                        bundle.putParcelable(MainActivity.EXTRA_LOAN, loan);
+                        fillInIntent.putExtras(bundle);
+                        remoteViews.setOnClickFillInIntent(R.id.container, fillInIntent);
+
+
                     } else {
                         Log.e(TAG, "Loan is null, should not happen.");
                     }
@@ -140,7 +148,7 @@ public class LoanAppWidgetService extends RemoteViewsService {
             }
 
 
-            return row;
+            return remoteViews;
         }
 
         @Override
