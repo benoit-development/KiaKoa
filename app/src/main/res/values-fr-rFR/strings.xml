@@ -4,7 +4,7 @@
     <string name="settings">Paramètres</string>
     <string name="lent">Prêté</string>
     <string name="borrowed">Emprunté</string>
-    <string name="returned">Retourné</string>
+    <string name="returned">Rendu</string>
     <string name="none">Aucun</string>
     <string name="item">Article</string>
     <string name="loan_date">Date d\'emprunt</string>
@@ -33,12 +33,12 @@
     <string name="all_loan_lists_cleared">Toutes les listes ont été vidées</string>
     <string name="notifications">Notifications</string>
     <string name="notification_date_return_summary">Vous recevrez une notification lorsque la date de retour sera atteinte</string>
-    <string name="loan_returned">L\'emprunt a été retourné</string>
+    <string name="loan_returned">L\'emprunt a été rendu</string>
     <string name="notification">Notification</string>
     <string name="click_see_loan_details">Cliquez ici pour voir les détails de l\'emprunt</string>
     <string name="return_date">Date de retour</string>
     <string name="loan_reached_return_date">\"%1$s\" a atteint sa date de retour</string>
-    <string name="set_as_returned">Déjà retourné</string>
+    <string name="set_as_returned">Déjà rendu</string>
     <string name="return_date_updated">Date de retour mise à jour</string>
     <string name="add_a_week">Ajouter une semaine</string>
     <string name="loan_deleted">Emprunt supprimé</string>
@@ -49,7 +49,7 @@
     <string name="background">Arrière-plan</string>
     <string name="in_progress">En cours</string>
     <string name="no_loan_in_progress">Pas d\'emprunt en cours</string>
-    <string name="no_loan_returned">Pas d\'emprtun retourné</string>
+    <string name="no_loan_returned">Pas d\'emprunt rendu</string>
     <string name="clipart">Clipart</string>
     <string name="pick_image">Choisir une image</string>
     <string name="pick_clipart">Choisir un clipart</string>
