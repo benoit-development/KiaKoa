@@ -16,16 +16,6 @@
         android:contentDescription="@string/picture"
         android:scaleType="centerCrop" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/returned_icon"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:src="#73d100"
-        android:layout_alignBottom="@id/circle"
-        android:layout_alignEnd="@id/circle"
-        android:contentDescription="@string/picture"
-        android:scaleType="centerCrop" />
-
     <TextView
         android:id="@+id/initial"
         android:layout_width="80dp"

@@ -114,7 +114,6 @@ class LoanListAdapter extends BaseAdapter {
             holder.initial = convertView.findViewById(R.id.initial);
             holder.clipart = convertView.findViewById(R.id.clipart);
             holder.circle = convertView.findViewById(R.id.circle);
-            holder.returnedIcon = convertView.findViewById(R.id.returned_icon);
             holder.item = convertView.findViewById(R.id.item);
             holder.contact = convertView.findViewById(R.id.contact);
             holder.loanDate = convertView.findViewById(R.id.loan_date);
@@ -215,13 +214,6 @@ class LoanListAdapter extends BaseAdapter {
                     ((GradientDrawable) holder.circle.getBackground()).setColor(loan.getColor(context));
                 }
             }
-
-            // returned icon
-            if (loan.isReturned()) {
-                holder.returnedIcon.setVisibility(View.VISIBLE);
-            } else {
-                holder.returnedIcon.setVisibility(View.GONE);
-            }
         }
         return convertView;
     }
@@ -234,7 +226,6 @@ class LoanListAdapter extends BaseAdapter {
         CircleImageView circle;
         TextView initial;
         ImageView clipart;
-        ImageView returnedIcon;
         TextView item;
         TextView contact;
         TextView loanDate;
