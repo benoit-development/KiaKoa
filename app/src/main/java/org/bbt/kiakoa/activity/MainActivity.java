@@ -190,13 +190,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // change the displayed Loan list
         // first position of loan lists is 1 (0 is the first header)
         switch (position) {
-            case 2:
-            case 3:
-            case 4:
-                // change displayed page in viewpager
-                loanListsPager.showPage(position - 2);
-                break;
-            case 5:
+            case 1:
                 // launch setting activity
                 mDrawerLayout.addDrawerListener(new ActionBarDrawerToggle(this, mDrawerLayout, null, 0, 0) {
                     @Override
@@ -209,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 });
                 break;
-            case 6:
+            case 2:
                 // check if there are loan lists to be clear
                 if (LoanLists.getInstance().getLoanCount() == 0) {
                     Toast.makeText(this, R.string.all_loan_lists_already_empty, Toast.LENGTH_SHORT).show();
@@ -227,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     newClearAllDialog.show(ft, "confirm_clear");
                 }
                 break;
-            case 7:
+            case 3:
                 // launch setting activity
                 mDrawerLayout.addDrawerListener(new ActionBarDrawerToggle(this, mDrawerLayout, null, 0, 0) {
                     @Override

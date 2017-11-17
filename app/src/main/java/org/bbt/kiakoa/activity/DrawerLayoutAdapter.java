@@ -6,12 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.model.LoanLists;
 
 /**
  * Adapter for the {@link ListView} inside the {@link DrawerLayout} of this activity
@@ -19,8 +17,7 @@ import org.bbt.kiakoa.model.LoanLists;
 class DrawerLayoutAdapter extends BaseAdapter {
 
     private static final int TYPE_TITLE = 0;
-    private static final int TYPE_HEADER = 1;
-    private static final int TYPE_ITEM = 2;
+    private static final int TYPE_ITEM = 1;
 
     /**
      * inflater for layout
@@ -38,7 +35,7 @@ class DrawerLayoutAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 8;
+        return 4;
     }
 
     @Override
@@ -58,7 +55,7 @@ class DrawerLayoutAdapter extends BaseAdapter {
      */
     @Override
     public int getViewTypeCount() {
-        return 3;
+        return 2;
     }
 
     /**
@@ -68,8 +65,6 @@ class DrawerLayoutAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         if (position == 0) {
             return TYPE_TITLE;
-        } else if ((position == 1) || (position == 4)) {
-            return TYPE_HEADER;
         } else {
             return TYPE_ITEM;
         }
@@ -87,23 +82,11 @@ class DrawerLayoutAdapter extends BaseAdapter {
                 view.setEnabled(false);
                 view.setOnClickListener(null);
 
-            } else if (itemViewType == TYPE_HEADER) {
-
-                view = inflater.inflate(R.layout.adapter_drawer_layout_header, viewGroup, false);
-                view.setEnabled(false);
-                view.setOnClickListener(null);
-                // Creates a ViewHolderHeader
-                holder.text = view.findViewById(R.id.text);
-                // no icon by default
-                holder.text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-
             } else {
 
                 view = inflater.inflate(R.layout.adapter_drawer_layout_item, viewGroup, false);
                 // Creates a ViewHolder
-                holder.icon = view.findViewById(R.id.icon);
-                holder.text = view.findViewById(R.id.text);
-                holder.badge = view.findViewById(R.id.clipart);
+                holder.text = (TextView) view;
 
             }
             view.setTag(holder);
@@ -115,57 +98,32 @@ class DrawerLayoutAdapter extends BaseAdapter {
         // Bind the data efficiently with the holder.
         int iconId = 0;
         int textId = 0;
-        int loanCount = 0;
         switch (position) {
             case 1:
-                textId = R.string.loan_lists;
-                break;
-            case 2:
-                iconId = R.drawable.ic_lent_24dp;
-                textId = R.string.lent;
-                loanCount = LoanLists.getInstance().getLentList().getInProgressCount();
-                break;
-            case 3:
-                iconId = R.drawable.ic_borrowed_24dp;
-                textId = R.string.borrowed;
-                loanCount = LoanLists.getInstance().getBorrowedList().getInProgressCount();
-                break;
-            case 4:
-                textId = R.string.tools;
-                break;
-            case 5:
                 iconId = R.drawable.ic_settings_24dp;
                 textId = R.string.settings;
                 break;
-            case 6:
+            case 2:
                 iconId = R.drawable.ic_delete_forever_24dp;
                 textId = R.string.clear_all_loan_lists;
                 break;
-            case 7:
+            case 3:
                 iconId = R.drawable.ic_about_24dp;
                 textId = R.string.about;
                 break;
         }
         if (iconId != 0) {
-            holder.icon.setImageResource(iconId);
+            holder.text.setCompoundDrawablesWithIntrinsicBounds(iconId, 0, 0, 0);
         }
         if (textId != 0) {
             holder.text.setText(textId);
-        }
-        if (loanCount != 0) {
-            holder.badge.setText(String.valueOf(loanCount));
-        }
-        if (itemViewType == TYPE_ITEM) {
-            holder.badge.setVisibility((loanCount == 0) ? View.GONE : View.VISIBLE);
         }
 
         return view;
     }
 
     private class ViewHolder {
-        ImageView icon;
         TextView text;
-        TextView badge;
     }
 
 }

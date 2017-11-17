@@ -54,6 +54,18 @@ public class LoanListsPagerFragment extends Fragment implements LoanLists.OnLoan
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        LoanLists.getInstance().registerOnLoanListsChangedListener(this, TAG);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LoanLists.getInstance().unregisterOnLoanListsChangedListener(this, TAG);
+    }
+
     /**
      * Display the asked page of the pager
      *
@@ -112,10 +124,10 @@ public class LoanListsPagerFragment extends Fragment implements LoanLists.OnLoan
             String title;
             switch (position) {
                 case 0:
-                    title = getString(R.string.lent);
+                    title = getString(R.string.lent) + " (" + LoanLists.getInstance().getLentList().getInProgressCount() + ")";
                     break;
                 default:
-                    title = getString(R.string.borrowed);
+                    title = getString(R.string.borrowed) + " (" + LoanLists.getInstance().getBorrowedList().getInProgressCount() + ")";
                     break;
             }
             return title;
