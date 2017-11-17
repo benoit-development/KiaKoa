@@ -15,9 +15,7 @@
     <string name="no_loan_selected">No loan selected</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="item_icon">Item icon</string>
     <string name="loan_lists">Loan lists</string>
-    <string name="tools">Tools</string>
     <string name="contact">Contact</string>
     <string name="delete">Delete</string>
     <string name="no_contact">No contact</string>

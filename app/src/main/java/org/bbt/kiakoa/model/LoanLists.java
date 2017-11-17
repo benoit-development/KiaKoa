@@ -330,7 +330,7 @@ public class LoanLists {
     /**
      * Method called to notify changes
      */
-    public void notifyLoanListsChanged() {
+    private void notifyLoanListsChanged() {
         Log.i(TAG, "Notifying Loan Lists changed");
         for (OnLoanListsChangedListener listener : onLoanListsChangedListeners) {
             if (listener != null) {
@@ -447,55 +447,6 @@ public class LoanLists {
                 loan.cancelNotificationSchedule(context);
             }
         }
-    }
-
-    /**
-     * export lists in json format
-     *
-     * @return json string
-     */
-    public String toJson() {
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create()
-                .toJson(this);
-    }
-
-    /**
-     * import lists from a json string
-     *
-     * @param json    json string
-     * @param context a context
-     */
-    public boolean fromJson(String json, Context context) {
-        Log.i(TAG, "json import requested");
-        Log.d(TAG, "json : " + json);
-        LoanLists loanLists = new Gson().fromJson(json, LoanLists.class);
-        if (loanLists != null) {
-            if (loanLists.isValid()) {
-                Log.i(TAG, "LoanLists instance seems valid. Replacing the lists.");
-                // clear all lists
-                clearLists(context);
-                // lent list
-                if (loanLists.lentList != null) {
-                    lentList.addAll(loanLists.lentList);
-                }
-                // borrowed list
-                if (loanLists.borrowedList != null) {
-                    borrowedList.addAll(loanLists.borrowedList);
-                }
-
-                getInstance().saveInSharedPreferences(context);
-                getInstance().notifyLoanListsChanged();
-                return true;
-            } else {
-                Log.e(TAG, "New LoanLists not valid. Import cancelled.");
-            }
-        } else {
-            Log.e(TAG, "New LoanLists is null ! Import cancelled.");
-        }
-        return false;
     }
 
     /**

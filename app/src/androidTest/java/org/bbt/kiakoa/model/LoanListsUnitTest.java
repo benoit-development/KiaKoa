@@ -148,35 +148,6 @@ public class LoanListsUnitTest {
     }
 
     @Test
-    public void export_import_to_json() {
-
-        // loans to be exported and imported
-        Loan lentLoan = new Loan(1, "lent");
-        lentLoan.setContact(new Contact(1, "name", "uri"));
-        Loan borrowedLoan = new Loan(2, "borrowed");
-
-        // add to LoanLists
-        loanLists.clearLists(context);
-        loanLists.saveLent(lentLoan, context);
-        loanLists.saveBorrowed(borrowedLoan, context);
-        String jsonExport = loanLists.toJson();
-
-        // clear lists
-        loanLists.clearLists(context);
-        assertEquals(0, loanLists.getLoanCount());
-
-        // import json
-        assertTrue(LoanLists.getInstance().fromJson(jsonExport, context));
-        assertEquals(2, loanLists.getLoanCount());
-        assertEquals(lentLoan, loanLists.getLentList().get(0));
-        assertEquals(lentLoan.getContact().getId(), loanLists.getLentList().get(0).getContact().getId());
-        assertEquals(lentLoan.getContact().getName(), loanLists.getLentList().get(0).getContact().getName());
-        assertEquals(lentLoan.getContact().getPhotoUri(), loanLists.getLentList().get(0).getContact().getPhotoUri());
-        assertEquals(borrowedLoan, loanLists.getBorrowedList().get(0));
-
-    }
-
-    @Test
     public void comparable_list() {
         LoanList list = new LoanList();
 

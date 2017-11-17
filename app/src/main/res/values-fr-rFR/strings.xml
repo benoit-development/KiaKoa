@@ -16,9 +16,7 @@
     <string name="no_loan_selected">Aucun emprunt sélectionné</string>
     <string name="open">Ouvrir</string>
     <string name="close">Fermer</string>
-    <string name="item_icon">Icône</string>
     <string name="loan_lists">Listes de rprêt</string>
-    <string name="tools">Outils</string>
     <string name="contact">Contact</string>
     <string name="delete">Supprimer</string>
     <string name="no_contact">Pas de contact</string>
