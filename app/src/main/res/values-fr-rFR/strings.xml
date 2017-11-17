@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Mes Listes de Prêt</string>
+    <string name="app_name">KiaKoa</string>
     <string name="settings">Paramètres</string>
     <string name="lent">Prêté</string>
     <string name="borrowed">Emprunté</string>

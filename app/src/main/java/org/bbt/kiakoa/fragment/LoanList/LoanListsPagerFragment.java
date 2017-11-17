@@ -12,13 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.bbt.kiakoa.R;
+import org.bbt.kiakoa.model.LoanLists;
 
 /**
  * {@link android.app.Fragment} displaying a loan lists
  *
  * @author Benoit Bousquet
  */
-public class LoanListsPagerFragment extends Fragment {
+public class LoanListsPagerFragment extends Fragment implements LoanLists.OnLoanListsChangedListener {
 
     /**
      * For log
@@ -30,45 +31,27 @@ public class LoanListsPagerFragment extends Fragment {
      */
     private ViewPager viewPager;
 
+    /**
+     * Adapter for {@link ViewPager}
+     */
+    private LoanPagerAdapter loanPagerAdapter;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_loan_list_pager, container, false);
 
         // get viewpager
         viewPager = view.findViewById(R.id.pager);
 
         // Pager adapter
-        LoanPagerAdapter loanPagerAdapter = new LoanPagerAdapter(getChildFragmentManager());
+        loanPagerAdapter = new LoanPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(loanPagerAdapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                setActivityTitle(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        // TabLayout to display dots
-        TabLayout tabLayout = view.findViewById(R.id.tabDots);
-        tabLayout.setupWithViewPager(viewPager, true);
+        // tab layout
+        TabLayout tabLayout = view.findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        setActivityTitle(viewPager.getCurrentItem());
     }
 
     /**
@@ -85,23 +68,9 @@ public class LoanListsPagerFragment extends Fragment {
         }
     }
 
-    /**
-     * update title in activity
-     *
-     * @param page selected page in viewpager
-     */
-    private void setActivityTitle(int page) {
-        Log.i(TAG, "Change Activity Title : " + page);
-        switch (page) {
-            case 0:
-                // lent
-                getActivity().setTitle(R.string.lent);
-                break;
-            case 1:
-                // borrowed
-                getActivity().setTitle(R.string.borrowed);
-                break;
-        }
+    @Override
+    public void onLoanListsChanged() {
+        loanPagerAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -136,6 +105,20 @@ public class LoanListsPagerFragment extends Fragment {
             }
 
             return fragment;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            String title;
+            switch (position) {
+                case 0:
+                    title = getString(R.string.lent);
+                    break;
+                default:
+                    title = getString(R.string.borrowed);
+                    break;
+            }
+            return title;
         }
     }
 
