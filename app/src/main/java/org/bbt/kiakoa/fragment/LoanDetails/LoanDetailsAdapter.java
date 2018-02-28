@@ -112,18 +112,13 @@ class LoanDetailsAdapter extends BaseAdapter {
         holder.initial.setVisibility(View.GONE);
         holder.switchView.setVisibility(View.GONE);
 
+        int loanColor = loan.getColor(context);
         switch (position) {
             case 0:
                 // item
                 holder.icon.setImageResource(R.drawable.ic_item_24dp);
                 holder.description.setText(R.string.item);
                 holder.value.setText(loan.getItem());
-
-                // initial
-//                holder.circle.setVisibility(View.VISIBLE);
-//                ((GradientDrawable) holder.circle.getBackground()).setColor(loan.getColor(context));
-//                holder.initial.setVisibility(View.VISIBLE);
-//                holder.initial.setText(loan.getItem().substring(0, 1).toUpperCase());
                 break;
             case 1:
                 // returned
@@ -141,7 +136,7 @@ class LoanDetailsAdapter extends BaseAdapter {
                 if (loan.isItemPictureDrawable()) {
                     // drawable
                     holder.circle.setVisibility(View.VISIBLE);
-                    ((GradientDrawable) holder.circle.getBackground()).setColor(loan.getColor(context));
+                    ((GradientDrawable) holder.circle.getBackground()).setColor(loanColor);
                     holder.clipart.setVisibility(View.VISIBLE);
                     holder.clipart.setImageResource(Miscellaneous.getClipartResId(Integer.valueOf(itemPicture)));
                 } else if (itemPicture != null) {
@@ -201,9 +196,12 @@ class LoanDetailsAdapter extends BaseAdapter {
                 holder.value.setVisibility(View.INVISIBLE);
                 holder.icon.setImageResource(R.drawable.ic_color_24dp);
                 holder.circle.setVisibility(View.VISIBLE);
-                ((GradientDrawable) holder.circle.getBackground()).setColor(loan.getColor(context));
+                ((GradientDrawable) holder.circle.getBackground()).setColor(loanColor);
                 break;
         }
+
+        // update icon with loan color
+        holder.icon.setColorFilter(loanColor);
 
         return convertView;
     }
