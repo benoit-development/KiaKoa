@@ -22,8 +22,7 @@
         <!-- Main Activity -->
         <activity
             android:name=".activity.MainActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleInstance">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -43,6 +42,7 @@
         <!-- Loan detail activity (only for phones, not tablets) -->
         <activity
             android:name=".activity.LoanDetailsActivity"
+            android:label="@string/loan_lists"
             android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
