@@ -19,15 +19,12 @@
     <string name="contact">Contact</string>
     <string name="delete">Delete</string>
     <string name="no_contact">No contact</string>
-    <string name="clear">Clear</string>
     <string name="loan_details">Loan details</string>
     <string name="picture">Picture</string>
     <string name="no_picture">No picture</string>
     <string name="write_external_storage_required">Permission to write on external storage is required to take a picture</string>
     <string name="purge_loan_lists">Purge loan lists</string>
-    <string name="clear_all_lists_question">Do you want to clear all loan lists ?</string>
     <string name="all_loan_lists_already_empty">All loan lists are already empty</string>
-    <string name="all_loan_lists_cleared">All loan lists cleared</string>
     <string name="notifications">Notifications</string>
     <string name="notification_date_return_summary">You will be notified when return date is reached</string>
     <string name="loan_returned">Loan has been returned</string>
@@ -60,11 +57,6 @@
     <string name="rate_app">Rate this app</string>
     <string name="readme">Readme</string>
     <string name="color">Color</string>
-    <plurals name="plural_item">
-        <item quantity="zero">%d item</item>
-        <item quantity="one">%d item</item>
-        <item quantity="other">%d items</item>
-    </plurals>
     <string name="all">All</string>
     <string name="oneWeek">One week</string>
     <string name="oneMonth">One month</string>
