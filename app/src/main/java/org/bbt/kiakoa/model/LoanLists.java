@@ -16,7 +16,9 @@ import com.google.gson.reflect.TypeToken;
 import org.bbt.kiakoa.widget.LoanAppWidgetProvider;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * Class managing all current loans
@@ -474,5 +476,43 @@ public class LoanLists {
         return result;
     }
 
+    /**
+     * Purge all loans older than one week
+     */
+    public void purgeWeek() {
+        Log.i(TAG, "Week purge requested");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -7);
+        purgeLists(cal.getTimeInMillis());
+    }
 
+    /**
+     * Purge all loans older than one month
+     */
+    public void purgeMonth() {
+        Log.i(TAG, "Month purge requested");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        purgeLists(cal.getTimeInMillis());
+    }
+
+    /**
+     * Purge all loans before the date
+     *
+     * @param time date for purge
+     */
+    private void purgeLists(long time) {
+        for (LoanList list : getAllLists()) {
+            Iterator<Loan> listIterator = list.iterator();
+            while (listIterator.hasNext()) {
+                Loan loan = listIterator.next();
+                if (loan.getLoanDate() <= time) {
+                    Log.i(TAG, "Deleting : " + loan.toJson());
+                    listIterator.remove();
+                }
+            }
+        }
+
+        notifyLoanListsChanged();
+    }
 }

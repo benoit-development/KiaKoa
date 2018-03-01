@@ -19,7 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.dialog.ClearAllDialog;
+import org.bbt.kiakoa.dialog.PurgeListsDialog;
 import org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment;
 import org.bbt.kiakoa.fragment.LoanList.AbstractLoanListFragment;
 import org.bbt.kiakoa.fragment.LoanList.LoanListsPagerFragment;
@@ -199,21 +199,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 });
                 break;
             case 2:
-                // check if there are loan lists to be clear
+                // check if there are loan lists to be purged
                 if (LoanLists.getInstance().getLoanCount() == 0) {
                     Toast.makeText(this, R.string.all_loan_lists_already_empty, Toast.LENGTH_SHORT).show();
                 } else {
-                    // show dialog to confirm the user desire to clear all lists
+                    // show dialog to confirm the user desire to purge all lists
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    Fragment clearAllDialog = getSupportFragmentManager().findFragmentByTag("confirm_clear");
-                    if (clearAllDialog != null) {
-                        ft.remove(clearAllDialog);
+                    Fragment purgeDialog = getSupportFragmentManager().findFragmentByTag("confirm_purge");
+                    if (purgeDialog != null) {
+                        ft.remove(purgeDialog);
                     }
                     ft.addToBackStack(null);
 
                     // Create and show the dialog
-                    ClearAllDialog newClearAllDialog = ClearAllDialog.newInstance();
-                    newClearAllDialog.show(ft, "confirm_clear");
+                    PurgeListsDialog newPurgeDialog = PurgeListsDialog.newInstance();
+                    newPurgeDialog.show(ft, "confirm_purge");
                 }
                 break;
             case 3:

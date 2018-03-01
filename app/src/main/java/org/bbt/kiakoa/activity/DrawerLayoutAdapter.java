@@ -105,7 +105,7 @@ class DrawerLayoutAdapter extends BaseAdapter {
                 break;
             case 2:
                 iconId = R.drawable.ic_delete_forever_24dp;
-                textId = R.string.clear_all_loan_lists;
+                textId = R.string.purge_loan_lists;
                 break;
             case 3:
                 iconId = R.drawable.ic_about_24dp;

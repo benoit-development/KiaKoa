@@ -25,7 +25,7 @@
     <string name="picture">Image</string>
     <string name="no_picture">Pas d\'image</string>
     <string name="write_external_storage_required">La permission d\'écrire sur un stockage externe est nécessaire pour prendre une photo</string>
-    <string name="clear_all_loan_lists">Effacer toutes les listes</string>
+    <string name="purge_loan_lists">Purger les listes</string>
     <string name="clear_all_lists_question">Voullez-vous vider toutes les listes ?</string>
     <string name="all_loan_lists_already_empty">Toutes les liste sont déjà vides</string>
     <string name="all_loan_lists_cleared">Toutes les listes ont été vidées</string>
@@ -65,4 +65,8 @@
         <item quantity="other">%d articles</item>
     </plurals>
     <string name="color">Couleur</string>
+    <string name="all">Tous</string>
+    <string name="oneWeek">Une semaine</string>
+    <string name="oneMonth">Un mois</string>
+    <string name="purgeLoanLists">Purger les listes</string>
 </resources>

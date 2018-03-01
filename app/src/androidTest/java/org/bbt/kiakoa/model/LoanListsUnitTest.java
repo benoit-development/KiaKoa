@@ -5,12 +5,17 @@ import android.support.test.InstrumentationRegistry;
 
 import com.google.gson.Gson;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Test;
 
+import java.util.Calendar;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 
@@ -30,6 +35,12 @@ public class LoanListsUnitTest {
      * Test instance
      */
     private final LoanLists loanLists = LoanLists.getInstance();
+
+    @After
+    public void tearDown() throws Exception {
+        LoanLists.getInstance().clearLists(context);
+    }
+
 
     @Test
     public void test_instance() throws Exception {
@@ -194,4 +205,62 @@ public class LoanListsUnitTest {
         loanLists.saveBorrowed(loan, context);
         assertFalse(loan.isLent());
     }
+
+    @Test
+    public void test_purge() {
+        LoanLists lists = LoanLists.getInstance();
+
+        // loans
+        // today
+        Loan loanToday = new Loan(1, "today");
+        // yesterday
+        Loan loan1Day = new Loan(2, "2 days");
+        Calendar oneDay = Calendar.getInstance();
+        oneDay.add(Calendar.DATE, -2);
+        loan1Day.setLoanDate(oneDay.getTimeInMillis());
+        // last week
+        Loan loan1Week = new Loan(3, "2 weeks");
+        Calendar oneWeek = Calendar.getInstance();
+        oneWeek.add(Calendar.DATE, -14);
+        loan1Week.setLoanDate(oneWeek.getTimeInMillis());
+        // last month
+        Loan loan1Month = new Loan(4, "2 months");
+        Calendar oneMonth = Calendar.getInstance();
+        oneMonth.add(Calendar.MONTH, -2);
+        loan1Month.setLoanDate(oneMonth.getTimeInMillis());
+        // last year
+        Loan loan1Year = new Loan(5, "1 year");
+        Calendar oneYear = Calendar.getInstance();
+        oneYear.add(Calendar.YEAR, -1);
+        loan1Year.setLoanDate(oneYear.getTimeInMillis());
+
+        lists.getLentList().add(loanToday);
+        lists.getBorrowedList().add(loan1Day);
+        lists.getLentList().add(loan1Week);
+        lists.getBorrowedList().add(loan1Month);
+        lists.getLentList().add(loan1Year);
+
+        // purgeWeek
+        lists.purgeWeek();
+        assertNotNull(lists.findLoanById(1));
+        assertNotNull(lists.findLoanById(2));
+        assertNull(lists.findLoanById(3));
+        assertNull(lists.findLoanById(4));
+        assertNull(lists.findLoanById(5));
+
+        lists.getLentList().add(loan1Week);
+        lists.getBorrowedList().add(loan1Month);
+        lists.getLentList().add(loan1Year);
+
+        // purgeMonth
+        lists.purgeMonth();
+        assertNotNull(lists.findLoanById(1));
+        assertNotNull(lists.findLoanById(2));
+        assertNotNull(lists.findLoanById(3));
+        assertNull(lists.findLoanById(4));
+        assertNull(lists.findLoanById(5));
+
+    }
+
+
 }
