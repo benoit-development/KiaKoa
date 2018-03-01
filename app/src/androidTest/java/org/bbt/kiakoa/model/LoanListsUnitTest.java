@@ -6,7 +6,6 @@ import android.support.test.InstrumentationRegistry;
 import com.google.gson.Gson;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.util.Calendar;

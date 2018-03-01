@@ -19,7 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.bbt.kiakoa.R;
-import org.bbt.kiakoa.dialog.PurgeListsDialog;
+import org.bbt.kiakoa.dialog.CleanListsDialog;
 import org.bbt.kiakoa.fragment.LoanDetails.LoanDetailsFragment;
 import org.bbt.kiakoa.fragment.LoanList.AbstractLoanListFragment;
 import org.bbt.kiakoa.fragment.LoanList.LoanListsPagerFragment;
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     ft.addToBackStack(null);
 
                     // Create and show the dialog
-                    PurgeListsDialog newPurgeDialog = PurgeListsDialog.newInstance();
+                    CleanListsDialog newPurgeDialog = CleanListsDialog.newInstance();
                     newPurgeDialog.show(ft, "confirm_purge");
                 }
                 break;

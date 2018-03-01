@@ -6,13 +6,13 @@
     <string name="borrowed">Emprunté</string>
     <string name="returned">Rendu</string>
     <string name="none">Aucun</string>
-    <string name="item">Article</string>
     <string name="loan_date">Date d\'emprunt</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
-    <string name="new_item_lent">Nouvel article prêté</string>
-    <string name="new_item_borrowed">Nouvel article emprunté</string>
-    <string name="item_cant_be_blank">l\'article est obligatoire</string>
+    <string name="new_loan_created">Nouveau prêt créé</string>
+    <string name="new_loan_borrowed">Nouvel emprunt créé</string>
+    <string name="label">Libellé</string>
+    <string name="label_cant_be_blank">Le libellé est requis</string>
     <string name="no_loan_selected">Aucun emprunt sélectionné</string>
     <string name="open">Ouvrir</string>
     <string name="close">Fermer</string>
@@ -24,7 +24,7 @@
     <string name="picture">Image</string>
     <string name="no_picture">Pas d\'image</string>
     <string name="write_external_storage_required">La permission d\'écrire sur un stockage externe est nécessaire pour prendre une photo</string>
-    <string name="purge_loan_lists">Purger les listes</string>
+    <string name="clean_loan_lists">Nettoyer les listes</string>
     <string name="all_loan_lists_already_empty">Toutes les liste sont déjà vides</string>
     <string name="notifications">Notifications</string>
     <string name="notification_date_return_summary">Vous recevrez une notification lorsque la date de retour sera atteinte</string>
@@ -58,8 +58,7 @@
     <string name="rate_app">Noter cette application</string>
     <string name="readme">Lisez-moi</string>
     <string name="color">Couleur</string>
-    <string name="all">Tous</string>
-    <string name="oneWeek">Une semaine</string>
-    <string name="oneMonth">Un mois</string>
-    <string name="purgeLoanLists">Purger les listes</string>
+    <string name="all_loans">Tous les prêts</string>
+    <string name="older_one_week">Plus d\'une semaine</string>
+    <string name="older_one_month">Plus d\'un mois</string>
 </resources>

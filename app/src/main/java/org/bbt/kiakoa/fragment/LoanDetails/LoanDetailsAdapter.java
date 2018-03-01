@@ -116,8 +116,8 @@ class LoanDetailsAdapter extends BaseAdapter {
         switch (position) {
             case 0:
                 // item
-                holder.icon.setImageResource(R.drawable.ic_item_24dp);
-                holder.description.setText(R.string.item);
+                holder.icon.setImageResource(R.drawable.ic_label_24dp);
+                holder.description.setText(R.string.label);
                 holder.value.setText(loan.getItem());
                 break;
             case 1:

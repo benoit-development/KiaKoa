@@ -12,34 +12,33 @@ import org.bbt.kiakoa.R;
 import org.bbt.kiakoa.model.LoanLists;
 
 /**
- * Dialog used to clear all lists
+ * Dialog used to clean all lists
  */
-public class PurgeListsDialog extends DialogFragment {
+public class CleanListsDialog extends DialogFragment {
 
     /**
      * For log
      */
-    private static final String TAG = "PurgeListsDialog";
+    private static final String TAG = "CleanListsDialog";
 
     /**
-     * Create a new instance of PurgeListsDialog
+     * Create a new instance of CleanListsDialog
      */
-    public static PurgeListsDialog newInstance() {
-        return new PurgeListsDialog();
+    public static CleanListsDialog newInstance() {
+        return new CleanListsDialog();
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.i(TAG, "Show dialog to purge loans");
-        int loanCount = LoanLists.getInstance().getLoanCount();
+        Log.i(TAG, "Show dialog to clean loans");
         return new AlertDialog.Builder(getActivity())
-                .setIcon(R.drawable.ic_delete_forever_24dp)
-                .setTitle(R.string.purgeLoanLists)
+                .setIcon(R.drawable.ic_delete_sweep_24dp)
+                .setTitle(R.string.clean_loan_lists)
                 .setItems(R.array.purge_choice, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "Purge requested : " + which);
+                        Log.d(TAG, "Clean requested : " + which);
                         switch (which) {
                             case 0:
                                 LoanLists.getInstance().clearLists(getContext());

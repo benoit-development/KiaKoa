@@ -128,9 +128,9 @@ public class LoanItemDialog extends DialogFragment implements TextView.OnEditorA
         // set title
         if (ACTION_CREATE == action) {
             if (LoanLists.SHARED_PREFERENCES_LENT_KEY.equals(list)) {
-                dialog.setTitle(R.string.new_item_lent);
+                dialog.setTitle(R.string.new_loan_created);
             } else {
-                dialog.setTitle(R.string.new_item_borrowed);
+                dialog.setTitle(R.string.new_loan_borrowed);
             }
         } else {
             dialog.setTitle(loan.getItem());
@@ -183,7 +183,7 @@ public class LoanItemDialog extends DialogFragment implements TextView.OnEditorA
             dismiss();
         } else {
             Log.i(TAG, "item can't be empty");
-            Toast.makeText(getContext(), R.string.item_cant_be_blank, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.label_cant_be_blank, Toast.LENGTH_SHORT).show();
         }
     }
 

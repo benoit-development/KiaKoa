@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer-array name="purge_choice">
-        <item>@string/all</item>
-        <item>@string/oneWeek</item>
-        <item>@string/oneMonth</item>
+        <item>@string/all_loans</item>
+        <item>@string/older_one_week</item>
+        <item>@string/older_one_month</item>
     </integer-array>
 </resources>

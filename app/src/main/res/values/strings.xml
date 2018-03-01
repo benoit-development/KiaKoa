@@ -5,13 +5,13 @@
     <string name="borrowed">Borrowed</string>
     <string name="returned">Returned</string>
     <string name="none">None</string>
-    <string name="item">Item</string>
     <string name="loan_date">Loan date</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="new_item_lent">New item lent</string>
-    <string name="new_item_borrowed">New item borrowed</string>
-    <string name="item_cant_be_blank">Item can\'t be blank</string>
+    <string name="new_loan_created">New loan created</string>
+    <string name="new_loan_borrowed">New borrowing created</string>
+    <string name="label">Label</string>
+    <string name="label_cant_be_blank">Label can\'t be blank</string>
     <string name="no_loan_selected">No loan selected</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
@@ -23,7 +23,7 @@
     <string name="picture">Picture</string>
     <string name="no_picture">No picture</string>
     <string name="write_external_storage_required">Permission to write on external storage is required to take a picture</string>
-    <string name="purge_loan_lists">Purge loan lists</string>
+    <string name="clean_loan_lists">Purge loan lists</string>
     <string name="all_loan_lists_already_empty">All loan lists are already empty</string>
     <string name="notifications">Notifications</string>
     <string name="notification_date_return_summary">You will be notified when return date is reached</string>
@@ -57,8 +57,7 @@
     <string name="rate_app">Rate this app</string>
     <string name="readme">Readme</string>
     <string name="color">Color</string>
-    <string name="all">All</string>
-    <string name="oneWeek">One week</string>
-    <string name="oneMonth">One month</string>
-    <string name="purgeLoanLists">Purge loan lists</string>
+    <string name="all_loans">All loans</string>
+    <string name="older_one_week">Older than a week</string>
+    <string name="older_one_month">Older than a month</string>
 </resources>
