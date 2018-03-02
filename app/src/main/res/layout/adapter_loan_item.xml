@@ -21,31 +21,31 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentStart="true"
+        android:alpha="@integer/icon_alpha"
         android:gravity="center"
         android:text="O"
         android:textColor="@color/colorBadgeContent"
-        android:textSize="35sp"
-        android:alpha="@integer/icon_alpha" />
+        android:textSize="35sp" />
 
     <ImageView
         android:id="@+id/clipart"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentStart="true"
+        android:alpha="@integer/icon_alpha"
+        android:contentDescription="@string/clipart"
         android:gravity="center"
         android:padding="25dp"
-        android:contentDescription="@string/clipart"
         android:src="@drawable/clipart_money"
-        android:tint="@color/colorBadgeContent"
-        android:alpha="@integer/icon_alpha" />
+        android:tint="@color/colorBadgeContent" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
         android:layout_toEndOf="@id/circle"
-        android:orientation="vertical"
-        android:layout_marginStart="10dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/item"
@@ -87,8 +87,8 @@
                 android:layout_height="15dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginStart="5dp"
-                android:src="@drawable/ic_forward_text_24dp"
-                android:contentDescription="@string/return_date"/>
+                android:contentDescription="@string/return_date"
+                android:src="@drawable/ic_forward_text_24dp" />
 
             <TextView
                 android:id="@+id/return_date"
