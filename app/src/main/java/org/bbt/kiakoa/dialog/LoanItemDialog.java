@@ -128,9 +128,9 @@ public class LoanItemDialog extends DialogFragment implements TextView.OnEditorA
         // set title
         if (ACTION_CREATE == action) {
             if (LoanLists.SHARED_PREFERENCES_LENT_KEY.equals(list)) {
-                dialog.setTitle(R.string.new_loan_created);
+                dialog.setTitle(R.string.new_loan);
             } else {
-                dialog.setTitle(R.string.new_loan_borrowed);
+                dialog.setTitle(R.string.new_borrowing);
             }
         } else {
             dialog.setTitle(loan.getItem());

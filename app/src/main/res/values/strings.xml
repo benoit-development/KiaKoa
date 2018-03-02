@@ -8,8 +8,8 @@
     <string name="loan_date">Loan date</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="new_loan_created">New loan created</string>
-    <string name="new_loan_borrowed">New borrowing created</string>
+    <string name="new_loan">New loan</string>
+    <string name="new_borrowing">New borrowing</string>
     <string name="label">Label</string>
     <string name="label_cant_be_blank">Label can\'t be blank</string>
     <string name="no_loan_selected">No loan selected</string>

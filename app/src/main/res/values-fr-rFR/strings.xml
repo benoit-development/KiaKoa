@@ -9,8 +9,8 @@
     <string name="loan_date">Date d\'emprunt</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
-    <string name="new_loan_created">Nouveau prêt créé</string>
-    <string name="new_loan_borrowed">Nouvel emprunt créé</string>
+    <string name="new_loan">Nouveau prêt</string>
+    <string name="new_borrowing">Nouvel emprunt</string>
     <string name="label">Libellé</string>
     <string name="label_cant_be_blank">Le libellé est requis</string>
     <string name="no_loan_selected">Aucun emprunt sélectionné</string>
