@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Loan Lists</string>
     <string name="settings">Settings</string>
@@ -42,6 +43,8 @@
     <string name="create_calendar_event">Create a calendar event</string>
     <string name="background">Background</string>
     <string name="in_progress">In Progress</string>
+    <string name="no_borrowing_in_progress">No borrowing in progress</string>
+    <string name="no_borrowing_returned">No borrowing returned</string>
     <string name="no_loan_in_progress">No loan in progress</string>
     <string name="no_loan_returned">No loan returned</string>
     <string name="clipart">Clipart</string>

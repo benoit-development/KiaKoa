@@ -18,6 +18,7 @@ import org.bbt.kiakoa.exception.LoanException;
 import org.bbt.kiakoa.model.Contact;
 import org.bbt.kiakoa.model.Loan;
 import org.bbt.kiakoa.model.LoanList;
+import org.bbt.kiakoa.model.LoanLists;
 import org.bbt.kiakoa.tools.Miscellaneous;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -42,12 +43,18 @@ class LoanListAdapter extends BaseAdapter {
     private final LoanList loanList;
 
     /**
+     * List id (loan or borrowing)
+     */
+    private final String listId;
+
+    /**
      * Constructor
      *
      * @param loanList displayed loan list
      */
-    LoanListAdapter(LoanList loanList) {
+    LoanListAdapter(LoanList loanList, String listId) {
         this.loanList = loanList;
+        this.listId = listId;
     }
 
     @Override
@@ -135,7 +142,14 @@ class LoanListAdapter extends BaseAdapter {
                     holder.emptyText.setVisibility(View.GONE);
                 } else {
                     holder.emptyText.setVisibility(View.VISIBLE);
-                    holder.emptyText.setText(R.string.no_loan_in_progress);
+
+                    int text;
+                    if (LoanLists.SHARED_PREFERENCES_LENT_KEY.equals(listId)) {
+                        text = R.string.no_loan_in_progress;
+                    } else {
+                        text = R.string.no_borrowing_in_progress;
+                    }
+                    holder.emptyText.setText(text);
                 }
             } else {
                 // returned header
@@ -144,7 +158,14 @@ class LoanListAdapter extends BaseAdapter {
                     holder.emptyText.setVisibility(View.GONE);
                 } else {
                     holder.emptyText.setVisibility(View.VISIBLE);
-                    holder.emptyText.setText(R.string.no_loan_returned);
+
+                    int text;
+                    if (LoanLists.SHARED_PREFERENCES_LENT_KEY.equals(listId)) {
+                        text = R.string.no_loan_returned;
+                    } else {
+                        text = R.string.no_borrowing_returned;
+                    }
+                    holder.emptyText.setText(text);
                 }
             }
             holder.text.setText(textId);

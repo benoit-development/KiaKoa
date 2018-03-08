@@ -55,7 +55,7 @@ abstract public class AbstractLoanListFragment extends ListFragment implements L
         fab.setOnClickListener(getFABOnClickListener());
 
         // adapter
-        listAdapter = new LoanListAdapter(getLoanList());
+        listAdapter = new LoanListAdapter(getLoanList(), getLoanListId());
         ListView listView = getListView();
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(this);

@@ -43,8 +43,10 @@
     <string name="create_calendar_event">Créer un évènement dans le calendrier</string>
     <string name="background">Arrière-plan</string>
     <string name="in_progress">En cours</string>
-    <string name="no_loan_in_progress">Pas d\'emprunt en cours</string>
-    <string name="no_loan_returned">Pas d\'emprunt rendu</string>
+    <string name="no_borrowing_in_progress">Pas d\'emprunt en cours</string>
+    <string name="no_borrowing_returned">Pas d\'emprunt rendu</string>
+    <string name="no_loan_in_progress">Pas de prêt en cours</string>
+    <string name="no_loan_returned">Pas de prêt rendu</string>
     <string name="clipart">Clipart</string>
     <string name="pick_image">Choisir une image</string>
     <string name="pick_clipart">Choisir un clipart</string>
