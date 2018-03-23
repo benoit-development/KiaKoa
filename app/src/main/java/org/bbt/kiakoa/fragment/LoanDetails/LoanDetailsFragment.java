@@ -89,7 +89,7 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         setListAdapter(new LoanDetailsAdapter());
@@ -241,7 +241,7 @@ public class LoanDetailsFragment extends ListFragment implements LoanLists.OnLoa
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("loan", loan);
     }

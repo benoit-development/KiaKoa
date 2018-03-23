@@ -1,6 +1,7 @@
 package org.bbt.kiakoa.fragment.LoanList;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,7 +38,7 @@ public class LoanListsPagerFragment extends Fragment implements LoanLists.OnLoan
     private LoanPagerAdapter loanPagerAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_loan_list_pager, container, false);
 
         // get viewpager

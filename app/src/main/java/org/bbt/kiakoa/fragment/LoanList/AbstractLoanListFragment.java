@@ -1,6 +1,7 @@
 package org.bbt.kiakoa.fragment.LoanList;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -46,7 +47,7 @@ abstract public class AbstractLoanListFragment extends ListFragment implements L
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // Attach floating button

@@ -185,6 +185,13 @@ class LoanDetailsAdapter extends BaseAdapter {
                     if (photoUri != null) {
                         holder.circle.setImageURI(Uri.parse(photoUri));
                         holder.circle.setVisibility(View.VISIBLE);
+
+                        holder.circle.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                loan.displayContactCard(context);
+                            }
+                        });
                     }
                 } else {
                     holder.value.setText(R.string.no_contact);
