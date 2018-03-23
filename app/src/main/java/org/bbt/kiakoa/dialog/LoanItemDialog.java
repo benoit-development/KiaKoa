@@ -4,9 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -123,7 +127,6 @@ public class LoanItemDialog extends DialogFragment implements TextView.OnEditorA
         } else {
             iconId = R.drawable.ic_borrowed_24dp;
         }
-        dialog.setIcon(iconId);
 
         // set title
         if (ACTION_CREATE == action) {
@@ -151,6 +154,27 @@ public class LoanItemDialog extends DialogFragment implements TextView.OnEditorA
                 });
             }
         });
+
+        // set primary color if loan exists (loan update)
+        if (loan != null) {
+            // icon
+            Drawable myIcon = getResources().getDrawable(iconId);
+            myIcon.setTint(loan.getColor(getContext()));
+            dialog.setIcon(myIcon);
+            // EditText
+            ColorStateList colorStateList = ColorStateList.valueOf(loan.getColor(getContext()));
+            ViewCompat.setBackgroundTintList(itemEditText, colorStateList);
+            // buttons
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface d) {
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(loan.getColor(getContext()));
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(loan.getColor(getContext()));
+                }
+            });
+        } else {
+            dialog.setIcon(iconId);
+        }
 
         Window window = dialog.getWindow();
         if (window != null) {
