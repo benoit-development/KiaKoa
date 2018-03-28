@@ -155,27 +155,6 @@ public class LoanItemDialog extends DialogFragment implements TextView.OnEditorA
             }
         });
 
-        // set primary color if loan exists (loan update)
-        if (loan != null) {
-            // icon
-            Drawable myIcon = getResources().getDrawable(iconId);
-            myIcon.setTint(loan.getColor(getContext()));
-            dialog.setIcon(myIcon);
-            // EditText
-            ColorStateList colorStateList = ColorStateList.valueOf(loan.getColor(getContext()));
-            ViewCompat.setBackgroundTintList(itemEditText, colorStateList);
-            // buttons
-            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface d) {
-                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(loan.getColor(getContext()));
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(loan.getColor(getContext()));
-                }
-            });
-        } else {
-            dialog.setIcon(iconId);
-        }
-
         Window window = dialog.getWindow();
         if (window != null) {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);

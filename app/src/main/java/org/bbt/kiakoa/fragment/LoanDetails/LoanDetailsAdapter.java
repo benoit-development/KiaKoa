@@ -207,9 +207,6 @@ class LoanDetailsAdapter extends BaseAdapter {
                 break;
         }
 
-        // update icon with loan color
-        holder.icon.setColorFilter(loanColor);
-
         return convertView;
     }
 
